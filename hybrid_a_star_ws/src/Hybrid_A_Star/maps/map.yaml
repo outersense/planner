@@ -1,0 +1,11 @@
+# image: figure8_track2.png
+image: figure8_track.png
+# resolution: 1.0
+resolution: 1.0
+origin: [ 0.0, 0.0, 0.0 ]
+# occupied_thresh: 0.1
+# free_thresh: 0.05
+occupied_thresh: 0.99
+free_thresh: 0.25
+negate: 0
+mode: scale
