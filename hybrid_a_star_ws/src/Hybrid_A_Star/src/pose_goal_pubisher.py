@@ -80,36 +80,71 @@ import rospy
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import PoseWithCovarianceStamped
+import scipy.spatial as sp
+import os
+import numpy as np
+import matplotlib.pyplot as plt
 
-def odom_callback(msg):
-    # Create a PoseStamped message
-    pose_cov_msg = PoseWithCovarianceStamped()
+def do_kdtree(array_source, array_dest, k =1):
+    '''nearest neighbor kdtree, fast because creates a binary octatree
+    Args: 
+        1) array_source: array with more elements in whom we want to find nearest neighbour
+        2) array_dest: array with less elements whose nearest neighbour we need to find
+    Returns:
+        1) indexes: arrray having all indexes
+        2) dist: array having distances
+    '''
+    mytree = sp.cKDTree(array_source)
+    dist, indexes = mytree.query(array_dest, k)
+    return indexes, dist
 
-    # Preserve the timestamp from the Odometry message
-    pose_cov_msg.header.stamp = msg.header.stamp
-    pose_cov_msg.header.frame_id = "world"  # Set the frame_id as "world"
+class GetGoal:
+    def __init__(self):
+        self.look_ahead_index = 10
+        waypoints_name = "waypoints.npy"
+        self.waypoints = np.load(waypoints_name, allow_pickle=True)
+        rospy.init_node('publish_curr_pose_and_goal_pose')
+        rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
+        self.pose_cov_publisher = rospy.Publisher('/car2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        self.goal_publisher = rospy.Publisher('/car2/planner_goal_pos', PoseStamped, queue_size=10)
+        
+        
+        
+    def get_goal_for_pose(self, curr):
+        near_id, _ = do_kdtree(self.waypoints, curr, k =1)
+        goal_id = near_id + self.look_ahead_index
+        if (goal_id >= self.waypoints.shape[0]-1):
+            goal_id = goal_id - self.waypoints.shape[0]
 
-    # Extract the position and orientation data from the Odometry message
-    pose_cov_msg.pose.pose.position.x = msg.pose.pose.position.x*100-30
-    pose_cov_msg.pose.pose.position.y = msg.pose.pose.position.y*100+48
-    pose_cov_msg.pose.pose.position.z = 0.0
-    pose_cov_msg.pose.pose.orientation = msg.pose.pose.orientation
 
-    # Set the covariance matrix from the Odometry message
-    pose_cov_msg.pose.covariance = msg.pose.covariance
 
-    # Publish the PoseWithCovarianceStamped message
-    pose_cov_publisher.publish(pose_cov_msg)
-
+        
+        return goal_pose
     
 
+
+    def odom_callback(self,msg):
+        # Create a PoseStamped message
+        pose_cov_msg = PoseWithCovarianceStamped()
+        pose_cov_msg.header.stamp = msg.header.stamp
+        pose_cov_msg.header.frame_id = "world"
+
+        pose_cov_msg.pose.pose.position.x = msg.pose.pose.position.x*100-30
+        pose_cov_msg.pose.pose.position.y = msg.pose.pose.position.y*100+48
+        pose_cov_msg.pose.pose.position.z = 0.0
+        pose_cov_msg.pose.pose.orientation = msg.pose.pose.orientation
+
+
+        pose_cov_msg.pose.covariance = msg.pose.covariance
+
+        self.pose_cov_publisher.publish(pose_cov_msg)
+        self.current_pose = np.asarray([pose_cov_msg.pose.pose.position.x, pose_cov_msg.pose.pose.position.y]).reshape(1,-1)
+        self.goal_pose_val = get_goal_for_pose(self.current_pose)
+
+    def main(self):
+        rospy.spin()
+
 if __name__ == '__main__':
-    rospy.init_node('publish_curr_pose_and_goal_pose')
+    get_goal = GetGoal()
+    get_goal.main()
 
-    # Subscriber for nav_msgs/Odometry messages
-    rospy.Subscriber('/car2/fused', Odometry, odom_callback)  # Replace 'your_odom_topic' with the actual topic name
-
-    # Publisher for geometry_msgs/PoseStamped messages
-    pose_cov_publisher = rospy.Publisher('/car2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)  # Replace 'pose_stamped_topic' with the desired topic name
-
-    rospy.spin()

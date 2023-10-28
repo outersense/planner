@@ -139,41 +139,41 @@ void HybridAStarFlow::Run() {
             PublishVehiclePath(path, 30.0, 20.0, 20u);
             PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
 
-            nav_msgs::Path path_ros;
-            geometry_msgs::PoseStamped pose_stamped;
+            // nav_msgs::Path path_ros;
+            // geometry_msgs::PoseStamped pose_stamped;
 
-            for (const auto &pose: path) {
-                pose_stamped.header.frame_id = "world";
-                pose_stamped.pose.position.x = pose.x();
-                pose_stamped.pose.position.y = pose.y();
-                pose_stamped.pose.position.z = 0.0;
+            // for (const auto &pose: path) {
+            //     pose_stamped.header.frame_id = "world";
+            //     pose_stamped.pose.position.x = pose.x();
+            //     pose_stamped.pose.position.y = pose.y();
+            //     pose_stamped.pose.position.z = 0.0;
 
-                pose_stamped.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.z());
+            //     pose_stamped.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.z());
 
-                path_ros.poses.emplace_back(pose_stamped);
-            }
+            //     path_ros.poses.emplace_back(pose_stamped);
+            // }
 
-            path_ros.header.frame_id = "world";
-            path_ros.header.stamp = ros::Time::now();
-            static tf::TransformBroadcaster transform_broadcaster;
-            for (const auto &pose: path_ros.poses) {
-                tf::Transform transform;
-                transform.setOrigin(tf::Vector3(pose.pose.position.x, pose.pose.position.y, 0.0));
+            // path_ros.header.frame_id = "world";
+            // path_ros.header.stamp = ros::Time::now();
+            // static tf::TransformBroadcaster transform_broadcaster;
+            // for (const auto &pose: path_ros.poses) {
+            //     tf::Transform transform;
+            //     transform.setOrigin(tf::Vector3(pose.pose.position.x, pose.pose.position.y, 0.0));
 
-                tf::Quaternion q;
-                q.setX(pose.pose.orientation.x);
-                q.setY(pose.pose.orientation.y);
-                q.setZ(pose.pose.orientation.z);
-                q.setW(pose.pose.orientation.w);
-                transform.setRotation(q);
+            //     tf::Quaternion q;
+            //     q.setX(pose.pose.orientation.x);
+            //     q.setY(pose.pose.orientation.y);
+            //     q.setZ(pose.pose.orientation.z);
+            //     q.setW(pose.pose.orientation.w);
+            //     transform.setRotation(q);
 
-                transform_broadcaster.sendTransform(tf::StampedTransform(transform,
-                                                                         ros::Time::now(), "world",
-                                                                         "ground_link")
-                );
+            //     transform_broadcaster.sendTransform(tf::StampedTransform(transform,
+            //                                                              ros::Time::now(), "world",
+            //                                                              "ground_link")
+            //     );
 
-                ros::Duration(0.05).sleep();
-            }
+            //     ros::Duration(0.05).sleep();
+            // }
         }
 
 
@@ -226,7 +226,7 @@ void HybridAStarFlow::PublishPath(const VectorVec3d &path) {
 }
 
 void HybridAStarFlow::PublishVehiclePath(const VectorVec3d &path, double width,
-                                         double length, unsigned int vehicle_interval = 5u) {
+                                         double length, unsigned int vehicle_interval = 25u) {
     visualization_msgs::MarkerArray vehicle_array;
 
     for (unsigned int i = 0; i < path.size(); i += vehicle_interval) {
