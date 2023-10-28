@@ -66,7 +66,8 @@ HybridAStar::~HybridAStar() {
 void HybridAStar::Init(double x_lower, double x_upper, double y_lower, double y_upper,
                        double state_grid_resolution, double map_grid_resolution) {
     // SetVehicleShape(4.7, 2.0, 1.3);
-    SetVehicleShape(3.0, 2.0, 1.3);
+    // SetVehicleShape(3.0, 2.0, 1.3);
+    SetVehicleShape(30, 20, 13);
     // SetVehicleShape(0.30, 0.20, 0.13);
     // SetVehicleShape(9.0, 6.0, 3.9);
 

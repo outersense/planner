@@ -82,26 +82,26 @@ Visualization Manager:
           Value: true
         Value: false
       Enabled: true
-      Head Length: 1
-      Head Radius: 1
+      Head Length: 10
+      Head Radius: 10
       Name: Start Pose
-      Shaft Length: 4
-      Shaft Radius: 0.5
+      Shaft Length: 40
+      Shaft Radius: 05.0
       Shape: Arrow
       Topic: /initialpose
       Unreliable: false
       Value: true
-    - Alpha: 0.6000000238418579
-      Axes Length: 1
-      Axes Radius: 0.10000000149011612
+    - Alpha: 06.000000238418579
+      Axes Length: 10
+      Axes Radius: 01.0000000149011612
       Class: rviz/Pose
       Color: 0; 0; 0
       Enabled: true
-      Head Length: 1
-      Head Radius: 1
+      Head Length: 10
+      Head Radius: 10
       Name: Goal Pose
-      Shaft Length: 4
-      Shaft Radius: 0.5
+      Shaft Length: 40
+      Shaft Radius: 05.0
       Shape: Arrow
       Topic: /move_base_simple/goal
       Unreliable: false
@@ -111,11 +111,11 @@ Visualization Manager:
       Class: rviz/Path
       Color: 25; 255; 0
       Enabled: true
-      Head Diameter: 0.30000001192092896
-      Head Length: 0.20000000298023224
-      Length: 0.30000001192092896
+      Head Diameter: 03.0000001192092896
+      Head Length: 02.0000000298023224
+      Length: 03.0000001192092896
       Line Style: Billboards
-      Line Width: 0.30000001192092896
+      Line Width: 03.0000001192092896
       Name: Path
       Offset:
         X: 0
@@ -123,9 +123,9 @@ Visualization Manager:
         Z: 0
       Pose Color: 255; 85; 255
       Pose Style: None
-      Radius: 0.029999999329447746
-      Shaft Diameter: 0.10000000149011612
-      Shaft Length: 0.10000000149011612
+      Radius: 00.29999999329447746
+      Shaft Diameter: 01.0000000149011612
+      Shaft Length: 01.0000000149011612
       Topic: /run_hybrid_astar/searched_path
       Unreliable: false
       Value: true
@@ -134,11 +134,11 @@ Visualization Manager:
       Class: rviz/Path
       Color: 255; 0; 0
       Enabled: false
-      Head Diameter: 0.30000001192092896
-      Head Length: 0.20000000298023224
-      Length: 0.30000001192092896
+      Head Diameter: 03.0000001192092896
+      Head Length: 02.0000000298023224
+      Length: 03.0000001192092896
       Line Style: Billboards
-      Line Width: 0.10000000149011612
+      Line Width: 01.0000000149011612
       Name: Optimized Path
       Offset:
         X: 0
@@ -146,9 +146,9 @@ Visualization Manager:
         Z: 0
       Pose Color: 255; 85; 255
       Pose Style: None
-      Radius: 0.029999999329447746
-      Shaft Diameter: 0.10000000149011612
-      Shaft Length: 0.10000000149011612
+      Radius: 00.29999999329447746
+      Shaft Diameter: 01.0000000149011612
+      Shaft Length: 01.0000000149011612
       Topic: /run_hybrid_astar/searched_path
       Unreliable: false
       Value: false

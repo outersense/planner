@@ -65,7 +65,8 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // std::cout << "this is the map pointer" << std::endl;
     // std::cout << *costmap_sub_ptr_<< std::endl;
     // costmap_sub_ptr_->PrintCostMapData();
-    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
+    // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
+    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car2/planner_curr_pos", 1);
     goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
@@ -134,7 +135,8 @@ void HybridAStarFlow::Run() {
         if (kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state)) {
             auto path = kinodynamic_astar_searcher_ptr_->GetPath();
             PublishPath(path);
-            PublishVehiclePath(path, 4.0, 2.0, 5u);
+            // PublishVehiclePath(path, 4.0, 2.0, 5u);
+            PublishVehiclePath(path, 30.0, 20.0, 20u);
             PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
 
             nav_msgs::Path path_ros;

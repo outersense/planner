@@ -1,7 +1,8 @@
 # image: figure8_track2.png
-image: figure8_track.png
-# resolution: 1.0
+# image: figure8_track.png
+image: figure8_track4.png
 resolution: 1.0
+# resolution: 0.1
 origin: [ 0.0, 0.0, 0.0 ]
 # occupied_thresh: 0.1
 # free_thresh: 0.05
