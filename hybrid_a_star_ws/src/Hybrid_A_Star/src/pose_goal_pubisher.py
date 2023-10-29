@@ -103,33 +103,34 @@ def do_kdtree(array_source, array_dest, k =1):
 class GetGoal:
     def __init__(self):
         self.look_ahead_index = 5
+        self.error_buffer = 5
         waypoints_name = "waypoints.npy"
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
         rospy.init_node('publish_curr_pose_and_goal_pose')
         rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
         self.pose_cov_publisher = rospy.Publisher('/car2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         self.goal_publisher = rospy.Publisher('/car2/planner_goal_pos', PoseStamped, queue_size=10)
-        # self.goal_id_dq = deque(maxlen=1)
+        self.goal_id_dq = deque(maxlen=1)
         
         
         
     def get_goal_for_pose(self, curr):
         near_id, _ = do_kdtree(self.waypoints[:,:-1], curr, k =1)
         goal_id = near_id + self.look_ahead_index
-        # if (len(self.goal_id_dq) ==0):
-        #     self.goal_id_dq.append(goal_id)
+        if (len(self.goal_id_dq) ==0):
+            self.goal_id_dq.append(goal_id)
             
-        # if(goal_id <= self.waypoints.shape[0]-1 and abs(goal_id-self.goal_id_dq[0])>3):
-        #     print("triggeredddd")
-        #     goal_id = [self.goal_id_dq[0]]
+        if(goal_id <= self.waypoints.shape[0]-1 and abs(goal_id-self.goal_id_dq[0])>self.error_buffer):
+            # print("triggeredddd")
+            goal_id = np.asarray([self.goal_id_dq[0]])[0]
 
 
         if (goal_id > self.waypoints.shape[0]-1):
             goal_id = goal_id - self.waypoints.shape[0]
-        # self.goal_id_dq.append(goal_id)
+        self.goal_id_dq.append(goal_id)
         goal_pose = self.waypoints[goal_id]
 
-        print(near_id, "                ", goal_id)
+        print(near_id, "                ", goal_id, type(goal_id))
         
         return goal_pose
     

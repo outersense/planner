@@ -530,6 +530,7 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     StateNode::Ptr neighbor_node_ptr;
 
     int count = 0;
+    auto start_time = std::chrono::high_resolution_clock::now();
     while (!openset_.empty()) {
         current_node_ptr = openset_.begin()->second;
         current_node_ptr->node_status_ = StateNode::IN_CLOSESET;
@@ -609,8 +610,17 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         }
 
         count++;
+        // std::cout<<"inside search "<< count<< std::endl;
+
         if (count > 50000) {
             ROS_WARN("Exceeded the number of iterations, the search failed");
+            return false;
+        }
+        // Check the elapsed time
+        auto current_time = std::chrono::high_resolution_clock::now();
+        auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time);
+        if (time_span.count() > 50) {
+            std::cout << "Time limit exceeded: " << time_span.count() << " ms" << std::endl;
             return false;
         }
     }
@@ -689,10 +699,10 @@ void HybridAStar::ReleaseMemory() {
 __attribute__((unused)) double HybridAStar::GetPathLength() const {
     return path_length_;
 }
-
+int count_dddd =0;
 VectorVec3d HybridAStar::GetPath() const {
     VectorVec3d path;
-
+    std::cout<< "Inside get path" <<std::endl;
     std::vector<StateNode::Ptr> temp_nodes;
 
     StateNode::Ptr state_grid_node_ptr = terminal_node_ptr_;
@@ -706,7 +716,7 @@ VectorVec3d HybridAStar::GetPath() const {
         path.insert(path.end(), node->intermediate_states_.begin(),
                     node->intermediate_states_.end());
     }
-
+    std::cout<< "ended path search"<< std::endl;
     return path;
 }
 

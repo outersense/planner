@@ -186,10 +186,12 @@ public:
             // double y_og = obstacle_data->data[i + 2];
             int x = static_cast<int>(obstacle_data->data[i + 1]*100)-30;
             int y = static_cast<int>(obstacle_data->data[i + 2]*100)+48;
-            int vel = static_cast<int>(obstacle_data->data[i + 4]);
+            double vel = std::abs(obstacle_data->data[i + 4]);
+            std::cout<< "velocity is                             "<<vel << "                           "<< i << std::endl;
             // std::cout<<" The Scaled values are: "<< x<< " "<< y<< " "<< std::endl;
-            if (vel == 0 && x >= 0 && x < map_width && y >= 0 && y < map_height)
+            if (vel <= 0.05 && x >= 0 && x < map_width && y >= 0 && y < map_height)
             {
+                std::cout<< "I have an obstical so something has 0 vel" << std::endl;
                 int map_index = x + y * map_width;
                 
                 if (static_cast<unsigned int>(map_index) < map_size) {

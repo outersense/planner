@@ -54,6 +54,8 @@ private:
 
     void PublishPath(const VectorVec3d &path);
 
+    void PublishPathOutersense(const VectorVec3d &path);
+
     void PublishSearchedTree(const VectorVec4d &searched_tree);
 
     void PublishVehiclePath(const VectorVec3d &path, double width,
@@ -66,6 +68,7 @@ private:
     std::shared_ptr<GoalPoseSubscriber2D> goal_pose_sub_ptr_;
 
     ros::Publisher path_pub_;
+    ros::Publisher path_pub_os;
     ros::Publisher searched_tree_pub_;
     ros::Publisher vehicle_path_pub_;
 

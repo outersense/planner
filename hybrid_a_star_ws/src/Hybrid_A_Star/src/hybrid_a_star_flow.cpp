@@ -70,12 +70,13 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car2/planner_goal_pos", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
+    path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
 
     has_map_ = false;
 }
-
+// int count_ddddd =0;
 void HybridAStarFlow::Run() {
     kinodynamic_astar_searcher_ptr_->Reset();
     ReadData();
@@ -115,8 +116,9 @@ void HybridAStarFlow::Run() {
         has_map_ = true;
     }
     costmap_deque_.clear();
-
+    
     while (HasStartPose() && HasGoalPose()) {
+        // std::cout<<"#################"<< count_ddddd <<std::endl;
         InitPoseData();
 
         double start_yaw = tf::getYaw(current_init_pose_ptr_->pose.pose.orientation);
@@ -136,6 +138,7 @@ void HybridAStarFlow::Run() {
         if (kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state)) {
             auto path = kinodynamic_astar_searcher_ptr_->GetPath();
             PublishPath(path);
+            PublishPathOutersense(path);
             // PublishVehiclePath(path, 4.0, 2.0, 5u);
             PublishVehiclePath(path, 30.0, 20.0, 20u);
             PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
@@ -181,6 +184,9 @@ void HybridAStarFlow::Run() {
         // debug
 //        std::cout << "visited nodes: " << kinodynamic_astar_searcher_ptr_->GetVisitedNodesNumber() << std::endl;
         kinodynamic_astar_searcher_ptr_->Reset();
+        // std::cout<< "############## end "<<count_ddddd <<std::endl;
+        // count_ddddd = count_ddddd+1;
+
     }
 }
 
@@ -199,10 +205,12 @@ void HybridAStarFlow::InitPoseData() {
 }
 
 bool HybridAStarFlow::HasGoalPose() {
+    // std::cout<< "goal pose " << init_pose_deque_.empty() << std::endl;
     return !goal_pose_deque_.empty();
 }
 
 bool HybridAStarFlow::HasStartPose() {
+    // std::cout<< "init pose " << init_pose_deque_.empty() << std::endl;
     return !init_pose_deque_.empty();
 }
 
@@ -224,6 +232,25 @@ void HybridAStarFlow::PublishPath(const VectorVec3d &path) {
     nav_path.header.stamp = timestamp_;
 
     path_pub_.publish(nav_path);
+}
+void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
+    nav_msgs::Path nav_path;
+
+    geometry_msgs::PoseStamped pose_stamped;
+    for (const auto &pose: path) {
+        pose_stamped.header.frame_id = "world";
+        pose_stamped.pose.position.x = (pose.x()+30)/100;
+        pose_stamped.pose.position.y = (pose.y()-48)/100;
+        pose_stamped.pose.position.z = 0.0;
+        pose_stamped.pose.orientation = tf::createQuaternionMsgFromYaw(pose.z());
+
+        nav_path.poses.emplace_back(pose_stamped);
+    }
+
+    nav_path.header.frame_id = "world";
+    nav_path.header.stamp = timestamp_;
+
+    path_pub_os.publish(nav_path);
 }
 
 void HybridAStarFlow::PublishVehiclePath(const VectorVec3d &path, double width,

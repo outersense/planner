@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 
     HybridAStarFlow kinodynamic_astar_flow(node_handle);
 
-    ros::Rate rate(10);
+    ros::Rate rate(100);
 
     while (ros::ok()) {
         kinodynamic_astar_flow.Run();
