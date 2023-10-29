@@ -103,7 +103,7 @@ Visualization Manager:
       Shaft Length: 40
       Shaft Radius: 05.0
       Shape: Arrow
-      Topic: /move_base_simple/goal
+      Topic: /car2/planner_goal_pos
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -223,7 +223,7 @@ Visualization Manager:
       X std deviation: 0.5
       Y std deviation: 0.5
     - Class: rviz/SetGoal
-      Topic: /move_base_simple/goal
+      Topic: /car2/planner_goal_pos
     - Class: rviz/PublishPoint
       Single click: true
       Topic: /clicked_point

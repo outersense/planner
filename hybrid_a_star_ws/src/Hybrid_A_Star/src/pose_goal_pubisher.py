@@ -84,6 +84,8 @@ import scipy.spatial as sp
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from tf.transformations import quaternion_from_euler
+from collections import deque
 
 def do_kdtree(array_source, array_dest, k =1):
     '''nearest neighbor kdtree, fast because creates a binary octatree
@@ -100,24 +102,34 @@ def do_kdtree(array_source, array_dest, k =1):
 
 class GetGoal:
     def __init__(self):
-        self.look_ahead_index = 10
+        self.look_ahead_index = 5
         waypoints_name = "waypoints.npy"
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
         rospy.init_node('publish_curr_pose_and_goal_pose')
         rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
         self.pose_cov_publisher = rospy.Publisher('/car2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         self.goal_publisher = rospy.Publisher('/car2/planner_goal_pos', PoseStamped, queue_size=10)
+        # self.goal_id_dq = deque(maxlen=1)
         
         
         
     def get_goal_for_pose(self, curr):
-        near_id, _ = do_kdtree(self.waypoints, curr, k =1)
+        near_id, _ = do_kdtree(self.waypoints[:,:-1], curr, k =1)
         goal_id = near_id + self.look_ahead_index
-        if (goal_id >= self.waypoints.shape[0]-1):
+        # if (len(self.goal_id_dq) ==0):
+        #     self.goal_id_dq.append(goal_id)
+            
+        # if(goal_id <= self.waypoints.shape[0]-1 and abs(goal_id-self.goal_id_dq[0])>3):
+        #     print("triggeredddd")
+        #     goal_id = [self.goal_id_dq[0]]
+
+
+        if (goal_id > self.waypoints.shape[0]-1):
             goal_id = goal_id - self.waypoints.shape[0]
+        # self.goal_id_dq.append(goal_id)
+        goal_pose = self.waypoints[goal_id]
 
-
-
+        print(near_id, "                ", goal_id)
         
         return goal_pose
     
@@ -138,8 +150,31 @@ class GetGoal:
         pose_cov_msg.pose.covariance = msg.pose.covariance
 
         self.pose_cov_publisher.publish(pose_cov_msg)
-        self.current_pose = np.asarray([pose_cov_msg.pose.pose.position.x, pose_cov_msg.pose.pose.position.y]).reshape(1,-1)
-        self.goal_pose_val = get_goal_for_pose(self.current_pose)
+        self.current_pose = np.asarray([msg.pose.pose.position.x, msg.pose.pose.position.y]).reshape(1,-1)
+        self.goal_pose_val = self.get_goal_for_pose(self.current_pose)
+        # print(self.current_pose,    "                  ",        self.goal_pose_val)
+        # print(self.goal_pose_val.shape)
+
+        pose_stamped_msg = PoseStamped()
+        pose_stamped_msg.header.stamp = msg.header.stamp
+        pose_stamped_msg.header.frame_id = "world"
+
+        pose_stamped_msg.pose.position.x = self.goal_pose_val[0,0]*100-30
+        pose_stamped_msg.pose.position.y = self.goal_pose_val[0,1]*100+48
+        pose_stamped_msg.pose.position.z = 0.0
+
+        # Convert theta to a quaternion
+        x, y, z, w = quaternion_from_euler(0, 0, self.goal_pose_val[0,2])  # Convert theta to quaternion
+
+        # Set the orientation of PoseStamped message
+        pose_stamped_msg.pose.orientation.x = x
+        pose_stamped_msg.pose.orientation.y = y
+        pose_stamped_msg.pose.orientation.z = z
+        pose_stamped_msg.pose.orientation.w = w
+
+        self.goal_publisher.publish(pose_stamped_msg)
+
+
 
     def main(self):
         rospy.spin()
