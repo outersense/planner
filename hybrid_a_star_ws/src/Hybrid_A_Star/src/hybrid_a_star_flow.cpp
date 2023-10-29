@@ -139,6 +139,7 @@ void HybridAStarFlow::Run() {
     costmap_deque_.clear();
 
     while (HasStartPose() && HasGoalPose()) {
+    // while (true) {
         InitPoseData();
 
         double start_yaw = tf::getYaw(current_init_pose_ptr_->pose.pose.orientation);
