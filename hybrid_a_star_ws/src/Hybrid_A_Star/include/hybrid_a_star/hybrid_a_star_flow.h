@@ -37,6 +37,20 @@
 
 class HybridAStarFlow {
 public:
+    // InitPoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name,
+    //                      size_t buff_size);
+
+    void ParseData(std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> &pose_data_buff);
+
+private:
+    void MessageCallBack(const geometry_msgs::PoseWithCovarianceStampedPtr &init_pose_ptr);
+
+private:
+    ros::Subscriber subscriber_;
+    std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> init_poses_;
+
+    std::mutex buff_mutex_;
+public:
     HybridAStarFlow() = default;
 
     explicit HybridAStarFlow(ros::NodeHandle &nh);

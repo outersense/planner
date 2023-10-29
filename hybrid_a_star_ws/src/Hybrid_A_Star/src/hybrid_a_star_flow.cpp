@@ -66,6 +66,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // std::cout << *costmap_sub_ptr_<< std::endl;
     // costmap_sub_ptr_->PrintCostMapData();
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
+    subscriber_ = nh.subscribe("/car2/planner_curr_pos", 1, &HybridAStarFlow::MessageCallBack, this);
     init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car2/planner_curr_pos", 1);
     goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car2/planner_goal_pos", 1);
 
@@ -75,9 +76,30 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 
     has_map_ = false;
 }
+// #################################################
+void HybridAStarFlow::MessageCallBack(
+        const geometry_msgs::PoseWithCovarianceStampedPtr &init_pose_ptr
+) {
+    buff_mutex_.lock();
+    init_poses_.emplace_back(init_pose_ptr);
+    buff_mutex_.unlock();
+    // kinodynamic_astar_searcher_ptr_->Reset();
+    Run();
+}
 
+void HybridAStarFlow::ParseData(
+        std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> &pose_data_buff
+) {
+    buff_mutex_.lock();
+    if (!init_poses_.empty()) {
+        pose_data_buff.insert(pose_data_buff.end(), init_poses_.begin(), init_poses_.end());
+        init_poses_.clear();
+    }
+    buff_mutex_.unlock();
+}
+// #################################################
 void HybridAStarFlow::Run() {
-    kinodynamic_astar_searcher_ptr_->Reset();
+    // kinodynamic_astar_searcher_ptr_->Reset();
     ReadData();
 
     if (!has_map_) {
@@ -186,7 +208,8 @@ void HybridAStarFlow::Run() {
 
 void HybridAStarFlow::ReadData() {
     costmap_sub_ptr_->ParseData(costmap_deque_);
-    init_pose_sub_ptr_->ParseData(init_pose_deque_);
+    ParseData(init_pose_deque_);
+    // init_pose_sub_ptr_->ParseData(init_pose_deque_);
     goal_pose_sub_ptr_->ParseData(goal_pose_deque_);
 }
 
