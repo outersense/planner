@@ -54,6 +54,8 @@ public:
 
     bool Search(const Vec3d &start_state, const Vec3d &goal_state);
 
+    VectorVec3d InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size);
+
     VectorVec4d GetSearchedTree();
 
     VectorVec3d GetPath() const;

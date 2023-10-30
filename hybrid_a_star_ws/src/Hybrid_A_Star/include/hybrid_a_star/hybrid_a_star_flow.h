@@ -56,6 +56,8 @@ private:
 
     void PublishPathOutersense(const VectorVec3d &path);
 
+    // VectorVec3d InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size);
+
     void PublishSearchedTree(const VectorVec4d &searched_tree);
 
     void PublishVehiclePath(const VectorVec3d &path, double width,

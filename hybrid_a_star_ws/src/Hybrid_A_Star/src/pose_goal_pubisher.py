@@ -103,13 +103,13 @@ def do_kdtree(array_source, array_dest, k =1):
 class GetGoal:
     def __init__(self):
         self.look_ahead_index = 5
-        self.error_buffer = 5
+        self.error_buffer = 10
         waypoints_name = "waypoints.npy"
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
         rospy.init_node('publish_curr_pose_and_goal_pose')
-        rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
-        self.pose_cov_publisher = rospy.Publisher('/car2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
-        self.goal_publisher = rospy.Publisher('/car2/planner_goal_pos', PoseStamped, queue_size=10)
+        rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
+        self.pose_cov_publisher = rospy.Publisher('/car1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        self.goal_publisher = rospy.Publisher('/car1/planner_goal_pos', PoseStamped, queue_size=10)
         self.goal_id_dq = deque(maxlen=1)
         
         

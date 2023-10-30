@@ -418,7 +418,81 @@ void HybridAStar::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
         }
     }
 }
+VectorVec3d HybridAStar::InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size){
+    VectorVec3d path;
+    std::cout<< "i am here"<< std::endl;
+    Vec3d diff = goal_state - start_state;
+    Vec3d temp_path;
+    double distance = diff.norm();
+    std::cout<< "            " << distance << std::endl;
+    // if (distance>0)
+    if (distance<1e-6){
+        path.push_back(start_state);
+    }
 
+    Vec3d direction = diff.normalized();
+    // if (distance >0){
+    //     direction = diff/distance;
+    //     std::cout<< "kya karu yaar"<< direction << std::endl<< "  "<< diff<< std::endl<< step_size/distance<<std::endl;
+    // }
+    // else{
+    //     direction = Vec3d(0,0,0);
+        
+    // for (j = 0; j < numofDOFs; j++){
+    //     if(distance < fabs(q_near[j] - qrand[j]))
+    //         distance = fabs(q_near[j] - qrand[j]);
+    // }
+
+
+
+    int numofsamples = (int)(distance/0.2);
+    for (int i = 0; i < numofsamples; i++){
+        for(int j = 0; j < 3; j++){
+            temp_path[j] = start_state[j] + ((double)(i)/(numofsamples-1))*(goal_state[j] - start_state[j]);
+            
+        }
+        path.push_back(temp_path);
+        // if(IsValidArmConfiguration(joint_angles, numofDOFs, map, x_size, y_size)) {
+		// 	std::vector<double> valid_angles(joint_angles, joint_angles + numofDOFs);
+		// 	double temp_dist = get_distance(q_near, valid_angles);
+		// 	if ( temp_dist< Eu_dist){
+		// 		if (int_dist< temp_dist){
+		// 			int_dist = temp_dist;
+		// 			q_new = valid_angles;
+		// 		}
+
+		// 	}
+        // }
+		// else{
+		// 	if(q_new.empty()){
+		// 		// std::cout<< "first step was only invalid"<< std::endl;
+		// 		q_new = q_near;
+		// 		break;
+		// 		}
+		// 	else{
+		// 		// std::cout<< "some step was invalid exiting the for loop"<< std::endl;
+		// 		break;
+		// 		}
+		// 	}
+    }    
+
+
+
+
+    // for (double t=0.0; t<=1.0; t+= distance/step_size){
+    //     Vec3d interpolated_state = start_state + t*direction;
+    //     path.push_back(interpolated_state);
+    //     // std::cout<< "                                                    "<<path.size() << std::endl;
+
+
+    // }
+
+    // path.push_back(goal_state);
+    // std::cout<<"jash debugging statement                  "<<std::endl;
+    
+    return path;
+
+}
 void HybridAStar::DynamicModel(const double &step_size, const double &phi,
                                double &x, double &y, double &theta) const {
     x = x + step_size * std::cos(theta);
@@ -498,6 +572,7 @@ double HybridAStar::ComputeG(const StateNode::Ptr &current_node_ptr,
 }
 
 bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
+    int timer_out_time = 5000;
     Timer search_used_time;
 
     double neighbor_time = 0.0, compute_h_time = 0.0, compute_g_time = 0.0;
@@ -518,6 +593,14 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     start_node_ptr->intermediate_states_.emplace_back(start_state);
     start_node_ptr->g_cost_ = 0.0;
     start_node_ptr->f_cost_ = ComputeH(start_node_ptr, goal_node_ptr);
+
+    bool time_condition_initial_pt = CheckCollision(start_node_ptr->state_.x(), start_node_ptr->state_.y(), start_node_ptr->state_.z());
+     if (!time_condition_initial_pt) {
+        // std::cout<< "DILLLLL DOLLLLLAAAAAa REEEEE DOLLLLAAAA DIL DOLA MAN DOLA DIL DOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"<< std::endl;
+        // timer_out_time = 1000;
+        auto path = InterpolatePath(start_state, goal_state, 1000.0);
+        return true;
+     }
 
     state_node_map_[start_grid_index.x()][start_grid_index.y()][start_grid_index.z()] = start_node_ptr;
     state_node_map_[goal_grid_index.x()][goal_grid_index.y()][goal_grid_index.z()] = goal_node_ptr;
@@ -548,12 +631,12 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                 }
                 path_length_ = path_length_ - segment_length_ + rs_length;
 
-                std::cout << "ComputeH use time(ms): " << compute_h_time << std::endl;
-                std::cout << "check collision use time(ms): " << check_collision_use_time << std::endl;
-                std::cout << "GetNeighborNodes use time(ms): " << neighbor_time << std::endl;
-                std::cout << "average time of check collision(ms): "
-                          << check_collision_use_time / num_check_collision
-                          << std::endl;
+                // std::cout << "ComputeH use time(ms): " << compute_h_time << std::endl;
+                // std::cout << "check collision use time(ms): " << check_collision_use_time << std::endl;
+                // std::cout << "GetNeighborNodes use time(ms): " << neighbor_time << std::endl;
+                // std::cout << "average time of check collision(ms): "
+                        //   << check_collision_use_time / num_check_collision
+                        //   << std::endl;
                 ROS_INFO("\033[1;32m --> Time in Hybrid A star is %f ms, path length: %f  \033[0m\n",
                          search_used_time.End(), path_length_);
 
@@ -619,11 +702,13 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         // Check the elapsed time
         auto current_time = std::chrono::high_resolution_clock::now();
         auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time);
-        if (time_span.count() > 50) {
+        std::cout << "Time is: " << time_span.count() << " ms" << "max kept is : "<< timer_out_time<< std::endl;
+        if (time_span.count() > timer_out_time) {
             std::cout << "Time limit exceeded: " << time_span.count() << " ms" << std::endl;
             return false;
         }
     }
+    std::cout<<"outside while"<< std::endl;
 
     return false;
 }
@@ -699,10 +784,10 @@ void HybridAStar::ReleaseMemory() {
 __attribute__((unused)) double HybridAStar::GetPathLength() const {
     return path_length_;
 }
-int count_dddd =0;
+// int count_dddd =0;
 VectorVec3d HybridAStar::GetPath() const {
     VectorVec3d path;
-    std::cout<< "Inside get path" <<std::endl;
+    // std::cout<< "Inside get path" <<std::endl;
     std::vector<StateNode::Ptr> temp_nodes;
 
     StateNode::Ptr state_grid_node_ptr = terminal_node_ptr_;
@@ -716,7 +801,7 @@ VectorVec3d HybridAStar::GetPath() const {
         path.insert(path.end(), node->intermediate_states_.begin(),
                     node->intermediate_states_.end());
     }
-    std::cout<< "ended path search"<< std::endl;
+    // std::cout<< "ended path search"<< std::endl;
     return path;
 }
 

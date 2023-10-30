@@ -66,11 +66,12 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // std::cout << *costmap_sub_ptr_<< std::endl;
     // costmap_sub_ptr_->PrintCostMapData();
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
-    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car2/planner_curr_pos", 1);
-    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car2/planner_goal_pos", 1);
+    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car1/planner_curr_pos", 1);
+    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car1/planner_goal_pos", 1);
+    // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
-    path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
+    path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
 
@@ -137,6 +138,7 @@ void HybridAStarFlow::Run() {
 
         if (kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state)) {
             auto path = kinodynamic_astar_searcher_ptr_->GetPath();
+            
             PublishPath(path);
             PublishPathOutersense(path);
             // PublishVehiclePath(path, 4.0, 2.0, 5u);
@@ -179,6 +181,15 @@ void HybridAStarFlow::Run() {
             //     ros::Duration(0.05).sleep();
             // }
         }
+        else{
+            // interpolate
+            std::cout<< "##############################did not find path#################################"<< std::endl;
+            // auto path = InterpolatePath(start_state, goal_state, 1000.0);
+            // std::cout<< "i am here now"<< std::endl;
+            // PublishPath(path);
+            // PublishPathOutersense(path);
+
+        }
 
 
         // debug
@@ -189,6 +200,107 @@ void HybridAStarFlow::Run() {
 
     }
 }
+
+// VectorVec3d HybridAStarFlow::InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size){
+//     VectorVec3d path;
+//     std::cout<< "i am here"<< std::endl;
+//     Vec3d diff = goal_state - start_state;
+//     double distance = std::sqrt(diff.x()*diff.x() + diff.y()*diff.y() +diff.z()*diff.z());
+//     Vec3d direction;
+//     if (distance >0){
+//         direction = diff/distance;
+//         std::cout<< "kya karu yaar"<< direction << std::endl<< "  "<< diff<< std::endl<< step_size/distance<<std::endl;
+//     }
+//     else{
+//         direction = Vec3d(0,0,0);
+        
+//     }
+//     for (double t=0.0; t<=1.0; t+= distance/step_size){
+//         Vec3d interpolated_state = start_state + t*direction;
+//         path.push_back(interpolated_state);
+//         std::cout<< "                                                    "<<path.size() << std::endl;
+//     }
+    
+//     return path;
+
+// }
+
+
+// VectorVec3d HybridAStarFlow::InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size){
+//     VectorVec3d path;
+//     std::cout<< "i am here"<< std::endl;
+//     Vec3d diff = goal_state - start_state;
+//     Vec3d temp_path;
+//     double distance = diff.norm();
+//     std::cout<< "            " << distance << std::endl;
+//     // if (distance>0)
+//     if (distance<1e-6){
+//         path.push_back(start_state);
+//     }
+
+//     Vec3d direction = diff.normalized();
+//     // if (distance >0){
+//     //     direction = diff/distance;
+//     //     std::cout<< "kya karu yaar"<< direction << std::endl<< "  "<< diff<< std::endl<< step_size/distance<<std::endl;
+//     // }
+//     // else{
+//     //     direction = Vec3d(0,0,0);
+        
+//     // for (j = 0; j < numofDOFs; j++){
+//     //     if(distance < fabs(q_near[j] - qrand[j]))
+//     //         distance = fabs(q_near[j] - qrand[j]);
+//     // }
+
+
+
+//     int numofsamples = (int)(distance/0.2);
+//     for (int i = 0; i < numofsamples; i++){
+//         for(int j = 0; j < 3; j++){
+//             temp_path[j] = start_state[j] + ((double)(i)/(numofsamples-1))*(goal_state[j] - start_state[j]);
+            
+//         }
+//         path.push_back(temp_path);
+//         // if(IsValidArmConfiguration(joint_angles, numofDOFs, map, x_size, y_size)) {
+// 		// 	std::vector<double> valid_angles(joint_angles, joint_angles + numofDOFs);
+// 		// 	double temp_dist = get_distance(q_near, valid_angles);
+// 		// 	if ( temp_dist< Eu_dist){
+// 		// 		if (int_dist< temp_dist){
+// 		// 			int_dist = temp_dist;
+// 		// 			q_new = valid_angles;
+// 		// 		}
+
+// 		// 	}
+//         // }
+// 		// else{
+// 		// 	if(q_new.empty()){
+// 		// 		// std::cout<< "first step was only invalid"<< std::endl;
+// 		// 		q_new = q_near;
+// 		// 		break;
+// 		// 		}
+// 		// 	else{
+// 		// 		// std::cout<< "some step was invalid exiting the for loop"<< std::endl;
+// 		// 		break;
+// 		// 		}
+// 		// 	}
+//     }    
+
+
+
+
+//     // for (double t=0.0; t<=1.0; t+= distance/step_size){
+//     //     Vec3d interpolated_state = start_state + t*direction;
+//     //     path.push_back(interpolated_state);
+//     //     // std::cout<< "                                                    "<<path.size() << std::endl;
+
+
+//     // }
+
+//     // path.push_back(goal_state);
+//     // std::cout<<"jash debugging statement                  "<<std::endl;
+    
+//     return path;
+
+// }
 
 void HybridAStarFlow::ReadData() {
     costmap_sub_ptr_->ParseData(costmap_deque_);

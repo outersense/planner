@@ -105,24 +105,54 @@ def get_rccar_pose(msg):
 #     return pos_yaw, location, pose_
 def calculate_perpendicular_points(waypoints):
     x, y, theta = waypoints[:, 0], waypoints[:, 1], waypoints[:, 2]
-
+    perpendicular_points_1 = np.zeros((waypoints.shape[0],2))
+    perpendicular_points_2 = np.zeros((waypoints.shape[0],2))
     # Calculate offsets for x and y based on the given theta
-    x_offset = 0.35 * np.cos(theta + np.pi / 2)
-    y_offset = 0.35 * np.sin(theta + np.pi / 2)
+    for i in range(waypoints.shape[0]):
+        x = waypoints[i,0]
+        y = waypoints[i,1]
+        theta = waypoints[i,2]
+    
+    
+        if (0<= theta + PI / 2< 1.57):
+            x_offset = 0.45 * np.cos(theta + PI / 2)
+            y_offset = 0.45 * np.sin(theta + PI / 2)
+        if (1.57<= theta + PI / 2< 3.14):
+            x_offset = 0.45 * np.cos(theta + PI / 2)
+            y_offset = 0.45 * np.sin(theta + PI / 2)
+        if (3.14<= theta + PI / 2< 4.71):
+            x_offset = 0.45 * np.cos(theta + PI / 2)
+            y_offset = 0.45 * np.sin(theta + PI / 2)
+        if (4.71<= theta + PI / 2< 6.28):
+            x_offset = 0.45 * np.cos(theta + PI / 2)
+            y_offset = 0.45 * np.sin(theta + PI / 2)
 
     # Calculate the coordinates for the points on one side of the original point
-    x1 = x + x_offset
-    y1 = y + y_offset
+    
+        perpendicular_points_1[i,0] = x + x_offset
+        perpendicular_points_1[i,1] = y + y_offset
+        # perpendicular_points_1[i,0] = 
+        # Calculate the coordinates for the points on the other side of the original point
+        perpendicular_points_2[i,0] = x - x_offset
+        perpendicular_points_2[i,1] = y - y_offset
+    pp1 = perpendicular_points_2[:12]
+    pp2 = perpendicular_points_1[12:30]
+    pp3 = perpendicular_points_2[30:]
 
-    # Calculate the coordinates for the points on the other side of the original point
-    x2 = x - x_offset
-    y2 = y - y_offset
+    pp2_ = np.vstack((pp1,pp2,pp3))
+    pp1 = perpendicular_points_1[:12]
+    pp2 = perpendicular_points_2[12:30]
+    pp3 = perpendicular_points_1[30:]
+
+    pp1_ = np.vstack((pp1,pp2,pp3))
+
 
     # Stack the x and y coordinates into two separate arrays
-    perpendicular_points_1 = np.column_stack((x1, y1))
-    perpendicular_points_2 = np.column_stack((x2, y2))
+    # perpendicular_points_1 = np.column_stack((x1, y1))
+    # perpendicular_points_2 = np.column_stack((x2, y2))
 
-    return perpendicular_points_1, perpendicular_points_2
+    return pp1_, pp2_
+    # return perpendicular_points_1, perpendicular_points_2
 
 def create_road_image(pp1, pp2):
     # Find the minimum and maximum coordinates from both pp1 and pp2
@@ -173,7 +203,7 @@ def create_road_image(pp1, pp2):
     #                               [238-25+20, 129+15+8],
     #                               [321   +20, 168+8 +8]])
     
-    cv2.fillPoly(road_image, [points_shifted.astype(int)], (255, 255, 255))
+    # cv2.fillPoly(road_image, [points_shifted.astype(int)], (255, 255, 255))
 
     return road_image
 
@@ -293,11 +323,11 @@ i_sin = np.sin(waypoints_new[:,-1])
 # plt.show()
 # plt.close()
 
-pp1, pp2 = calculate_perpendicular_points(waypoints_new)
+ln1, ln2 = calculate_perpendicular_points(waypoints_new)
 # print("############################################")
-# print(pp1)
-# print(pp2)
-# plt.plot(waypoints_new[:,0], waypoints_new[:,1], 'r+', label="Lidar after extrinsics")
+print(ln1)
+print(ln2)
+plt.plot(waypoints_new[:,0], waypoints_new[:,1], 'r+', label="Lidar after extrinsics")
 
 
 # road_image = create_road_image(pp1*100, pp2*100)
@@ -418,75 +448,75 @@ pp1, pp2 = calculate_perpendicular_points(waypoints_new)
 #  [ 6.50510148e+00 -4.72014347e-01]
 #  [ 5.76223313e+00 -2.90670489e-01]]
 
-ln1 = np.asarray([[5.34981401, 0.51280295],
-                  [4.9507869 , 0.69025858],
-                  [4.49694171, 0.78400936],
-                  [4.0104216 , 0.92089673],
-                  [3.59501154, 1.08610141],
-                  [3.20605143, 1.25257209],
-                  [2.92721689, 1.41473154],
-                  [2.33021381, 1.69964728],
-                  [1.85290623, 1.87026438],
-                  [1.25327053, 1.96819463],
-                  [0.68714259, 1.77867528],
-                  [0.5552168 , 1.60162416],
-                  [ 3.03822394e-01,  7.81912736e-01],
-                  [ 4.79092159e-01, -4.61011789e-02],
-                  [ 7.56798744e-01, -2.64006824e-01],
-                  [ 1.11954021e+00, -4.81994190e-01],
-                  [ 1.24346505e+00, -4.59320685e-01],
-                  [ 2.22123811e+00, -8.58127620e-02],
-                  [ 2.70251817e+00,  1.87740017e-01],
-                  [ 2.99920074e+00,  2.60350784e-01],
-                  [ 3.63996999e+00,  4.86133561e-01],
-                  [ 4.15067678e+00,  6.45041069e-01],
-                  [ 4.54381003e+00,  7.66309413e-01],
-                  [ 4.98455544e+00,  8.90630453e-01],
-                  [ 5.51662398e+00,  1.04549648e+00],
-                  [ 6.14463056e+00,  1.33763129e+00],
-                  [ 5.93600396e+00,  1.25177090e+00],
-                  [ 6.46780039e+00,  1.36219849e+00],
-                  [ 6.72285246e+00,  1.33141910e+00],
-                  [ 6.87966290e+00,  1.23177581e+00],
-                  [6.90460406, 0.88822463],
-                  [6.7887984 , 0.47127271],
-                  [6.67106886, 0.20802597],
-                  [5.91767849, 0.39185185]])
+# ln1 = np.asarray([[5.34981401, 0.51280295],
+#                   [4.9507869 , 0.69025858],
+#                   [4.49694171, 0.78400936],
+#                   [4.0104216 , 0.92089673],
+#                   [3.59501154, 1.08610141],
+#                   [3.20605143, 1.25257209],
+#                   [2.92721689, 1.41473154],
+#                   [2.33021381, 1.69964728],
+#                   [1.85290623, 1.87026438],
+#                   [1.25327053, 1.96819463],
+#                   [0.68714259, 1.77867528],
+#                   [0.5552168 , 1.60162416],
+#                   [ 3.03822394e-01,  7.81912736e-01],
+#                   [ 4.79092159e-01, -4.61011789e-02],
+#                   [ 7.56798744e-01, -2.64006824e-01],
+#                   [ 1.11954021e+00, -4.81994190e-01],
+#                   [ 1.24346505e+00, -4.59320685e-01],
+#                   [ 2.22123811e+00, -8.58127620e-02],
+#                   [ 2.70251817e+00,  1.87740017e-01],
+#                   [ 2.99920074e+00,  2.60350784e-01],
+#                   [ 3.63996999e+00,  4.86133561e-01],
+#                   [ 4.15067678e+00,  6.45041069e-01],
+#                   [ 4.54381003e+00,  7.66309413e-01],
+#                   [ 4.98455544e+00,  8.90630453e-01],
+#                   [ 5.51662398e+00,  1.04549648e+00],
+#                   [ 6.14463056e+00,  1.33763129e+00],
+#                   [ 5.93600396e+00,  1.25177090e+00],
+#                   [ 6.46780039e+00,  1.36219849e+00],
+#                   [ 6.72285246e+00,  1.33141910e+00],
+#                   [ 6.87966290e+00,  1.23177581e+00],
+#                   [6.90460406, 0.88822463],
+#                   [6.7887984 , 0.47127271],
+#                   [6.67106886, 0.20802597],
+#                   [5.91767849, 0.39185185]])
 
-ln2 = np.asarray([[ 5.05137579e+00, -1.20391035e-01],
-                  [ 4.80783146e+00,  5.01136301e-03],
-                  [ 4.30496965e+00,  1.10847621e-01],
-                  [ 3.75149170e+00,  2.70546590e-01],
-                  [ 3.31575554e+00,  4.44216614e-01],
-                  [ 2.85190955e+00,  6.48764567e-01],
-                  [ 2.62405597e+00,  7.83785062e-01],
-                  [ 2.09148809e+00,  1.04161230e+00],
-                  [ 1.69259333e+00,  1.18886892e+00],
-                  [ 1.43584071e+00,  1.29242239e+00],
-                  [ 1.14707341e+00,  1.25097874e+00],
-                  [ 1.21724462e+00,  1.37420568e+00],
-                  [1.00181009, 0.83495218],
-                  [0.91477748, 0.50178412],
-                  [1.2522471 , 0.23049386],
-                  [1.11954021, 0.21800581],
-                  [0.99561537, 0.19533231],
-                  [1.88850691, 0.53005244],
-                  [2.54037791, 0.86870296],
-                  [2.76679666, 0.92064492],
-                  [3.43199999, 1.15452602],
-                  [3.9445085 , 1.31399147],
-                  [4.35379395, 1.44002589],
-                  [4.78896216, 1.56274895],
-                  [5.31261206, 1.71510766],
-                  [5.53528106, 1.68215007],
-                  [5.84440014, 1.94575126],
-                  [6.70836995, 2.01956163],
-                  [7.28758742, 1.74503054],
-                  [7.5796629 , 1.23177595],
-                  [ 7.55472174e+00,  6.28711646e-01],
-                  [ 7.22164148e+00, -7.88607909e-02],
-                  [ 6.50510148e+00, -4.72014347e-01],
-                  [ 5.76223313e+00, -2.90670489e-01]])
+# ln2 = np.asarray([[ 5.05137579e+00, -1.20391035e-01],
+#                   [ 4.80783146e+00,  5.01136301e-03],
+#                   [ 4.30496965e+00,  1.10847621e-01],
+#                   [ 3.75149170e+00,  2.70546590e-01],
+#                   [ 3.31575554e+00,  4.44216614e-01],
+#                   [ 2.85190955e+00,  6.48764567e-01],
+#                   [ 2.62405597e+00,  7.83785062e-01],
+#                   [ 2.09148809e+00,  1.04161230e+00],
+#                   [ 1.69259333e+00,  1.18886892e+00],
+#                   [ 1.43584071e+00,  1.29242239e+00],
+#                   [ 1.14707341e+00,  1.25097874e+00],
+#                   [ 1.21724462e+00,  1.37420568e+00],
+#                   [1.00181009, 0.83495218],
+#                   [0.91477748, 0.50178412],
+#                   [1.2522471 , 0.23049386],
+#                   [1.11954021, 0.21800581],
+#                   [0.99561537, 0.19533231],
+#                   [1.88850691, 0.53005244],
+#                   [2.54037791, 0.86870296],
+#                   [2.76679666, 0.92064492],
+#                   [3.43199999, 1.15452602],
+#                   [3.9445085 , 1.31399147],
+#                   [4.35379395, 1.44002589],
+#                   [4.78896216, 1.56274895],
+#                   [5.31261206, 1.71510766],
+#                   [5.53528106, 1.68215007],
+#                   [5.84440014, 1.94575126],
+#                   [6.70836995, 2.01956163],
+#                   [7.28758742, 1.74503054],
+#                   [7.5796629 , 1.23177595],
+#                   [ 7.55472174e+00,  6.28711646e-01],
+#                   [ 7.22164148e+00, -7.88607909e-02],
+#                   [ 6.50510148e+00, -4.72014347e-01],
+#                   [ 5.76223313e+00, -2.90670489e-01]])
 
 plt.plot(ln1[:,0], ln1[:,1], 'b+', label="Lidar after extrinsics")
 plt.plot(ln2[:,0], ln2[:,1], 'g+', label="Lidar after extrinsics")
@@ -502,6 +532,6 @@ cv2.destroyAllWindows()
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 # cv2.imwrite("maps/figure8_track3.png", new_road_image)
-cv2.imwrite("maps/figure8_track4.png", road_image)
+cv2.imwrite("maps/figure8_track5.png", road_image)
 
 # 30.3822394 -48.199419 757.96629 201.956163

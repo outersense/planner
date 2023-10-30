@@ -184,21 +184,22 @@ public:
             // std::cout<<" The original values are: "<< obstacle_data->data[i + 1]<< " "<< obstacle_data->data[i + 2]<< " "<< std::endl;
             // double x_og = obstacle_data->data[i + 1];
             // double y_og = obstacle_data->data[i + 2];
+            int id = (obstacle_data->data[i]);
             int x = static_cast<int>(obstacle_data->data[i + 1]*100)-30;
             int y = static_cast<int>(obstacle_data->data[i + 2]*100)+48;
-            double vel = std::abs(obstacle_data->data[i + 4]);
-            std::cout<< "velocity is                             "<<vel << "                           "<< i << std::endl;
+            double vel = std::abs(obstacle_data->data[i + 3]);
+            // std::cout<< "velocity is                             "<<vel << "                           "<< i << std::endl;
             // std::cout<<" The Scaled values are: "<< x<< " "<< y<< " "<< std::endl;
-            if (vel <= 0.05 && x >= 0 && x < map_width && y >= 0 && y < map_height)
+            if (id < 1000 && vel <= 0.05 && x >= 0 && x < map_width && y >= 0 && y < map_height)
             {
-                std::cout<< "I have an obstical so something has 0 vel" << std::endl;
+                // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
                 int map_index = x + y * map_width;
                 
                 if (static_cast<unsigned int>(map_index) < map_size) {
                     current_map.data[map_index] = 100; 
                 }
 
-                for (int pix = 1; pix < 12; pix++){
+                for (int pix = 1; pix < 14; pix++){
                     // Update surrounding cells
                     for (int dx = -pix; dx <= pix; dx++) {
                         for (int dy = -pix; dy <= pix; dy++) {

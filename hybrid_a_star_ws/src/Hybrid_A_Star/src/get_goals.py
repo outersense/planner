@@ -155,19 +155,20 @@ x_points = gps_pose_array2[::5,0]
 y_points = gps_pose_array2[::5,1]
 yaw_points = yaw_array[::5]
 waypoints = np.stack((x_points,y_points, yaw_points)).T
+waypoints = waypoints[5:,:]
 
 np.save("waypoints.npy", waypoints)
 
-t_cos = np.cos(yaw_points)
-t_sin = np.sin(yaw_points)
+t_cos = np.cos(waypoints[:,2])
+t_sin = np.sin(waypoints[:,2])
 
 # print(x_points, y_points)
 print(waypoints, waypoints.shape)
 
 # print(gps_pose_array, gps_pose_array.shape)
 # plt.plot(x_points[-1], y_points[-1], 'r+', label="Lidar after extrinsics")
-plt.plot(x_points, y_points, 'b+', label="Lidar after extrinsics")
-plt.quiver(x_points, y_points, t_cos, t_sin, color='lightblue', width = 0.005, angles = 'uv' )
+plt.plot(waypoints[:,0], waypoints[:,1], 'b+', label="Lidar after extrinsics")
+plt.quiver(waypoints[:,0], waypoints[:,1], t_cos, t_sin, color='lightblue', width = 0.005, angles = 'uv' )
 plt.show()
 plt.close()
 
