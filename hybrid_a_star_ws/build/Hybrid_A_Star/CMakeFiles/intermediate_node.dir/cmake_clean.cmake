@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/intermediate_node"
-  "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/intermediate_node.pdb"
+  "/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/intermediate_node"
+  "/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/intermediate_node.pdb"
   "CMakeFiles/intermediate_node.dir/src/intermediate_node.cpp.o"
 )
 

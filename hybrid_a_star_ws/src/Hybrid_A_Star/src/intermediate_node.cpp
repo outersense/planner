@@ -199,7 +199,7 @@ public:
                     current_map.data[map_index] = 100; 
                 }
 
-                for (int pix = 1; pix < 14; pix++){
+                for (int pix = 1; pix < 13; pix++){
                     // Update surrounding cells
                     for (int dx = -pix; dx <= pix; dx++) {
                         for (int dy = -pix; dy <= pix; dy++) {

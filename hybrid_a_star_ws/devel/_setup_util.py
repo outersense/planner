@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
         if not args.local:
             # environment at generation time
-            CMAKE_PREFIX_PATH = r'/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel;/home/dhanesh/Masters/OuterSense/Planning/hybrid_a_star_ws/devel;/opt/ros/noetic'.split(';')
+            CMAKE_PREFIX_PATH = r'/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/devel;/opt/ros/noetic'.split(';')
         else:
             # don't consider any other prefix path than this one
             CMAKE_PREFIX_PATH = []

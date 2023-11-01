@@ -7,6 +7,6 @@
 # new environment variables
 
 # modified environment variables
-export LD_LIBRARY_PATH='/home/dhanesh/Masters/OuterSense/Planning/hybrid_a_star_ws/devel/lib:/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu'
-export PKG_CONFIG_PATH='/home/dhanesh/Masters/OuterSense/Planning/hybrid_a_star_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig:/opt/ros/noetic/lib/x86_64-linux-gnu/pkgconfig'
-export PWD='/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build'
+export LD_LIBRARY_PATH='/opt/ros/noetic/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/i386-linux-gnu:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'
+export PKG_CONFIG_PATH='/opt/ros/noetic/lib/pkgconfig'
+export PWD='/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/build'

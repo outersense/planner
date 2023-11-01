@@ -52,9 +52,11 @@ public:
     void Init(double x_lower, double x_upper, double y_lower, double y_upper,
               double state_grid_resolution, double map_grid_resolution = 0.1);
 
-    bool Search(const Vec3d &start_state, const Vec3d &goal_state);
+    int Search(const Vec3d &start_state, const Vec3d &goal_state);
 
-    VectorVec3d InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size);
+    // VectorVec3d InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size);
+
+    VectorVec3d InterpolateSpline(const Vec3d& start_state, const Vec3d& goal_state, double step_size,double car_radius);
 
     VectorVec4d GetSearchedTree();
 

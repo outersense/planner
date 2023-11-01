@@ -31,7 +31,7 @@
 #include "hybrid_a_star/trajectory_optimizer.h"
 
 #include <iostream>
-
+using Eigen::Vector3d;
 HybridAStar::HybridAStar(double steering_angle, int steering_angle_discrete_num, double segment_length,
                          int segment_length_discrete_num, double wheel_base, double steering_penalty,
                          double reversing_penalty, double steering_change_penalty, double shot_distance,
@@ -418,81 +418,124 @@ void HybridAStar::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
         }
     }
 }
-VectorVec3d HybridAStar::InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size){
+// VectorVec3d HybridAStar::InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size){
+//     VectorVec3d path;
+//     // std::cout<< "i am here"<< std::endl;
+//     Vec3d diff = goal_state - start_state;
+//     Vec3d temp_path;
+//     double distance = diff.norm();
+//     // std::cout<< "            " << distance << std::endl;
+//     // if (distance>0)
+//     if (distance<1e-6){
+//         path.push_back(start_state);
+//     }
+
+//     Vec3d direction = diff.normalized();
+//     // if (distance >0){
+//     //     direction = diff/distance;
+//     //     std::cout<< "kya karu yaar"<< direction << std::endl<< "  "<< diff<< std::endl<< step_size/distance<<std::endl;
+//     // }
+//     // else{
+//     //     direction = Vec3d(0,0,0);
+        
+//     // for (j = 0; j < numofDOFs; j++){
+//     //     if(distance < fabs(q_near[j] - qrand[j]))
+//     //         distance = fabs(q_near[j] - qrand[j]);
+//     // }
+
+
+
+//     int numofsamples = (int)(distance/0.2);
+//     for (int i = 0; i < numofsamples; i++){
+//         for(int j = 0; j < 3; j++){
+//             temp_path[j] = start_state[j] + ((double)(i)/(numofsamples-1))*(goal_state[j] - start_state[j]);
+            
+//         }
+//         path.push_back(temp_path);
+//         // if(IsValidArmConfiguration(joint_angles, numofDOFs, map, x_size, y_size)) {
+// 		// 	std::vector<double> valid_angles(joint_angles, joint_angles + numofDOFs);
+// 		// 	double temp_dist = get_distance(q_near, valid_angles);
+// 		// 	if ( temp_dist< Eu_dist){
+// 		// 		if (int_dist< temp_dist){
+// 		// 			int_dist = temp_dist;
+// 		// 			q_new = valid_angles;
+// 		// 		}
+
+// 		// 	}
+//         // }
+// 		// else{
+// 		// 	if(q_new.empty()){
+// 		// 		// std::cout<< "first step was only invalid"<< std::endl;
+// 		// 		q_new = q_near;
+// 		// 		break;
+// 		// 		}
+// 		// 	else{
+// 		// 		// std::cout<< "some step was invalid exiting the for loop"<< std::endl;
+// 		// 		break;
+// 		// 		}
+// 		// 	}
+//     }    
+
+
+
+
+//     // for (double t=0.0; t<=1.0; t+= distance/step_size){
+//     //     Vec3d interpolated_state = start_state + t*direction;
+//     //     path.push_back(interpolated_state);
+//     //     // std::cout<< "                                                    "<<path.size() << std::endl;
+
+
+//     // }
+
+//     // path.push_back(goal_state);
+//     // std::cout<<"jash debugging statement                  "<<std::endl;
+    
+//     return path;
+
+// }
+
+VectorVec3d HybridAStar::InterpolateSpline(const Vec3d& start_state, const Vec3d& goal_state, double step_size, double car_radius) {
     VectorVec3d path;
-    std::cout<< "i am here"<< std::endl;
+    std::cout << "i am in spline" << std::endl;
     Vec3d diff = goal_state - start_state;
-    Vec3d temp_path;
     double distance = diff.norm();
-    std::cout<< "            " << distance << std::endl;
-    // if (distance>0)
-    if (distance<1e-6){
+    // std::cout << "            " << distance << std::endl;
+
+    if (distance < 1e-6) {
         path.push_back(start_state);
+        // return path;  // Early exit for cases where start and end are the same
     }
 
-    Vec3d direction = diff.normalized();
-    // if (distance >0){
-    //     direction = diff/distance;
-    //     std::cout<< "kya karu yaar"<< direction << std::endl<< "  "<< diff<< std::endl<< step_size/distance<<std::endl;
-    // }
-    // else{
-    //     direction = Vec3d(0,0,0);
-        
-    // for (j = 0; j < numofDOFs; j++){
-    //     if(distance < fabs(q_near[j] - qrand[j]))
-    //         distance = fabs(q_near[j] - qrand[j]);
-    // }
+    // Calculate the maximum number of segments (path points) based on the turning radius
+    double max_segments = distance / (2.0 * car_radius);
+    int numofsamples = std::min(static_cast<int>(max_segments), 100);  // Limit the number of segments
 
+    Eigen::MatrixXd control_points(3, 2);
+    control_points.col(0) = start_state;
+    control_points.col(1) = goal_state;
 
+    // Generate the spline coefficients
+    Eigen::MatrixXd coefficients = Eigen::MatrixXd::Zero(4, 3);
+    coefficients.row(0) = control_points.col(0);
+    coefficients.row(3) = control_points.col(1);
 
-    int numofsamples = (int)(distance/0.2);
-    for (int i = 0; i < numofsamples; i++){
-        for(int j = 0; j < 3; j++){
-            temp_path[j] = start_state[j] + ((double)(i)/(numofsamples-1))*(goal_state[j] - start_state[j]);
-            
-        }
-        path.push_back(temp_path);
-        // if(IsValidArmConfiguration(joint_angles, numofDOFs, map, x_size, y_size)) {
-		// 	std::vector<double> valid_angles(joint_angles, joint_angles + numofDOFs);
-		// 	double temp_dist = get_distance(q_near, valid_angles);
-		// 	if ( temp_dist< Eu_dist){
-		// 		if (int_dist< temp_dist){
-		// 			int_dist = temp_dist;
-		// 			q_new = valid_angles;
-		// 		}
+    // Calculate intermediate control points
+    for (int i = 1; i < 3; i++) {
+        coefficients.row(i) = control_points.col(0) + i * (control_points.col(1) - control_points.col(0)) / 3.0;
+    }
 
-		// 	}
-        // }
-		// else{
-		// 	if(q_new.empty()){
-		// 		// std::cout<< "first step was only invalid"<< std::endl;
-		// 		q_new = q_near;
-		// 		break;
-		// 		}
-		// 	else{
-		// 		// std::cout<< "some step was invalid exiting the for loop"<< std::endl;
-		// 		break;
-		// 		}
-		// 	}
-    }    
+    for (int i = 0; i < numofsamples; i++) {
+        double t = static_cast<double>(i) / (numofsamples - 1);
+        Eigen::VectorXd t_powers(4);
+        t_powers << 1.0, t, t * t, t * t * t;
+        Eigen::VectorXd interpolated_state = t_powers.transpose() * coefficients;
+        path.push_back(interpolated_state);
+    }
 
-
-
-
-    // for (double t=0.0; t<=1.0; t+= distance/step_size){
-    //     Vec3d interpolated_state = start_state + t*direction;
-    //     path.push_back(interpolated_state);
-    //     // std::cout<< "                                                    "<<path.size() << std::endl;
-
-
-    // }
-
-    // path.push_back(goal_state);
-    // std::cout<<"jash debugging statement                  "<<std::endl;
-    
     return path;
-
 }
+
+
 void HybridAStar::DynamicModel(const double &step_size, const double &phi,
                                double &x, double &y, double &theta) const {
     x = x + step_size * std::cos(theta);
@@ -571,8 +614,8 @@ double HybridAStar::ComputeG(const StateNode::Ptr &current_node_ptr,
     return g;
 }
 
-bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
-    int timer_out_time = 5000;
+int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
+    int timer_out_time = 10000;
     Timer search_used_time;
 
     double neighbor_time = 0.0, compute_h_time = 0.0, compute_g_time = 0.0;
@@ -598,8 +641,8 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
      if (!time_condition_initial_pt) {
         // std::cout<< "DILLLLL DOLLLLLAAAAAa REEEEE DOLLLLAAAA DIL DOLA MAN DOLA DIL DOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"<< std::endl;
         // timer_out_time = 1000;
-        auto path = InterpolatePath(start_state, goal_state, 1000.0);
-        return true;
+        // auto path = InterpolatePath(start_state, goal_state, 1000.0);
+        return 9;
      }
 
     state_node_map_[start_grid_index.x()][start_grid_index.y()][start_grid_index.z()] = start_node_ptr;
@@ -642,7 +685,7 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
 
                 check_collision_use_time = 0.0;
                 num_check_collision = 0.0;
-                return true;
+                return 1;
             }
         }
 
@@ -697,7 +740,7 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
 
         if (count > 50000) {
             ROS_WARN("Exceeded the number of iterations, the search failed");
-            return false;
+            return 0;
         }
         // Check the elapsed time
         auto current_time = std::chrono::high_resolution_clock::now();
@@ -705,12 +748,12 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         std::cout << "Time is: " << time_span.count() << " ms" << "max kept is : "<< timer_out_time<< std::endl;
         if (time_span.count() > timer_out_time) {
             std::cout << "Time limit exceeded: " << time_span.count() << " ms" << std::endl;
-            return false;
+            return 0;
         }
     }
     std::cout<<"outside while"<< std::endl;
 
-    return false;
+    return 0;
 }
 
 VectorVec4d HybridAStar::GetSearchedTree() {
