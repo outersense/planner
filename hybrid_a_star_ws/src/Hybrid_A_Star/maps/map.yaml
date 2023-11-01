@@ -1,6 +1,7 @@
 # image: figure8_track2.png
 # image: figure8_track.png
-image: figure8_track4.png
+# image: figure8_track4.png
+image: figure8_track6.png
 resolution: 1.0
 # resolution: 0.1
 origin: [ 0.0, 0.0, 0.0 ]

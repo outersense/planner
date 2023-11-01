@@ -8,7 +8,7 @@
 #     secs: 1697571825
 #     nsecs:  84017754
 #   frame_id: "world"
-# child_frame_id: "car2/base_link"
+# child_frame_id: "car1/base_link"
 # pose: 
 #   pose: 
 #     position: 

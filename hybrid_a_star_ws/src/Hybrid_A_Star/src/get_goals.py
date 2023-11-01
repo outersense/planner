@@ -15,8 +15,9 @@ import math
 
 
 
-bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning/rosbags/oct17"
-bagfile_name = "1_car_1_loop.bag"
+bagfile_path = "/home/jash/outersense-hybrid-astar/planner/rosbags/nov1"
+
+bagfile_name = "manual_ronit.bag"
 
 topic_gps = "/rccar_pose"
 topic_car1_world = "/car2/fused"
@@ -150,14 +151,14 @@ for topic, msg, bag_t in bag_ego.read_messages():
         # print(location_gps)
         gps_pose_array2[gps_msgs2] = pose_odom
         gps_msgs2 += 1
-yaw_array = gps_pose_array2[:,-1]#*180/PI
-x_points = gps_pose_array2[::5,0]
-y_points = gps_pose_array2[::5,1]
-yaw_points = yaw_array[::5]
+yaw_array = gps_pose_array[:,-1]#*180/PI
+x_points = gps_pose_array[::15,1]
+y_points = gps_pose_array[::15,2]
+yaw_points = yaw_array[::15]
 waypoints = np.stack((x_points,y_points, yaw_points)).T
 waypoints = waypoints[5:,:]
 
-np.save("waypoints.npy", waypoints)
+np.save("waypoints1.npy", waypoints)
 
 t_cos = np.cos(waypoints[:,2])
 t_sin = np.sin(waypoints[:,2])

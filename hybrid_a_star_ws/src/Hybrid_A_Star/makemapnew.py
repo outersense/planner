@@ -170,40 +170,40 @@ def create_road_image(pp1, pp2):
     print("size is ", image_size)
 
     # Create a black image
-    road_image = np.zeros((image_size[1], image_size[0], 3), dtype=np.uint8)
+    road_image = np.ones((image_size[1], image_size[0], 3), dtype=np.uint8)*255
 
-    # Shift the points to fit within the image size
-    pp1_shifted = pp1 - [min_x, min_y]
-    pp2_shifted = pp2 - [min_x, min_y]
-
-    # Rescale the shifted points to the image size
-    pp1_rescaled = pp1_shifted.astype(int) #(pp1_shifted * (image_size[0] / (max_x - min_x))).astype(int)
-    pp2_rescaled = pp2_shifted.astype(int) #(pp2_shifted * (image_size[0] / (max_x - min_x))).astype(int)
-
-    print(pp1_rescaled, pp2_rescaled)
-
-    # Draw the road boundaries as white lines
-    for i in range(len(pp1_rescaled) - 1):
-        cv2.line(road_image, tuple(pp1_rescaled[i]), tuple(pp2_rescaled[i]), (255, 0, 0), 5)
-
-    # Fill the road area with white color
-    cv2.fillPoly(road_image, [pp1_rescaled, pp2_rescaled[::-1]], (255, 255, 255))
-    points = np.asarray([[4.4969 +0.2,                0.7840],
-                         [3.3157 +0.2,       4.4421e-01 -0.1],
-                         [2.6240 -0.2,       7.8378e-01 +0.05],
-                         [3.4319,           1.1545]])
-    points_shifted = points*100 - [min_x, min_y]
+    # # Shift the points to fit within the image size
+    # pp1_shifted = pp1 - [min_x, min_y]
+    # pp2_shifted = pp2 - [min_x, min_y]
 
     # # Rescale the shifted points to the image size
-    # points_rescaled = (points_shifted * (image_size[0] / (max_x - min_x))).astype(int)
-    # print(points_rescaled, points_rescaled.shape)
+    # pp1_rescaled = pp1_shifted.astype(int) #(pp1_shifted * (image_size[0] / (max_x - min_x))).astype(int)
+    # pp2_rescaled = pp2_shifted.astype(int) #(pp2_shifted * (image_size[0] / (max_x - min_x))).astype(int)
 
-    # points_rescaled = np.asarray([[430+10+20, 129   +8],
-    #                               [309+15+20,  95-15+8],
-    #                               [238-25+20, 129+15+8],
-    #                               [321   +20, 168+8 +8]])
+    # print(pp1_rescaled, pp2_rescaled)
+
+    # # Draw the road boundaries as white lines
+    # for i in range(len(pp1_rescaled) - 1):
+    #     cv2.line(road_image, tuple(pp1_rescaled[i]), tuple(pp2_rescaled[i]), (255, 0, 0), 5)
+
+    # # Fill the road area with white color
+    # cv2.fillPoly(road_image, [pp1_rescaled, pp2_rescaled[::-1]], (255, 255, 255))
+    # points = np.asarray([[4.4969 +0.2,                0.7840],
+    #                      [3.3157 +0.2,       4.4421e-01 -0.1],
+    #                      [2.6240 -0.2,       7.8378e-01 +0.05],
+    #                      [3.4319,           1.1545]])
+    # points_shifted = points*100 - [min_x, min_y]
+
+    # # # Rescale the shifted points to the image size
+    # # points_rescaled = (points_shifted * (image_size[0] / (max_x - min_x))).astype(int)
+    # # print(points_rescaled, points_rescaled.shape)
+
+    # # points_rescaled = np.asarray([[430+10+20, 129   +8],
+    # #                               [309+15+20,  95-15+8],
+    # #                               [238-25+20, 129+15+8],
+    # #                               [321   +20, 168+8 +8]])
     
-    # cv2.fillPoly(road_image, [points_shifted.astype(int)], (255, 255, 255))
+    # # cv2.fillPoly(road_image, [points_shifted.astype(int)], (255, 255, 255))
 
     return road_image
 
@@ -344,6 +344,6 @@ cv2.destroyAllWindows()
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 # cv2.imwrite("maps/figure8_track3.png", new_road_image)
-cv2.imwrite("maps/figure8_track5.png", road_image)
+cv2.imwrite("maps/figure8_track6.png", road_image)
 
 # 30.3822394 -48.199419 757.96629 201.956163

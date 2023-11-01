@@ -17,7 +17,7 @@
 #         heading_data = []
 
 #         with rosbag.Bag(bag_file, 'r') as bag:
-#             for topic, msg, timestamp in bag.read_messages(topics='/car2/fused'):
+#             for topic, msg, timestamp in bag.read_messages(topics='/car1/fused'):
 #                 x_data.append(msg.pose.pose.position.x)
 #                 y_data.append(msg.pose.pose.position.y)
 #                 orientation = msg.pose.pose.orientation
@@ -92,7 +92,7 @@ class RosBagParser:
         heading_data = []
 
         with rosbag.Bag(bag_file, 'r') as bag:
-            for topic, msg, timestamp in bag.read_messages(topics='/car2/fused'):
+            for topic, msg, timestamp in bag.read_messages(topics='/car1/fused'):
                 x_data.append(msg.pose.pose.position.x)
                 y_data.append(msg.pose.pose.position.y)
                 orientation = msg.pose.pose.orientation
