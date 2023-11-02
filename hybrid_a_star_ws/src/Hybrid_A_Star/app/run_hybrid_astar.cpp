@@ -37,7 +37,16 @@ backward::SignalHandling sh;
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "run_hybrid_astar");
-    ros::NodeHandle node_handle("/car2");
+
+    std::string group_ns;
+    // Retrieve the group namespace from the ROS parameter server
+    if (!ros::param::get("~group_ns", group_ns)) {
+        ROS_ERROR("Failed to get the group_ns parameter.");
+        return 1;
+    }
+
+    // Use the retrieved group namespace as the node name
+    ros::NodeHandle node_handle(group_ns);
 
     HybridAStarFlow kinodynamic_astar_flow(node_handle);
 
