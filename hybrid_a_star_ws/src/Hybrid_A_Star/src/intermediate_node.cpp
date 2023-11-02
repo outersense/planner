@@ -151,8 +151,8 @@ public:
     ObstacleMapUpdater()
     {
         obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &ObstacleMapUpdater::obstacleCallback, this);
-        map_subscriber = nh.subscribe("/map", 1, &ObstacleMapUpdater::mapCallback, this);
-        updated_map_publisher = nh.advertise<nav_msgs::OccupancyGrid>("/updated_map", 1);
+        map_subscriber = nh.subscribe("map", 1, &ObstacleMapUpdater::mapCallback, this);
+        updated_map_publisher = nh.advertise<nav_msgs::OccupancyGrid>("updated_map", 1);
     }
 
     void obstacleCallback(const std_msgs::Float32MultiArray::ConstPtr& obstacle_data)

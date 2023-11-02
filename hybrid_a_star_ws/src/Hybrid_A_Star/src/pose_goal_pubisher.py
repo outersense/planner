@@ -34,7 +34,7 @@
 #   covariance: [0.0005010088481122983, -1.5796431104794825e-21, 6.78012999858353e-26, -1.7462633274307452e-28, -1.9776938887050552e-27, 5.988393154936348e-22, -1.5796431104794818e-21, 0.0005010088481119932, 5.0040238497350123e-29, 4.210623271354027e-33, 1.7720143016089391e-31, 2.553776130835845e-22, -3.559312113967227e-26, 4.9251377592134526e-29, 1.4663689031948455e-06, 6.308286649009168e-23, -9.854010218034441e-19, 1.7570132866342285e-30, -1.746263327430745e-28, 4.210623271353815e-33, 6.308286649009173e-23, 1.2347785881310081e-06, 1.2296771546825321e-24, 4.086813419138285e-28, -1.977693912779225e-27, 1.7717735603371286e-31, -9.854010218539304e-19, 1.2296771546825329e-24, 1.2347785881309926e-06, -2.8090322806766235e-29, 5.988910143312232e-22, 2.5537761352731877e-22, 1.7816651626233804e-30, 4.1951093051238335e-30, -2.828753807615544e-29, 0.0004002122586454154]
 # ---
 
-#  it gets the car1 values x and y and publishes in format initial
+#  it gets the car2 values x and y and publishes in format initial
 # header: 
 #   seq: 0
 #   stamp: 
@@ -107,9 +107,9 @@ class GetGoal:
         waypoints_name = "waypoints.npy"
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
         rospy.init_node('publish_curr_pose_and_goal_pose')
-        rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
-        self.pose_cov_publisher = rospy.Publisher('/car1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
-        self.goal_publisher = rospy.Publisher('/car1/planner_goal_pos', PoseStamped, queue_size=10)
+        rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
+        self.pose_cov_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        self.goal_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_goal_pos', PoseStamped, queue_size=10)
         self.goal_id_dq = deque(maxlen=1)
         
         

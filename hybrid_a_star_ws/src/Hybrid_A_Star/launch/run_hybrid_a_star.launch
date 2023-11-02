@@ -2,7 +2,7 @@
 
 
 <launch>
-    <!-- <group ns="car1"> -->
+    <group ns="car2">
         <arg name="fixed_frame" default="world"/>
 
         <param name="robot_description" textfile="$(find hybrid_a_star)/model/car_model/default.urdf"/>
@@ -31,5 +31,5 @@
             <param name="planner/steering_change_penalty" value="1.0"/>
             <param name="planner/shot_distance" value="5000000.0"/>
         </node>
-    <!-- </group> -->
+    </group>
 </launch>

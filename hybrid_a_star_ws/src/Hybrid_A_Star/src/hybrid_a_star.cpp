@@ -745,7 +745,7 @@ int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         // Check the elapsed time
         auto current_time = std::chrono::high_resolution_clock::now();
         auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time);
-        std::cout << "Time is: " << time_span.count() << " ms" << "max kept is : "<< timer_out_time<< std::endl;
+        // std::cout << "Time is: " << time_span.count() << " ms" << "max kept is : "<< timer_out_time<< std::endl;
         if (time_span.count() > timer_out_time) {
             std::cout << "Time limit exceeded: " << time_span.count() << " ms" << std::endl;
             return 0;

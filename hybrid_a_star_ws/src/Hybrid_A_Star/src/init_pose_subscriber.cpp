@@ -30,6 +30,10 @@
 InitPoseSubscriber2D::InitPoseSubscriber2D(ros::NodeHandle &nh,
                                            const std::string &topic_name,
                                            size_t buff_size) {
+
+    // std::cout<<"here"<<std::endl;
+    // std::cout<<&topic_name<<std::endl;
+
     subscriber_ = nh.subscribe(
             topic_name, buff_size, &InitPoseSubscriber2D::MessageCallBack, this
     );

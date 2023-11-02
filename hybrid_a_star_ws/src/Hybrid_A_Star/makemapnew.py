@@ -16,7 +16,7 @@ bagfile_path = "/home/jash/outersense-hybrid-astar/planner/rosbags/oct9"
 bagfile_name = "1.bag"
 
 topic_gps = "/rccar_pose"
-topic_car1_world = "/car1/world_pose"
+topic_car2_world = "/car2/world_pose"
 
 
 bagfile_ego = os.path.join(bagfile_path, bagfile_name)
@@ -226,7 +226,7 @@ gps_pose_array = np.zeros(shape=(gps_msg_count,5))
 if gps_msg_count ==0:
     print("no gps dynamic global pose availabe")
 
-# gps_msg_count2 = bag_ego.get_message_count(topic_filters= topic_car1_world)
+# gps_msg_count2 = bag_ego.get_message_count(topic_filters= topic_car2_world)
 # gps_pose_array2 = np.zeros(shape=(gps_msg_count2,3))
 # if gps_msg_count2 ==0:
 #     print("no gps dynamic global pose 2 availabe")
@@ -241,7 +241,7 @@ for topic, msg, bag_t in bag_ego.read_messages():
         gps_pose_array[gps_msgs] = pose_gps
         gps_msgs += 1
 
-    # if topic == topic_car1_world:
+    # if topic == topic_car2_world:
     #     heading_degree_gps2, location_gps2, pose_gps2 = get_carworld_pose(msg)
     #     # print(location_gps)
     #     gps_pose_array2[gps_msgs2] = pose_gps2

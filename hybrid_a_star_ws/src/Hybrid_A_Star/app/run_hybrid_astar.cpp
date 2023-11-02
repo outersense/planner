@@ -37,7 +37,7 @@ backward::SignalHandling sh;
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "run_hybrid_astar");
-    ros::NodeHandle node_handle("~");
+    ros::NodeHandle node_handle("/car2");
 
     HybridAStarFlow kinodynamic_astar_flow(node_handle);
 

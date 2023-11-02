@@ -61,17 +61,17 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
             steering_penalty, reversing_penalty, steering_change_penalty, shot_distance
     );
     // costmap_sub_ptr_ = std::make_shared<CostMapSubscriber>(nh, "/map", 1);
-    costmap_sub_ptr_ = std::make_shared<CostMapSubscriber>(nh, "/updated_map", 1);
+    costmap_sub_ptr_ = std::make_shared<CostMapSubscriber>(nh, "updated_map", 1);
     // std::cout << "this is the map pointer" << std::endl;
     // std::cout << *costmap_sub_ptr_<< std::endl;
     // costmap_sub_ptr_->PrintCostMapData();
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
-    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car1/planner_curr_pos", 1);
-    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car1/planner_goal_pos", 1);
+    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "run_hybrid_astar/planner_curr_pos", 1);
+    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "run_hybrid_astar/planner_goal_pos", 1);
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
-    path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
+    path_pub_os = nh.advertise<nav_msgs::Path>("planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
 
