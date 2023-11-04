@@ -104,13 +104,22 @@ class GetGoal:
     def __init__(self):
         self.look_ahead_index = 5
         self.error_buffer = 10
-        waypoints_name = "waypoints.npy"
+        # waypoints_name = "waypoints1_10scale.npy"
+        waypoints_name = "waypoints1_100scale.npy" #Nov2 manual Ronit
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
-        rospy.init_node('publish_curr_pose_and_goal_pose')
+        rospy.init_node('publish_curr_pose_and_goal_pose_car2')
         rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
         self.pose_cov_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         self.goal_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_goal_pos', PoseStamped, queue_size=10)
         self.goal_id_dq = deque(maxlen=1)
+        # for 100 scale maps Nov2
+        self.translate_x = -23.433744557914416
+        self.translate_y = 37.368772684946485
+        self.scale_factor = 100
+        # for 10 scale maps Nov2
+        # self.translate_x = -2.3433744557914416
+        # self.translate_y = 3.7368772684946485
+        # self.scale_factor = 10
         
         
         
@@ -142,8 +151,8 @@ class GetGoal:
         pose_cov_msg.header.stamp = msg.header.stamp
         pose_cov_msg.header.frame_id = "world"
 
-        pose_cov_msg.pose.pose.position.x = msg.pose.pose.position.x*100-30
-        pose_cov_msg.pose.pose.position.y = msg.pose.pose.position.y*100+48
+        pose_cov_msg.pose.pose.position.x = msg.pose.pose.position.x*self.scale_factor + self.translate_x
+        pose_cov_msg.pose.pose.position.y = msg.pose.pose.position.y*self.scale_factor + self.translate_y
         pose_cov_msg.pose.pose.position.z = 0.0
         pose_cov_msg.pose.pose.orientation = msg.pose.pose.orientation
 
@@ -160,8 +169,8 @@ class GetGoal:
         pose_stamped_msg.header.stamp = msg.header.stamp
         pose_stamped_msg.header.frame_id = "world"
 
-        pose_stamped_msg.pose.position.x = self.goal_pose_val[0,0]*100-30
-        pose_stamped_msg.pose.position.y = self.goal_pose_val[0,1]*100+48
+        pose_stamped_msg.pose.position.x = self.goal_pose_val[0,0]*self.scale_factor + self.translate_x
+        pose_stamped_msg.pose.position.y = self.goal_pose_val[0,1]*self.scale_factor + self.translate_y
         pose_stamped_msg.pose.position.z = 0.0
 
         # Convert theta to a quaternion

@@ -1,0 +1,48 @@
+makemapnew: it takes in a rosbag
+reads the rccar_pose message
+depending on the cale it saves a waypoints.npy file need to rename it tho
+it also generates 2 maps one is a filled figure 8 map and other is white map
+it prints the translation in x and y values to terminal 
+
+we dont need to run get_foals
+
+pose_goal_publisher reads this waypoints.npy generated
+and gets the current id and looks ahead to find goal check is jump is within bounds and publishes 2 topics goal and pose
+
+TODO: currently, currejt pose and goal pose are 2 different topic with same timestamps and curr is posestamped with cov and goal is just posestamped 
+this is how A* repo has its inputs 
+problem is even tho tehy have the same timestamps they might not be received at the same time 
+leading to goal of t1 and current of t0
+one way to solve it is: have both messages of same type ie posestamped with cov
+                      : check if the current hybrid si using cov or not, if not then send both just posestamped and use path to couple curr and goal
+                      : publish only 1 topic called poses and publish a array of both current amd goal pose
+                      : subscrive to this topic 
+                      : decouple them to currnet pose and goal pose 
+                      : custom data type banan pad sakta hybrid_a_star
+                      : apna callback banana padega and test karna padega
+
+
+if has_map part: this makes map only once, but we are updating map at 20hz
+               : even tho we can see in RViz the map is not going to planner
+               : Dumb way: keep publishing updated map as we do 
+                         : make has map a counter based update, beacue it is expensive, 
+                         : you update the map every 5,10,20 iteration of the .Run() call 
+                         : first check by doing it at 20hz see the drop in performance, then do it at x Hz and come to a number
+                         : note that the scale of map will heavily determione time taken 
+                         : visualization is real time so we will see ethat the obstacle has come but the planner doesnt get it real time it gets at x hz so we can see going through or sudden jump 
+               : Smarter : intermediate node only publishes obstacles 
+                         : the current update map function from intermediate node replaces the hasmap function
+                         : only the obstacle is updated in the current map 
+                         : every 5 iteration or so the map is cleared and reupdated  ( this is the same costly process as above)
+                         : advantage is no1: oly opstacle is being sent over the network , no2: if update rate is low or if we can do it smarly then the cost will be very low and time qwould be faster
+
+
+reversing: if we want the car to reverse, we need to raise a flag saying reverse,
+         : we have the serached path, do a check on it and say if reverse
+         : see where it does reverse in code and remove that
+         : or raise a flag when reversed
+
+interpolation: eitehr use white map and test robustly on it that it does not gi iutsude even when obstacle or gies barely outside
+             : or when it goes in interpolation do a collision check as well 
+             : implement a spline type solution 
+             : or get the closest point on center of lane and do A* from that, this would mean overwriting the input 

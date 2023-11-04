@@ -7,6 +7,8 @@
 # new environment variables
 
 # modified environment variables
-export LD_LIBRARY_PATH='/opt/ros/noetic/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/i386-linux-gnu:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'
-export PKG_CONFIG_PATH='/opt/ros/noetic/lib/pkgconfig'
-export PWD='/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/build'
+export CMAKE_PREFIX_PATH="/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel:$CMAKE_PREFIX_PATH"
+export PATH='/opt/ros/noetic/bin:/home/dhanesh/miniconda3/condabin:/home/dhanesh/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
+export PWD='/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build'
+export ROSLISP_PACKAGE_DIRECTORIES='/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/share/common-lisp'
+export ROS_PACKAGE_PATH="/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src:$ROS_PACKAGE_PATH"

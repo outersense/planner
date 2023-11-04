@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/build/gtest/googlemock/cmake_install.cmake")
+  include("/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/gtest/googlemock/cmake_install.cmake")
 
 endif()
 
