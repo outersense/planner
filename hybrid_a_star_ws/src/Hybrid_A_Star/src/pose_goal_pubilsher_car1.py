@@ -8,7 +8,7 @@
 #     secs: 1697571825
 #     nsecs:  84017754
 #   frame_id: "world"
-# child_frame_id: "car1/base_link"
+# child_frame_id: "car2/base_link"
 # pose: 
 #   pose: 
 #     position: 
@@ -34,7 +34,7 @@
 #   covariance: [0.0005010088481122983, -1.5796431104794825e-21, 6.78012999858353e-26, -1.7462633274307452e-28, -1.9776938887050552e-27, 5.988393154936348e-22, -1.5796431104794818e-21, 0.0005010088481119932, 5.0040238497350123e-29, 4.210623271354027e-33, 1.7720143016089391e-31, 2.553776130835845e-22, -3.559312113967227e-26, 4.9251377592134526e-29, 1.4663689031948455e-06, 6.308286649009168e-23, -9.854010218034441e-19, 1.7570132866342285e-30, -1.746263327430745e-28, 4.210623271353815e-33, 6.308286649009173e-23, 1.2347785881310081e-06, 1.2296771546825321e-24, 4.086813419138285e-28, -1.977693912779225e-27, 1.7717735603371286e-31, -9.854010218539304e-19, 1.2296771546825329e-24, 1.2347785881309926e-06, -2.8090322806766235e-29, 5.988910143312232e-22, 2.5537761352731877e-22, 1.7816651626233804e-30, 4.1951093051238335e-30, -2.828753807615544e-29, 0.0004002122586454154]
 # ---
 
-#  it gets the car1 values x and y and publishes in format initial
+#  it gets the car2 values x and y and publishes in format initial
 # header: 
 #   seq: 0
 #   stamp: 
@@ -104,13 +104,24 @@ class GetGoal:
     def __init__(self):
         self.look_ahead_index = 5
         self.error_buffer = 10
-        waypoints_name = "waypoints.npy"
+        # waypoints_name = "waypoints1_10scale.npy"
+        waypoints_name = "waypoints1_100scale.npy" #Nov2 manual Ronit
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
-        rospy.init_node('publish_curr_pose_and_goal_pose')
+        rospy.init_node('publish_curr_pose_and_goal_pose_car1')
         rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
+        # self.pose_cov_publisher = rospy.Publisher('/car1/run_hybrid_astar/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        # self.goal_publisher = rospy.Publisher('/car1/run_hybrid_astar/planner_goal_pos', PoseStamped, queue_size=10)
         self.pose_cov_publisher = rospy.Publisher('/car1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         self.goal_publisher = rospy.Publisher('/car1/planner_goal_pos', PoseStamped, queue_size=10)
         self.goal_id_dq = deque(maxlen=1)
+        # for 100 scale maps Nov2
+        self.translate_x = -23.433744557914416
+        self.translate_y = 37.368772684946485
+        self.scale_factor = 100
+        # for 10 scale maps Nov2
+        # self.translate_x = -2.3433744557914416
+        # self.translate_y = 3.7368772684946485
+        # self.scale_factor = 10
         
         
         
@@ -142,8 +153,8 @@ class GetGoal:
         pose_cov_msg.header.stamp = msg.header.stamp
         pose_cov_msg.header.frame_id = "world"
 
-        pose_cov_msg.pose.pose.position.x = msg.pose.pose.position.x*100-30
-        pose_cov_msg.pose.pose.position.y = msg.pose.pose.position.y*100+48
+        pose_cov_msg.pose.pose.position.x = msg.pose.pose.position.x*self.scale_factor + self.translate_x
+        pose_cov_msg.pose.pose.position.y = msg.pose.pose.position.y*self.scale_factor + self.translate_y
         pose_cov_msg.pose.pose.position.z = 0.0
         pose_cov_msg.pose.pose.orientation = msg.pose.pose.orientation
 
@@ -160,8 +171,8 @@ class GetGoal:
         pose_stamped_msg.header.stamp = msg.header.stamp
         pose_stamped_msg.header.frame_id = "world"
 
-        pose_stamped_msg.pose.position.x = self.goal_pose_val[0,0]*100-30
-        pose_stamped_msg.pose.position.y = self.goal_pose_val[0,1]*100+48
+        pose_stamped_msg.pose.position.x = self.goal_pose_val[0,0]*self.scale_factor + self.translate_x
+        pose_stamped_msg.pose.position.y = self.goal_pose_val[0,1]*self.scale_factor + self.translate_y
         pose_stamped_msg.pose.position.z = 0.0
 
         # Convert theta to a quaternion
@@ -183,4 +194,3 @@ class GetGoal:
 if __name__ == '__main__':
     get_goal = GetGoal()
     get_goal.main()
-

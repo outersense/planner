@@ -1,4 +1,4 @@
-prefix=/home/jash/outersense-hybrid-astar/planner/hybrid_a_star_ws/devel
+prefix=/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel
 
 Name: hybrid_a_star
 Description: Description of hybrid_a_star

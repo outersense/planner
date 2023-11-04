@@ -15,12 +15,11 @@ import math
 
 
 
-bagfile_path = "/home/jash/outersense-hybrid-astar/planner/rosbags/nov1"
-
+bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning/rosbags/nov2"
 bagfile_name = "manual_ronit.bag"
 
 topic_gps = "/rccar_pose"
-topic_car1_world = "/car2/fused"
+topic_car2_world = "/car2/fused"
 
 
 bagfile_ego = os.path.join(bagfile_path, bagfile_name)
@@ -131,7 +130,7 @@ gps_pose_array = np.zeros(shape=(gps_msg_count,5))
 if gps_msg_count ==0:
     print("no gps dynamic global pose availabe")
 
-gps_msg_count2 = bag_ego.get_message_count(topic_filters= topic_car1_world)
+gps_msg_count2 = bag_ego.get_message_count(topic_filters= topic_car2_world)
 gps_pose_array2 = np.zeros(shape=(gps_msg_count2,3))
 if gps_msg_count2 ==0:
     print("no gps dynamic global pose 2 availabe")
@@ -146,7 +145,7 @@ for topic, msg, bag_t in bag_ego.read_messages():
         gps_pose_array[gps_msgs] = pose_gps
         gps_msgs += 1
 
-    if topic == topic_car1_world:
+    if topic == topic_car2_world:
         x, y, z, theta, vel, pose_odom = parse_odom_message(msg)
         # print(location_gps)
         gps_pose_array2[gps_msgs2] = pose_odom
@@ -156,7 +155,7 @@ x_points = gps_pose_array[::15,1]
 y_points = gps_pose_array[::15,2]
 yaw_points = yaw_array[::15]
 waypoints = np.stack((x_points,y_points, yaw_points)).T
-waypoints = waypoints[5:,:]
+waypoints = waypoints[1:,:]
 
 np.save("waypoints1.npy", waypoints)
 
@@ -176,4 +175,3 @@ plt.close()
 # plt.plot(gps_pose_array2[:,1], gps_pose_array2[:,2], 'r+', label="Lidar after extrinsics")
 # plt.show()
 # plt.close()
-

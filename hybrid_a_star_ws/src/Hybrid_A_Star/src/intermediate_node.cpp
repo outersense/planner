@@ -178,6 +178,12 @@ public:
             ROS_ERROR("Map size is not valid.");
             return;
         }
+        int scale_factor = 100;
+        int translate_x = -23;
+        int translate_y = 37;
+        // int scale_factor = 10;
+        // int translate_x = -2;
+        // int translate_y = 4;
 
         for (std::vector<float>::size_type i = 0; i < obstacle_data->data.size(); i += 5)
         {
@@ -185,8 +191,8 @@ public:
             // double x_og = obstacle_data->data[i + 1];
             // double y_og = obstacle_data->data[i + 2];
             int id = (obstacle_data->data[i]);
-            int x = static_cast<int>(obstacle_data->data[i + 1]*100)-30;
-            int y = static_cast<int>(obstacle_data->data[i + 2]*100)+48;
+            int x = static_cast<int>(obstacle_data->data[i + 1]*scale_factor)+translate_x;
+            int y = static_cast<int>(obstacle_data->data[i + 2]*scale_factor)+translate_y;
             double vel = std::abs(obstacle_data->data[i + 3]);
             // std::cout<< "velocity is                             "<<vel << "                           "<< i << std::endl;
             // std::cout<<" The Scaled values are: "<< x<< " "<< y<< " "<< std::endl;
