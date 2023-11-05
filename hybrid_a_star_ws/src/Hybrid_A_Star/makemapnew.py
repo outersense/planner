@@ -12,16 +12,16 @@ import cv2
 
 
 
-# bagfile_path = "/home/jash/outersense-hybrid-astar/planner/rosbags/oct9"
-bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov1"
+bagfile_path = "/home/jash/outersense_planner/planner/rosbags/nov1"
+# bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov1"
 # bagfile_name = "1.bag"
 bagfile_name = "manual_ronit.bag"
 
 topic_gps = "/rccar_pose"
 topic_car2_world = "/car2/world_pose"
 
-scale_factor =100
-# scale_factor =10
+# scale_factor =100
+scale_factor =10
 
 
 bagfile_ego = os.path.join(bagfile_path, bagfile_name)
@@ -288,6 +288,12 @@ def fill_lanes_with_color(lane_1, lane_2):
     lane_1[:, 1] += translate_y
     lane_2[:, 0] += translate_x
     lane_2[:, 1] += translate_y
+    # 5 and 2.1
+    lane_2_indexes= np.where(lane_2[:,0]>(5*scale_factor+translate_x))
+    lane_1_indexes= np.where(lane_1[:,0]<(2.2*scale_factor+translate_x))
+    # print(lane_1_indexes, type(lane_1_indexes))
+    lane_3 = lane_1[lane_1_indexes[0]]
+    lane_4 = lane_2[lane_2_indexes[0]]
 
     # Create masks for each lane separately
     mask_lane1 = np.zeros((image_size[1], image_size[0]), dtype=np.uint8)
@@ -300,6 +306,8 @@ def fill_lanes_with_color(lane_1, lane_2):
 
     # Combine the lane masks using bitwise OR operation
     combined_mask = cv2.bitwise_or(mask_lane1, mask_lane2)
+    cv2.fillPoly(combined_mask, [lane_3.astype(int)], color=0)
+    cv2.fillPoly(combined_mask, [lane_4.astype(int)], color=0)
 
     # Apply the combined mask to the image
     image[combined_mask == 255] = [255, 255, 255]  # Filling the lanes with white
@@ -339,7 +347,7 @@ y_points = gps_pose_array[::25,2]
 yaw_points = yaw_array[::25]
 waypoints = np.stack((x_points,y_points, yaw_points)).T[1:,:]
 # waypoints_new = np.stack((x_points*scale_factor,y_points*scale_factor, yaw_points)).T[1:,:]
-np.save("/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints1_100scale.npy", waypoints)
+# np.save("/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints1_100scale.npy", waypoints)
 t_cos = np.cos(waypoints[:,-1])
 t_sin = np.sin(waypoints[:,-1])
 
@@ -452,7 +460,7 @@ cv2.destroyAllWindows()
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 # cv2.imwrite("maps/figure8_track3.png", new_road_image)
-cv2.imwrite("maps/figure8_track7.png", road_image)
-cv2.imwrite("maps/figure8_track8.png", white_image)
+cv2.imwrite("maps/figure8_track12.png", road_image)
+# cv2.imwrite("maps/figure8_track8.png", white_image)
 
 # 30.3822394 -48.199419 757.96629 201.956163

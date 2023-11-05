@@ -57,6 +57,8 @@ private:
 
     void PublishPathOutersense(const VectorVec3d &path);
 
+    Vec3d FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values) ;
+
     VectorVec3d InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size);
 
     VectorVec3d InterpolateSpline(const Vec3d& start_state, const Vec3d& goal_state, double step_size, double car_radius);
@@ -84,6 +86,9 @@ private:
     std::deque<geometry_msgs::PoseStampedPtr> goal_pose_deque_;
     std::deque<nav_msgs::OccupancyGridPtr> costmap_deque_;
     std::vector<int> vals_accessed;
+
+    std::vector<double> x_values;
+    std::vector<double> y_values;
 
     geometry_msgs::PoseWithCovarianceStampedPtr current_init_pose_ptr_;
     geometry_msgs::PoseStampedPtr current_goal_pose_ptr_;

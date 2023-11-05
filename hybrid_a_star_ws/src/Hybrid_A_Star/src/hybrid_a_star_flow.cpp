@@ -33,6 +33,11 @@
 #include <tf/transform_datatypes.h>
 #include <tf/transform_broadcaster.h>
 
+#include <fstream>
+#include <string>
+#include <cmath>
+
+
 double Mod2Pi(const double &x) {
     double v = fmod(x, 2 * M_PI);
 
@@ -81,6 +86,33 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
     
     has_map_ = false;
+
+
+    // std::vector<double> theta_values;
+
+
+
+    double x, y, theta;
+    std::string filename = "/home/jash/outersense_planner/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints1_10scale.txt";
+    std::ifstream file(filename);
+    if (file.is_open()) {
+        std::string line;
+        while (file >> x >> y >> theta) {
+
+            x_values.push_back(x);
+            y_values.push_back(y);
+            // theta_values.push_back(theta);
+            // std::cout << line << std::endl; 
+            // std::cout<<"read the file"<<std::endl;
+        }
+
+        file.close();  // Close the file when done
+    } else {
+        std::cerr << "Failed to open the file: " << filename << std::endl;
+    }
+
+    // std::cout<<x_values[1]<<std::endl;
+
 }
 
 // void HybridAStarFlow::obstacleCallback()
@@ -140,54 +172,6 @@ void HybridAStarFlow::Run() {
         }
     }
 
-    // if (vals_accessed.size() != 0){
-    //     if (costmap_deque_.empty()) {
-    //         return;
-    //     }
-
-    //     current_costmap_ptr_ = costmap_deque_.front();
-    //     costmap_deque_.pop_front();
-
-    //     const double map_resolution = 0.2;
-    //     // kinodynamic_astar_searcher_ptr_->Init(
-    //     //         current_costmap_ptr_->info.origin.position.x,
-    //     //         1.0 * current_costmap_ptr_->info.width * current_costmap_ptr_->info.resolution,
-    //     //         current_costmap_ptr_->info.origin.position.y,
-    //     //         1.0 * current_costmap_ptr_->info.height * current_costmap_ptr_->info.resolution,
-    //     //         current_costmap_ptr_->info.resolution,
-    //     //         map_resolution
-    //     // );
-
-    //     // unsigned int map_w = std::floor(current_costmap_ptr_->info.width / map_resolution);
-    //     // unsigned int map_h = std::floor(current_costmap_ptr_->info.height / map_resolution);
-    //     // for (unsigned int w = 0; w < map_w; ++w) {
-    //     //     for (unsigned int h = 0; h < map_h; ++h) {
-    //     //         auto x = static_cast<unsigned int> ((w + 0.5) * map_resolution
-    //     //                                             / current_costmap_ptr_->info.resolution);
-    //     //         auto y = static_cast<unsigned int> ((h + 0.5) * map_resolution
-    //     //                                             / current_costmap_ptr_->info.resolution);
-    //     // std::cout<<"need to do something here"<< std::endl;
-    //     for (size_t i = 0; i < vals_accessed.size(); i += 2) {
-    //         unsigned int x_pls = vals_accessed[i];
-    //         unsigned int y_pls = vals_accessed[i + 1];
-    //         // std::cout<< x_pls << "                        "<< y_pls << std::endl;
-    //         // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
-    //         auto x = static_cast<unsigned int> ((x_pls + 0.5) * map_resolution
-    //                                                 / current_costmap_ptr_->info.resolution);
-    //         auto y = static_cast<unsigned int> ((y_pls + 0.5) * map_resolution
-    //                                             / current_costmap_ptr_->info.resolution);
-
-    //         if (current_costmap_ptr_->data[y * current_costmap_ptr_->info.width + x]) {
-    //             kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls); 
-    //         }
-
-    //         // if (current_costmap_ptr_->data[y_pls * current_costmap_ptr_->info.width + x_pls]) {
-    //         //     kinodynamic_astar_searcher_ptr_->SetObstacle(w, h); 
-    //         // }
-    //     }
-    // }
-        
-
 
 
 
@@ -233,18 +217,27 @@ void HybridAStarFlow::Run() {
             }
             else if(variation_id == 9){
                 //  change the current position vec3d to nearest position vec3d
+                // std::cout<<"finding neigbor"<<std::endl;
+                std::cout<< "previous: "<<start_state[0]<<std::endl;
+
+                start_state = FindNearestNeighbor(start_state,x_values,y_values);
+                // std::cout<<new_init[0];
+
+                // std::cout<<"after: "<<new_init[0]<<std::endl;
+
+
                 
-                //  kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state);
-                //  auto path = kinodynamic_astar_searcher_ptr_->GetPath();
-                //  PublishPath(path);
-                //  PublishPathOutersense(path);
-                //  if (scale_100 == true){
-                //      PublishVehiclePath(path, 30.0, 20.0, 20u);
-                //  }
-                //  else{
-                //      PublishVehiclePath(path, 3.0, 2.0, 5u);
-                //  }
-                auto path = InterpolatePath(start_state, goal_state, 1000.0);
+                 kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state);
+                 auto path = kinodynamic_astar_searcher_ptr_->GetPath();
+                 PublishPath(path);
+                 PublishPathOutersense(path);
+                 if (scale_100 == true){
+                     PublishVehiclePath(path, 30.0, 20.0, 20u);
+                 }
+                 else{
+                     PublishVehiclePath(path, 3.0, 2.0, 5u);
+                 }
+                path = InterpolatePath(start_state, goal_state, 1000.0);
                 std::cout<< "i am here now"<< std::endl;
                 PublishPath(path);
                 PublishPathOutersense(path);
@@ -345,6 +338,42 @@ void HybridAStarFlow::Run() {
 //     return path;
 
 // }
+
+Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values) {
+    if (x_values.empty() || y_values.empty() || x_values.size() != y_values.size()) {
+        // Handle invalid input or mismatched vector sizes
+        return start_state;
+    }
+
+    double min_distance = std::numeric_limits<double>::max();
+    size_t nearest_index = 0;
+
+    for (size_t i = 0; i < x_values.size(); ++i) {
+        double dx = start_state[0] - x_values[i];
+        double dy = start_state[1] - y_values[i];
+        double distance = std::sqrt(dx * dx + dy * dy);
+        
+        if (distance < min_distance) {
+            min_distance = distance;
+            nearest_index = i;
+        }
+    }
+
+    Vec3d nearest_neighbor;
+    nearest_neighbor[0] = x_values[nearest_index];
+    nearest_neighbor[1] = y_values[nearest_index];
+    nearest_neighbor[2] = start_state[2]; // Assuming z-coordinate remains the same
+
+    return nearest_neighbor;
+}
+
+
+
+
+
+
+
+
 
 
 VectorVec3d HybridAStarFlow::InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size){
