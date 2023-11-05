@@ -232,6 +232,18 @@ void HybridAStarFlow::Run() {
                 PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
             }
             else if(variation_id == 9){
+                //  change the current position vec3d to nearest position vec3d
+                
+                //  kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state);
+                //  auto path = kinodynamic_astar_searcher_ptr_->GetPath();
+                //  PublishPath(path);
+                //  PublishPathOutersense(path);
+                //  if (scale_100 == true){
+                //      PublishVehiclePath(path, 30.0, 20.0, 20u);
+                //  }
+                //  else{
+                //      PublishVehiclePath(path, 3.0, 2.0, 5u);
+                //  }
                 auto path = InterpolatePath(start_state, goal_state, 1000.0);
                 std::cout<< "i am here now"<< std::endl;
                 PublishPath(path);
