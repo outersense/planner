@@ -60,8 +60,8 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
             steering_angle, steering_angle_discrete_num, segment_length, segment_length_discrete_num, wheel_base,
             steering_penalty, reversing_penalty, steering_change_penalty, shot_distance
     );
-    // costmap_sub_ptr_ = std::make_shared<CostMapSubscriber>(nh, "/map", 1);
-    costmap_sub_ptr_ = std::make_shared<CostMapSubscriber>(nh, "/updated_map", 1);
+    costmap_sub_ptr_ = std::make_shared<CostMapSubscriber>(nh, "/map", 1);
+    // costmap_sub_ptr_ = std::make_shared<CostMapSubscriber>(nh, "/updated_map", 1);
     // std::cout << "this is the map pointer" << std::endl;
     // std::cout << *costmap_sub_ptr_<< std::endl;
     // costmap_sub_ptr_->PrintCostMapData();
