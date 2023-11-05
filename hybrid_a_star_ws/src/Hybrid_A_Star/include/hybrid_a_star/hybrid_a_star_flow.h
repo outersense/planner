@@ -32,6 +32,7 @@
 #include "costmap_subscriber.h"
 #include "init_pose_subscriber.h"
 #include "goal_pose_subscriber.h"
+#include "obstacle_pose_subscriber.h"
 
 #include <ros/ros.h>
 
@@ -64,21 +65,25 @@ private:
 
     void PublishVehiclePath(const VectorVec3d &path, double width,
                             double length, unsigned int vehicle_interval);
+    // void obstacleCallback()
 
 private:
     std::shared_ptr<HybridAStar> kinodynamic_astar_searcher_ptr_;
     std::shared_ptr<CostMapSubscriber> costmap_sub_ptr_;
     std::shared_ptr<InitPoseSubscriber2D> init_pose_sub_ptr_;
     std::shared_ptr<GoalPoseSubscriber2D> goal_pose_sub_ptr_;
+    std::shared_ptr<ObstaclePoseSubscriber2D> obstacle_pose_sub_ptr_;
 
     ros::Publisher path_pub_;
     ros::Publisher path_pub_os;
     ros::Publisher searched_tree_pub_;
     ros::Publisher vehicle_path_pub_;
+    // ros::Subscriber obstacle_subscriber;
 
     std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> init_pose_deque_;
     std::deque<geometry_msgs::PoseStampedPtr> goal_pose_deque_;
     std::deque<nav_msgs::OccupancyGridPtr> costmap_deque_;
+    std::vector<int> vals_accessed;
 
     geometry_msgs::PoseWithCovarianceStampedPtr current_init_pose_ptr_;
     geometry_msgs::PoseStampedPtr current_goal_pose_ptr_;

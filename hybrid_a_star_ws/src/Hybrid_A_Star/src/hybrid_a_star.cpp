@@ -276,11 +276,21 @@ bool HybridAStar::HasObstacle(const Vec2i &grid_index) const {
 void HybridAStar::SetObstacle(unsigned int x, unsigned int y) {
     if (x < 0u || x > static_cast<unsigned int>(MAP_GRID_SIZE_X_)
         || y < 0u || y > static_cast<unsigned int>(MAP_GRID_SIZE_Y_)) {
+        std::cout<<"triggereddddddd"<<std::endl;
         return;
     }
 
     map_data_[x + y * MAP_GRID_SIZE_X_] = 1;
 }
+void HybridAStar::RemoveObstacle(unsigned int x, unsigned int y) {
+    if (x < 0u || x > static_cast<unsigned int>(MAP_GRID_SIZE_X_)
+        || y < 0u || y > static_cast<unsigned int>(MAP_GRID_SIZE_Y_)) {
+        return;
+    }
+
+    map_data_[x + y * MAP_GRID_SIZE_X_] = 0;
+}
+
 
 void HybridAStar::SetObstacle(const double pt_x, const double pt_y) {
     if (pt_x < map_x_lower_ || pt_x > map_x_upper_ ||
@@ -745,6 +755,7 @@ int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         // Check the elapsed time
         auto current_time = std::chrono::high_resolution_clock::now();
         auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time);
+        std::cout<<"HEREEEEEEEEEEEEEEE"<<std::endl;
         std::cout << "Time is: " << time_span.count() << " ms" << "max kept is : "<< timer_out_time<< std::endl;
         if (time_span.count() > timer_out_time) {
             std::cout << "Time limit exceeded: " << time_span.count() << " ms" << std::endl;

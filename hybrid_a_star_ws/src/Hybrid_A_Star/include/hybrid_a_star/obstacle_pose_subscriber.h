@@ -25,30 +25,36 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-#ifndef HYBRID_A_STAR_GOAL_POSE_SUBSCRIBER_H
-#define HYBRID_A_STAR_GOAL_POSE_SUBSCRIBER_H
+
+#ifndef HYBRID_A_STAR_OBSTACLE_POSE_SUBSCRIBER_H
+#define HYBRID_A_STAR_OBSTACLE_POSE_SUBSCRIBER_H
 
 #include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
+#include <std_msgs/Float32MultiArray.h>
 
 #include <deque>
 #include <mutex>
 
-class GoalPoseSubscriber2D {
+class ObstaclePoseSubscriber2D {
 public:
-    GoalPoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name, size_t buff_size);
+    ObstaclePoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name, size_t buff_size);
 
-    void ParseData(std::deque<geometry_msgs::PoseStampedPtr> &pose_data_buff);
+    // void ParseData(std::deque<geometry_msgs::PoseStampedPtr> &pose_data_buff);
+    std::vector<int> getX_Y_Vals() const;
+    
+    void updateMapWithObstacles(const std_msgs::Float32MultiArray::ConstPtr& obstacle_data);
 
 private:
-    void MessageCallBack(const geometry_msgs::PoseStampedPtr &goal_pose_ptr);
+    void MessageCallBack(const std_msgs::Float32MultiArray::ConstPtr& obstacle_data);
 
 private:
     ros::Subscriber subscriber_;
-    std::deque<geometry_msgs::PoseStampedPtr> goal_poses_;
+    // std::deque<geometry_msgs::PoseStampedPtr> goal_poses_;
+    // std_msgs::Float32MultiArray::ConstPtr obstacle_data;
 
     std::mutex buff_mutex_;
     // int x, y;
+    std::vector<int> x_y_vals;
 };
 
-#endif //HYBRID_A_STAR_GOAL_POSE_SUBSCRIBER_H
+#endif //HYBRID_A_STAR_OBSTACLE_POSE_SUBSCRIBER_H

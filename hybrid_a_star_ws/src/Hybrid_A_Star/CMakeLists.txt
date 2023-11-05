@@ -53,6 +53,7 @@ add_library(
     src/init_pose_subscriber.cpp
     src/hybrid_a_star.cpp
     src/hybrid_a_star_flow.cpp
+    src/obstacle_pose_subscriber.cpp
 )
 
 target_link_libraries(

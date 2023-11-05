@@ -135,6 +135,19 @@ Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star_flow.cpp.s: cma
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star_flow.cpp.s"
 	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/Hybrid_A_Star && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/hybrid_a_star_flow.cpp -o CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star_flow.cpp.s
 
+Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o: Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/flags.make
+Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o: /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/obstacle_pose_subscriber.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o"
+	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/Hybrid_A_Star && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o -c /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/obstacle_pose_subscriber.cpp
+
+Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.i"
+	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/Hybrid_A_Star && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/obstacle_pose_subscriber.cpp > CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.i
+
+Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.s"
+	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/Hybrid_A_Star && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/obstacle_pose_subscriber.cpp -o CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.s
+
 # Object files for target PATH_SEARCHER_LIB
 PATH_SEARCHER_LIB_OBJECTS = \
 "CMakeFiles/PATH_SEARCHER_LIB.dir/src/rs_path.cpp.o" \
@@ -142,7 +155,8 @@ PATH_SEARCHER_LIB_OBJECTS = \
 "CMakeFiles/PATH_SEARCHER_LIB.dir/src/goal_pose_subscriber.cpp.o" \
 "CMakeFiles/PATH_SEARCHER_LIB.dir/src/init_pose_subscriber.cpp.o" \
 "CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star.cpp.o" \
-"CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star_flow.cpp.o"
+"CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star_flow.cpp.o" \
+"CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o"
 
 # External object files for target PATH_SEARCHER_LIB
 PATH_SEARCHER_LIB_EXTERNAL_OBJECTS =
@@ -153,6 +167,7 @@ PATH_SEARCHER_LIB_EXTERNAL_OBJECTS =
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/init_pose_subscriber.cpp.o
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star.cpp.o
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star_flow.cpp.o
+/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/build.make
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: /opt/ros/noetic/lib/libtf.so
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: /opt/ros/noetic/lib/libtf2_ros.so
@@ -178,7 +193,7 @@ PATH_SEARCHER_LIB_EXTERNAL_OBJECTS =
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: /usr/lib/x86_64-linux-gnu/libglog.so
 /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so: Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX shared library /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX shared library /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so"
 	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build/Hybrid_A_Star && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/PATH_SEARCHER_LIB.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

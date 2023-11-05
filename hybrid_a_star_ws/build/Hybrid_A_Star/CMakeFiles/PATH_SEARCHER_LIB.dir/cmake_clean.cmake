@@ -6,6 +6,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star.cpp.o"
   "CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star_flow.cpp.o"
   "CMakeFiles/PATH_SEARCHER_LIB.dir/src/init_pose_subscriber.cpp.o"
+  "CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o"
   "CMakeFiles/PATH_SEARCHER_LIB.dir/src/rs_path.cpp.o"
 )
 

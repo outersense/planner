@@ -68,6 +68,10 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
     init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car2/planner_curr_pos", 1);
     goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car2/planner_goal_pos", 1);
+
+    obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose", 1);
+    
+    // obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &HybridAStarFlow::obstacleCallback, this);
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
@@ -77,11 +81,13 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 
     has_map_ = false;
 }
+
+// void HybridAStarFlow::obstacleCallback()
 // int count_ddddd =0;
 void HybridAStarFlow::Run() {
     kinodynamic_astar_searcher_ptr_->Reset();
     ReadData();
-
+    int i_made_obstacles = 0;
     if (!has_map_) {
         if (costmap_deque_.empty()) {
             return;
@@ -102,6 +108,7 @@ void HybridAStarFlow::Run() {
 
         unsigned int map_w = std::floor(current_costmap_ptr_->info.width / map_resolution);
         unsigned int map_h = std::floor(current_costmap_ptr_->info.height / map_resolution);
+        std::cout<<"scaled width" << map_w << "          scaled height "<< map_h <<std::endl;
         for (unsigned int w = 0; w < map_w; ++w) {
             for (unsigned int h = 0; h < map_h; ++h) {
                 auto x = static_cast<unsigned int> ((w + 0.5) * map_resolution
@@ -110,13 +117,84 @@ void HybridAStarFlow::Run() {
                                                     / current_costmap_ptr_->info.resolution);
 
                 if (current_costmap_ptr_->data[y * current_costmap_ptr_->info.width + x]) {
-                    kinodynamic_astar_searcher_ptr_->SetObstacle(w, h);
+                    kinodynamic_astar_searcher_ptr_->SetObstacle(w, h); 
                 }
             }
         }
         has_map_ = true;
     }
+    if (vals_accessed.size() != 0){
+        std::cout<<"need to do something here"<< std::endl;
+        const double map_resolution = 0.2;
+        for (size_t i = 0; i < vals_accessed.size(); i += 2) {
+            unsigned int x_pls = vals_accessed[i];
+            unsigned int y_pls = vals_accessed[i + 1];
+
+            unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
+            unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
+            // std::cout<< x_pls << "                        "<< y_pls << std::endl;
+            // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
+            kinodynamic_astar_searcher_ptr_->SetObstacle(bhagwan_k_bharose_x, bhagwan_k_bharose_y);
+            i_made_obstacles=1;
+        }
+    }
+
+    // if (vals_accessed.size() != 0){
+    //     if (costmap_deque_.empty()) {
+    //         return;
+    //     }
+
+    //     current_costmap_ptr_ = costmap_deque_.front();
+    //     costmap_deque_.pop_front();
+
+    //     const double map_resolution = 0.2;
+    //     // kinodynamic_astar_searcher_ptr_->Init(
+    //     //         current_costmap_ptr_->info.origin.position.x,
+    //     //         1.0 * current_costmap_ptr_->info.width * current_costmap_ptr_->info.resolution,
+    //     //         current_costmap_ptr_->info.origin.position.y,
+    //     //         1.0 * current_costmap_ptr_->info.height * current_costmap_ptr_->info.resolution,
+    //     //         current_costmap_ptr_->info.resolution,
+    //     //         map_resolution
+    //     // );
+
+    //     // unsigned int map_w = std::floor(current_costmap_ptr_->info.width / map_resolution);
+    //     // unsigned int map_h = std::floor(current_costmap_ptr_->info.height / map_resolution);
+    //     // for (unsigned int w = 0; w < map_w; ++w) {
+    //     //     for (unsigned int h = 0; h < map_h; ++h) {
+    //     //         auto x = static_cast<unsigned int> ((w + 0.5) * map_resolution
+    //     //                                             / current_costmap_ptr_->info.resolution);
+    //     //         auto y = static_cast<unsigned int> ((h + 0.5) * map_resolution
+    //     //                                             / current_costmap_ptr_->info.resolution);
+    //     // std::cout<<"need to do something here"<< std::endl;
+    //     for (size_t i = 0; i < vals_accessed.size(); i += 2) {
+    //         unsigned int x_pls = vals_accessed[i];
+    //         unsigned int y_pls = vals_accessed[i + 1];
+    //         // std::cout<< x_pls << "                        "<< y_pls << std::endl;
+    //         // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
+    //         auto x = static_cast<unsigned int> ((x_pls + 0.5) * map_resolution
+    //                                                 / current_costmap_ptr_->info.resolution);
+    //         auto y = static_cast<unsigned int> ((y_pls + 0.5) * map_resolution
+    //                                             / current_costmap_ptr_->info.resolution);
+
+    //         if (current_costmap_ptr_->data[y * current_costmap_ptr_->info.width + x]) {
+    //             kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls); 
+    //         }
+
+    //         // if (current_costmap_ptr_->data[y_pls * current_costmap_ptr_->info.width + x_pls]) {
+    //         //     kinodynamic_astar_searcher_ptr_->SetObstacle(w, h); 
+    //         // }
+    //     }
+    // }
+        
+
+
+
+
+
+
+    // kinodynamic_astar_searcher_ptr_->SetObstacle(w, h);
     costmap_deque_.clear();
+    
     
     while (HasStartPose() && HasGoalPose()) {
         // std::cout<<"#################"<< count_ddddd <<std::endl;
@@ -207,6 +285,21 @@ void HybridAStarFlow::Run() {
         // std::cout<< "############## end "<<count_ddddd <<std::endl;
         // count_ddddd = count_ddddd+1;
 
+    }
+    if (i_made_obstacles != 0){
+        std::cout<<"need to remove obstacles"<< std::endl;
+        const double map_resolution = 0.2;
+        for (size_t i = 0; i < vals_accessed.size(); i += 2) {
+            unsigned int x_pls = vals_accessed[i];
+            unsigned int y_pls = vals_accessed[i + 1];
+
+            unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
+            unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
+            // std::cout<< x_pls << "                        "<< y_pls << std::endl;
+            // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
+            kinodynamic_astar_searcher_ptr_->RemoveObstacle(bhagwan_k_bharose_x, bhagwan_k_bharose_y);
+            i_made_obstacles=0;
+        }
     }
 }
 
@@ -356,6 +449,11 @@ void HybridAStarFlow::ReadData() {
     costmap_sub_ptr_->ParseData(costmap_deque_);
     init_pose_sub_ptr_->ParseData(init_pose_deque_);
     goal_pose_sub_ptr_->ParseData(goal_pose_deque_);
+    // ParseData for obstacle
+    // goal_pose_sub_ptr_->x, goal_pose_sub_ptr_-y, 
+    // std::vector<double> vals = obstacle_pose_sub_ptr_->getX_Y_Vals();
+    vals_accessed = obstacle_pose_sub_ptr_->getX_Y_Vals();
+    // std::cout<< "size of the vector that has been made is "<< vals_accessed.size() <<std::endl;
 }
 
 void HybridAStarFlow::InitPoseData() {

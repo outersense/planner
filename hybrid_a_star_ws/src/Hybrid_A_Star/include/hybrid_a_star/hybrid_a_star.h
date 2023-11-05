@@ -73,6 +73,7 @@ public:
     void SetObstacle(double pt_x, double pt_y);
 
     void SetObstacle(unsigned int x, unsigned int y);
+    void RemoveObstacle(unsigned int x, unsigned int y);
 
     /*!
      * Set vehicle shape

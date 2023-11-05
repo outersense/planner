@@ -26,7 +26,7 @@ if has_map part: this makes map only once, but we are updating map at 20hz
                : even tho we can see in RViz the map is not going to planner
                : Dumb way: keep publishing updated map as we do 
                          : make has map a counter based update, beacue it is expensive, 
-                         : you update the map every 5,10,20 iteration of the .Run() call 
+                         : you update the map every 1,5,10,20 iteration of the .Run() call 
                          : first check by doing it at 20hz see the drop in performance, then do it at x Hz and come to a number
                          : note that the scale of map will heavily determione time taken 
                          : visualization is real time so we will see ethat the obstacle has come but the planner doesnt get it real time it gets at x hz so we can see going through or sudden jump 

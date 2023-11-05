@@ -1166,6 +1166,33 @@ src/intermediate_node.cpp.s:
 	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build && $(MAKE) -f Hybrid_A_Star/CMakeFiles/intermediate_node.dir/build.make Hybrid_A_Star/CMakeFiles/intermediate_node.dir/src/intermediate_node.cpp.s
 .PHONY : src/intermediate_node.cpp.s
 
+src/obstacle_pose_subscriber.o: src/obstacle_pose_subscriber.cpp.o
+
+.PHONY : src/obstacle_pose_subscriber.o
+
+# target to build an object file
+src/obstacle_pose_subscriber.cpp.o:
+	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build && $(MAKE) -f Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/build.make Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.o
+.PHONY : src/obstacle_pose_subscriber.cpp.o
+
+src/obstacle_pose_subscriber.i: src/obstacle_pose_subscriber.cpp.i
+
+.PHONY : src/obstacle_pose_subscriber.i
+
+# target to preprocess a source file
+src/obstacle_pose_subscriber.cpp.i:
+	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build && $(MAKE) -f Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/build.make Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.i
+.PHONY : src/obstacle_pose_subscriber.cpp.i
+
+src/obstacle_pose_subscriber.s: src/obstacle_pose_subscriber.cpp.s
+
+.PHONY : src/obstacle_pose_subscriber.s
+
+# target to generate assembly for a file
+src/obstacle_pose_subscriber.cpp.s:
+	cd /home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/build && $(MAKE) -f Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/build.make Hybrid_A_Star/CMakeFiles/PATH_SEARCHER_LIB.dir/src/obstacle_pose_subscriber.cpp.s
+.PHONY : src/obstacle_pose_subscriber.cpp.s
+
 src/rs_path.o: src/rs_path.cpp.o
 
 .PHONY : src/rs_path.o
@@ -1281,6 +1308,9 @@ help:
 	@echo "... src/intermediate_node.o"
 	@echo "... src/intermediate_node.i"
 	@echo "... src/intermediate_node.s"
+	@echo "... src/obstacle_pose_subscriber.o"
+	@echo "... src/obstacle_pose_subscriber.i"
+	@echo "... src/obstacle_pose_subscriber.s"
 	@echo "... src/rs_path.o"
 	@echo "... src/rs_path.i"
 	@echo "... src/rs_path.s"
