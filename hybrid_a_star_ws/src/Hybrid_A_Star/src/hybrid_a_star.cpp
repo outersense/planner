@@ -32,6 +32,8 @@
 
 #include <iostream>
 using Eigen::Vector3d;
+bool scale_100_2 = false;
+
 HybridAStar::HybridAStar(double steering_angle, int steering_angle_discrete_num, double segment_length,
                          int segment_length_discrete_num, double wheel_base, double steering_penalty,
                          double reversing_penalty, double steering_change_penalty, double shot_distance,
@@ -66,8 +68,13 @@ HybridAStar::~HybridAStar() {
 void HybridAStar::Init(double x_lower, double x_upper, double y_lower, double y_upper,
                        double state_grid_resolution, double map_grid_resolution) {
     // SetVehicleShape(4.7, 2.0, 1.3);
-    // SetVehicleShape(3.0, 2.0, 1.3);
-    SetVehicleShape(30, 20, 13);
+    
+    if (scale_100_2 == true){
+        SetVehicleShape(30, 20, 13);
+    }
+    else{
+        SetVehicleShape(3.0, 2.0, 1.3);
+    }
     // SetVehicleShape(0.30, 0.20, 0.13);
     // SetVehicleShape(9.0, 6.0, 3.9);
 
@@ -400,32 +407,32 @@ void HybridAStar::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
             neighbor_nodes.push_back(neighbor_forward_node_ptr);
         }
 
-        // backward
-        has_obstacle = false;
-        intermediate_state.clear();
-        x = curr_node_ptr->state_.x();
-        y = curr_node_ptr->state_.y();
-        theta = curr_node_ptr->state_.z();
-        for (int j = 1; j <= segment_length_discrete_num_; j++) {
-            DynamicModel(-move_step_size_, phi, x, y, theta);
-            intermediate_state.emplace_back(Vec3d(x, y, theta));
+        // // backward
+        // has_obstacle = false;
+        // intermediate_state.clear();
+        // x = curr_node_ptr->state_.x();
+        // y = curr_node_ptr->state_.y();
+        // theta = curr_node_ptr->state_.z();
+        // for (int j = 1; j <= segment_length_discrete_num_; j++) {
+        //     DynamicModel(-move_step_size_, phi, x, y, theta);
+        //     intermediate_state.emplace_back(Vec3d(x, y, theta));
 
-            if (!CheckCollision(x, y, theta)) {
-                has_obstacle = true;
-                break;
-            }
-        }
+        //     if (!CheckCollision(x, y, theta)) {
+        //         has_obstacle = true;
+        //         break;
+        //     }
+        // }
 
-        if (!BeyondBoundary(intermediate_state.back().head(2)) && !has_obstacle) {
+        // if (!BeyondBoundary(intermediate_state.back().head(2)) && !has_obstacle) {
             
-            grid_index = State2Index(intermediate_state.back());
-            auto neighbor_backward_node_ptr = new StateNode(grid_index);
-            neighbor_backward_node_ptr->intermediate_states_ = intermediate_state;
-            neighbor_backward_node_ptr->state_ = intermediate_state.back();
-            neighbor_backward_node_ptr->steering_grade_ = i;
-            neighbor_backward_node_ptr->direction_ = StateNode::BACKWARD;
-            neighbor_nodes.push_back(neighbor_backward_node_ptr);
-        }
+        //     grid_index = State2Index(intermediate_state.back());
+        //     auto neighbor_backward_node_ptr = new StateNode(grid_index);
+        //     neighbor_backward_node_ptr->intermediate_states_ = intermediate_state;
+        //     neighbor_backward_node_ptr->state_ = intermediate_state.back();
+        //     neighbor_backward_node_ptr->steering_grade_ = i;
+        //     neighbor_backward_node_ptr->direction_ = StateNode::BACKWARD;
+        //     neighbor_nodes.push_back(neighbor_backward_node_ptr);
+        // }
     }
 }
 // VectorVec3d HybridAStar::InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size){
@@ -625,7 +632,11 @@ double HybridAStar::ComputeG(const StateNode::Ptr &current_node_ptr,
 }
 
 int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
-    int timer_out_time = 10000;
+    int timer_out_time = 1000;
+    if (scale_100_2 == true){
+        timer_out_time = 10000;
+    }
+    
     Timer search_used_time;
 
     double neighbor_time = 0.0, compute_h_time = 0.0, compute_g_time = 0.0;

@@ -82,28 +82,38 @@ Visualization Manager:
           Value: true
         Value: false
       Enabled: true
-      Head Length: 10
-      Head Radius: 10
+      Head Length: 1
+      Head Radius: 1
+      # Head Length: 10
+      # Head Radius: 10
       Name: Start Pose
       Queue Size: 10
-      Shaft Length: 40
-      Shaft Radius: 5
+      Shaft Length: 4
+      Shaft Radius: 0.5
+      # Shaft Length: 40
+      # Shaft Radius: 5
       Shape: Arrow
       Topic: /car2/planner_curr_pos
       Unreliable: false
       Value: true
     - Alpha: 1
-      Axes Length: 10
-      Axes Radius: 1
+      Axes Length: 1
+      Axes Radius: 0.1
+      # Axes Length: 10
+      # Axes Radius: 1
       Class: rviz/Pose
       Color: 0; 0; 0
       Enabled: true
-      Head Length: 10
-      Head Radius: 10
+      Head Length: 1
+      Head Radius: 1
+      # Head Length: 10
+      # Head Radius: 10
       Name: Goal Pose
       Queue Size: 10
-      Shaft Length: 40
-      Shaft Radius: 5
+      Shaft Length: 4
+      Shaft Radius: 0.5
+      # Shaft Length: 40
+      # Shaft Radius: 5
       Shape: Arrow
       Topic: /car2/planner_goal_pos
       Unreliable: false
@@ -113,11 +123,15 @@ Visualization Manager:
       Class: rviz/Path
       Color: 25; 255; 0
       Enabled: true
-      Head Diameter: 3
-      Head Length: 2
-      Length: 3
+      Head Diameter: 0.3
+      Head Length: 0.2
+      Length: 0.3
+      # Head Diameter: 3
+      # Head Length: 2
+      # Length: 3
       Line Style: Billboards
-      Line Width: 3
+      Line Width: 0.3
+      # Line Width: 3
       Name: Path
       Offset:
         X: 0
@@ -126,9 +140,12 @@ Visualization Manager:
       Pose Color: 255; 85; 255
       Pose Style: None
       Queue Size: 10
-      Radius: 0.29999998211860657
-      Shaft Diameter: 1
-      Shaft Length: 1
+      Radius: 0.029999998211860657
+      Shaft Diameter: 0.1
+      Shaft Length: 0.1
+      # Radius: 0.29999998211860657
+      # Shaft Diameter: 1
+      # Shaft Length: 1
       Topic: /run_hybrid_astar/searched_path
       Unreliable: false
       Value: true
@@ -137,11 +154,15 @@ Visualization Manager:
       Class: rviz/Path
       Color: 255; 0; 0
       Enabled: false
-      Head Diameter: 3
-      Head Length: 2
-      Length: 3
+      Head Diameter: 0.3
+      Head Length: 0.2
+      Length: 0.3
+      # Head Diameter: 3
+      # Head Length: 2
+      # Length: 3
       Line Style: Billboards
-      Line Width: 1
+      Line Width: 0.1
+      # Line Width: 1
       Name: Optimized Path
       Offset:
         X: 0
@@ -150,9 +171,12 @@ Visualization Manager:
       Pose Color: 255; 85; 255
       Pose Style: None
       Queue Size: 10
-      Radius: 0.29999998211860657
-      Shaft Diameter: 1
-      Shaft Length: 1
+      Radius: 0.029999998211860657
+      Shaft Diameter: 0.1
+      Shaft Length: 0.1
+      # Radius: 0.29999998211860657
+      # Shaft Diameter: 1
+      # Shaft Length: 1
       Topic: /run_hybrid_astar/searched_path
       Unreliable: false
       Value: false

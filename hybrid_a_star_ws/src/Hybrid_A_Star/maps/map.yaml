@@ -1,9 +1,9 @@
 # image: figure8_track2.png
 # image: figure8_track.png
 # image: figure8_track4.png
-image: figure8_track7.png #100 scale 8 filled Nov 1 manualRonit
+# image: figure8_track7.png #100 scale 8 filled Nov 1 manualRonit
 # image: figure8_track8.png #100 scale white Nov 1 manualRonit 
-# image: figure8_track9.png #10 scale 8 filled Nov 1 manualRonit
+image: figure8_track9.png #10 scale 8 filled Nov 1 manualRonit
 # image: figure8_track10.png #10 scale white Nov 1 manualRonit
 resolution: 1.0
 # resolution: 0.1

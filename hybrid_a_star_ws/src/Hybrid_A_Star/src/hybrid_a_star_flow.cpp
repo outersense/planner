@@ -44,6 +44,7 @@ double Mod2Pi(const double &x) {
 
     return v;
 }
+bool scale_100 = false;
 
 HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     double steering_angle = nh.param("planner/steering_angle", 10);
@@ -78,7 +79,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
-
+    
     has_map_ = false;
 }
 
@@ -108,7 +109,7 @@ void HybridAStarFlow::Run() {
 
         unsigned int map_w = std::floor(current_costmap_ptr_->info.width / map_resolution);
         unsigned int map_h = std::floor(current_costmap_ptr_->info.height / map_resolution);
-        std::cout<<"scaled width" << map_w << "          scaled height "<< map_h <<std::endl;
+        // std::cout<<"scaled width" << map_w << "          scaled height "<< map_h <<std::endl;
         for (unsigned int w = 0; w < map_w; ++w) {
             for (unsigned int h = 0; h < map_h; ++h) {
                 auto x = static_cast<unsigned int> ((w + 0.5) * map_resolution
@@ -124,7 +125,7 @@ void HybridAStarFlow::Run() {
         has_map_ = true;
     }
     if (vals_accessed.size() != 0){
-        std::cout<<"need to do something here"<< std::endl;
+        // std::cout<<"need to do something here"<< std::endl;
         const double map_resolution = 0.2;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             unsigned int x_pls = vals_accessed[i];
@@ -220,8 +221,14 @@ void HybridAStarFlow::Run() {
                 
                 PublishPath(path);
                 PublishPathOutersense(path);
-                // PublishVehiclePath(path, 4.0, 2.0, 5u);
-                PublishVehiclePath(path, 30.0, 20.0, 20u);
+                if (scale_100 == true){
+                    PublishVehiclePath(path, 30.0, 20.0, 20u);
+                }
+                else{
+                    PublishVehiclePath(path, 3.0, 2.0, 5u);
+                }
+                
+                
                 PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
             }
             else if(variation_id == 9){
@@ -287,7 +294,7 @@ void HybridAStarFlow::Run() {
 
     }
     if (i_made_obstacles != 0){
-        std::cout<<"need to remove obstacles"<< std::endl;
+        // std::cout<<"need to remove obstacles"<< std::endl;
         const double map_resolution = 0.2;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             unsigned int x_pls = vals_accessed[i];
@@ -498,9 +505,23 @@ void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
 
     geometry_msgs::PoseStamped pose_stamped;
     for (const auto &pose: path) {
+        int scale_factor = 1;
+        int translate_x = 0;
+        int translate_y = 0;
+        if (scale_100 == true){
+            scale_factor = 100;
+            translate_x = -23;
+            translate_y = 37;
+        }
+        else{
+            scale_factor = 10;
+            translate_x = -2;
+            translate_y = 4;
+        }
+        
         pose_stamped.header.frame_id = "world";
-        pose_stamped.pose.position.x = (pose.x()+30)/100;
-        pose_stamped.pose.position.y = (pose.y()-48)/100;
+        pose_stamped.pose.position.x = (pose.x()- translate_x)/scale_factor;
+        pose_stamped.pose.position.y = (pose.y()- translate_y)/scale_factor;
         pose_stamped.pose.position.z = 0.0;
         pose_stamped.pose.orientation = tf::createQuaternionMsgFromYaw(pose.z());
 

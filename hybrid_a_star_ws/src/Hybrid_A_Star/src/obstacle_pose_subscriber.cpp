@@ -18,18 +18,27 @@ void ObstaclePoseSubscriber2D::MessageCallBack(const std_msgs::Float32MultiArray
 
     buff_mutex_.unlock();
 }
-
+bool scale_100_4 = false;
 void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32MultiArray::ConstPtr& obstacle_data)
     {
         // std::cout<<"i am here now"<< std::endl;
         // buff_mutex_.lock();
-        int scale_factor = 100;
-        int translate_x = -23;
-        int translate_y = 37;
-        // std::cout<<"Now i am here"<< std::endl;
-        // int scale_factor = 10;
-        // int translate_x = -2;
-        // int translate_y = 4;
+        int scale_factor = 1;
+        int translate_x = 0;
+        int translate_y = 0;
+        int extend = 0;
+        if (scale_100_4 ==true){
+            scale_factor = 100;
+            translate_x = -23;
+            translate_y = 37;
+            extend = 13;
+        }
+        else{
+            scale_factor = 10;
+            translate_x = -2;
+            translate_y = 4;
+            extend = 2;
+        }
 
         for (std::vector<float>::size_type i = 0; i < obstacle_data->data.size(); i += 5)
         {
@@ -44,7 +53,7 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
                 x_y_vals.push_back(y);
 
 
-                for (int pix = 1; pix < 13; pix++){
+                for (int pix = 1; pix < extend; pix++){
                     // Update surrounding cells
                     for (int dx = -pix; dx <= pix; dx++) {
                         for (int dy = -pix; dy <= pix; dy++) {

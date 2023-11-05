@@ -148,6 +148,7 @@
 class ObstacleMapUpdater
 {
 public:
+bool scale_100_3 = false;
     ObstacleMapUpdater()
     {
         obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &ObstacleMapUpdater::obstacleCallback, this);
@@ -178,12 +179,24 @@ public:
             ROS_ERROR("Map size is not valid.");
             return;
         }
-        int scale_factor = 100;
-        int translate_x = -23;
-        int translate_y = 37;
-        // int scale_factor = 10;
-        // int translate_x = -2;
-        // int translate_y = 4;
+        int scale_factor = 1;
+        int translate_x = 0;
+        int translate_y = 0;
+        int extend = 0;
+        if (scale_100_3 ==true){
+            scale_factor = 100;
+            translate_x = -23;
+            translate_y = 37;
+            extend = 13;
+        }
+        else{
+            scale_factor = 10;
+            translate_x = -2;
+            translate_y = 4;
+            extend = 2;
+        }
+        
+        
 
         for (std::vector<float>::size_type i = 0; i < obstacle_data->data.size(); i += 5)
         {
@@ -204,8 +217,8 @@ public:
                 if (static_cast<unsigned int>(map_index) < map_size) {
                     current_map.data[map_index] = 100; 
                 }
-
-                for (int pix = 1; pix < 13; pix++){
+                
+                for (int pix = 1; pix < extend; pix++){
                     // Update surrounding cells
                     for (int dx = -pix; dx <= pix; dx++) {
                         for (int dy = -pix; dy <= pix; dy++) {

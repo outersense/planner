@@ -46,3 +46,13 @@ interpolation: eitehr use white map and test robustly on it that it does not gi 
              : or when it goes in interpolation do a collision check as well 
              : implement a spline type solution 
              : or get the closest point on center of lane and do A* from that, this would mean overwriting the input 
+
+
+
+CURRENT SCALE 10
+TO CHANGE SCALE TO 100
+put scale_100_x to true everywhere
+uncomment the line in launch and comment the next line
+uncooment th eline in urdf file and comment the next line
+uncomment the right file in map.yaml
+uncomment the lines in rviz file and comment the lines followng that are similar
