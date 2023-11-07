@@ -102,21 +102,28 @@ def do_kdtree(array_source, array_dest, k =1):
 
 class GetGoal:
     def __init__(self):
-        self.look_ahead_index = 5
+        self.look_ahead_index = 6
         self.error_buffer = 10
         scale_100_5 = False
         
         if (scale_100_5 == True):
-            waypoints_name = "waypoints1_100scale.npy" #Nov2 manual Ronit
+            # waypoints_name = "waypoints1_100scale.npy" #Nov2 manual Ronit
             # for 100 scale maps Nov2
-            self.translate_x = -23.433744557914416
-            self.translate_y = 37.368772684946485
+            waypoints_name = "waypoints_Nov6_1bag_cheat.npy"
+            self.translate_x = -30.419910440369464
+            self.translate_y = 29.681722692357146
+
+            # self.translate_x = -20.41996779977085
+            # self.translate_y = 39.681654685361023
             self.scale_factor = 100
         # for 10 scale maps Nov2
         else:
-            waypoints_name = "waypoints1_10scale.npy"
-            self.translate_x = -2.3433744557914416
-            self.translate_y = 3.7368772684946485
+            # waypoints_name = "waypoints1_10scale.npy"
+            waypoints_name = "waypoints_Nov6_1bag_cheat.npy"
+            self.translate_x = -3.0419910440369464
+            self.translate_y = 2.9681722692357146
+            # self.translate_x = -2.041996779977085
+            # self.translate_y = 3.9681654685361023
             self.scale_factor = 10
         
         self.waypoints = np.load(waypoints_name, allow_pickle=True)

@@ -185,14 +185,14 @@ bool scale_100_3 = false;
         int extend = 0;
         if (scale_100_3 ==true){
             scale_factor = 100;
-            translate_x = -23;
-            translate_y = 37;
+            translate_x = -30;
+            translate_y = 30;
             extend = 13;
         }
         else{
             scale_factor = 10;
-            translate_x = -2;
-            translate_y = 4;
+            translate_x = -3;
+            translate_y = 3;
             extend = 2;
         }
         

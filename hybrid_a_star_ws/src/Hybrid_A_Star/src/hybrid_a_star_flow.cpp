@@ -93,7 +93,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 
 
     double x, y, theta;
-    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints1_10scale.txt";
+    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints_Nov6_2bag.txt";
     std::ifstream file(filename);
     if (file.is_open()) {
         std::string line;
@@ -572,17 +572,17 @@ void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
     geometry_msgs::PoseStamped pose_stamped;
     for (const auto &pose: path) {
         int scale_factor = 1;
-        int translate_x = 0;
-        int translate_y = 0;
+        double translate_x = 0.0;
+        double translate_y = 0.0;
         if (scale_100 == true){
             scale_factor = 100;
-            translate_x = -23;
-            translate_y = 37;
+            translate_x = -30.419910440369464;
+            translate_y = 29.681722692357146;
         }
         else{
             scale_factor = 10;
-            translate_x = -2;
-            translate_y = 4;
+            translate_x = -3.0419910440369464;
+            translate_y = 2.9681722692357146;
         }
         
         pose_stamped.header.frame_id = "world";

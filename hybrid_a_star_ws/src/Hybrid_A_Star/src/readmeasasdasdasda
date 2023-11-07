@@ -56,3 +56,12 @@ uncomment the line in launch and comment the next line
 uncooment th eline in urdf file and comment the next line
 uncomment the right file in map.yaml
 uncomment the lines in rviz file and comment the lines followng that are similar
+
+
+
+look ahead tune now 8
+obstacle size tine now 2
+map waypoints why wrong?
+goal pose publisher checks for obstacle and if obs then publishes next goal
+translation not matching with real world : push obstacle more in y, car shows center but is actually more in y so check if car pose that we get needs to be pushed in y or reduced
+reversing flag stopping flag

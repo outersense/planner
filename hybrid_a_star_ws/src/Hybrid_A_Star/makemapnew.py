@@ -12,10 +12,11 @@ import cv2
 
 
 
-bagfile_path = "/home/jash/outersense_planner/planner/rosbags/nov1"
+bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov6"
+# bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov2"
 # bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov1"
-# bagfile_name = "1.bag"
-bagfile_name = "manual_ronit.bag"
+bagfile_name = "nov6_2.bag"
+# bagfile_name = "manual_ronit.bag"
 
 topic_gps = "/rccar_pose"
 topic_car2_world = "/car2/world_pose"
@@ -167,8 +168,8 @@ def calculate_perpendicular_points2(waypoints):
         x, y, theta = waypoint
 
         perpendicular_heading = theta + np.pi / 2  # Rotate the heading by 90 degrees to get a perpendicular direction
-        x_offset = 0.45 * np.cos(perpendicular_heading)
-        y_offset = 0.45 * np.sin(perpendicular_heading)
+        x_offset = 0.35 * np.cos(perpendicular_heading)
+        y_offset = 0.35 * np.sin(perpendicular_heading)
 
         lane_1_point = [x + x_offset, y + y_offset]
         lane_2_point = [x - x_offset, y - y_offset]
@@ -289,8 +290,10 @@ def fill_lanes_with_color(lane_1, lane_2):
     lane_2[:, 0] += translate_x
     lane_2[:, 1] += translate_y
     # 5 and 2.1
-    lane_2_indexes= np.where(lane_2[:,0]>(5*scale_factor+translate_x))
-    lane_1_indexes= np.where(lane_1[:,0]<(2.2*scale_factor+translate_x))
+    # lane_2_indexes= np.where(lane_2[:,0]>(5*scale_factor+translate_x))
+    # lane_1_indexes= np.where(lane_1[:,0]<(2.2*scale_factor+translate_x))
+    lane_2_indexes= np.where(lane_2[:,0]>(4.7*scale_factor+translate_x))
+    lane_1_indexes= np.where(lane_1[:,0]<(2.5*scale_factor+translate_x))
     # print(lane_1_indexes, type(lane_1_indexes))
     lane_3 = lane_1[lane_1_indexes[0]]
     lane_4 = lane_2[lane_2_indexes[0]]
@@ -342,12 +345,71 @@ for topic, msg, bag_t in bag_ego.read_messages():
     #     gps_pose_array2[gps_msgs2] = pose_gps2
     #     gps_msgs2 += 1
 yaw_array = gps_pose_array[:,-1]#*180/PI
-x_points = gps_pose_array[::25,1]
-y_points = gps_pose_array[::25,2]
-yaw_points = yaw_array[::25]
+x_points = gps_pose_array[::20,1]
+y_points = gps_pose_array[::20,2]
+yaw_points = yaw_array[::20]
 waypoints = np.stack((x_points,y_points, yaw_points)).T[1:,:]
+print(waypoints)
+waypoints = np.asarray([[ 2.51426935e+00,  4.91118938e-01,  3.26359332e-01],
+                        [ 2.79333186e+00,  5.75201929e-01,  2.57981598e-01],
+                        [ 3.09102345e+00,  6.56028569e-01,  2.58095711e-01],
+                        [ 3.39558887e+00,  7.39092469e-01,  2.81085581e-01],
+                        [ 3.68272233e+00,  8.13478172e-01,  2.22499445e-01],
+                        [ 3.98836303e+00,  8.72113407e-01,  1.97800457e-01],
+                        [ 4.41188955e+00,  9.73643243e-01,  2.37397671e-01],
+                        [ 4.71176386e+00,  1.05769050e+00,  2.95446515e-01],
+                        [ 4.99233818e+00,  1.15032542e+00,  3.34062874e-01],
+                        [ 5.28172970e+00,  1.25759184e+00,  3.68352532e-01],
+                        [ 5.25145149e+00,  1.27332699e+00,  4.30903018e-01],
+                        [ 5.51130247e+00,  1.40376687e+00,  3.80270809e-01],
+                        [ 5.80086231e+00,  1.50306058e+00,  2.90026993e-01],
+                        [ 6.08850861e+00,  1.58499253e+00,  2.02817425e-01],
+                        [ 6.35881805e+00,  1.60528743e+00, -3.68811237e-03],
+                        [ 6.54190445e+00,  1.58833456e+00, -2.54994035e-01],
+                        [ 6.86892843e+00,  1.54701471e+00, -4.49753076e-01],
+                        [ 7.05560541e+00,  1.41516900e+00, -7.83347309e-01],
+                        [ 7.18132019e+00,  1.25668979e+00, -1.05358374e+00],
+                        [ 7.26306677e+00,  1.06298971e+00, -1.27376115e+00],
+                        [ 7.28938007e+00,  8.71293843e-01, -1.57448483e+00],
+                        [ 7.27830219e+00,  6.88031733e-01, -1.73375618e+00],
+                        [ 7.23011112e+00,  5.39327383e-01, -1.99686849e+00],
+                        [ 7.11141348e+00,  3.55717152e-01, -2.23984694e+00],
+                        [ 6.95376635e+00,  2.04741284e-01, -2.53109193e+00],
+                        [ 6.70200729e+00,  8.35612565e-02, -2.84884167e+00],
+                        [ 6.44648361e+00,  5.31803928e-02,  3.13790464e+00],
+                        [ 6.13302183e+00,  6.67227134e-02,  3.05130482e+00],
+                        [ 5.79877710e+00,  1.05757698e-01,  2.99704528e+00],
+                        [ 5.43114853e+00,  1.58164844e-01,  3.02229691e+00],
+                        [ 5.09357262e+00,  1.98849693e-01,  3.02515864e+00],
+                        [ 4.98655319e+00,  2.13634902e-01,  2.96985984e+00],
+                        [ 4.65974760e+00,  2.82978201e-01,  2.84633589e+00],
+                        [ 4.36351156e+00,  3.85982150e-01,  2.76458859e+00],
+                        [ 4.03865957e+00,  5.05983853e-01,  2.83958364e+00],
+                        [ 3.58878255e+00,  6.33763635e-01,  2.81264472e+00],
+                        [ 3.22477007e+00,  7.64591479e-01,  2.79871893e+00],
+                        [ 2.87420344e+00,  0.97368112e+00,  2.78426099e+00],
+                        [ 2.56073594e+00,  1.17911923e+00,  2.81481814e+00],
+                        [ 2.22628140e+00,  1.30195391e+00,  2.79427671e+00],
+                        [ 1.89803088e+00,  1.41122890e+00,  2.82753468e+00],
+                        [ 1.59487998e+00,  1.48304808e+00,  2.98406839e+00],
+                        [ 1.37248278e+00,  1.49022830e+00,  3.13793612e+00],
+                        [ 1.09629655e+00,  1.50226641e+00, -2.79984379e+00],
+                        [ 9.33909476e-01,  1.41776860e+00, -2.50297356e+00],
+                        [ 7.94404030e-01,  1.28071511e+00, -2.23419261e+00],
+                        [ 6.92177355e-01,  1.10330057e+00, -1.90989697e+00],
+                        [ 6.54197097e-01,  8.96763921e-01, -1.57418334e+00],
+                        [ 6.70448065e-01,  7.01881707e-01, -1.34972692e+00],
+                        [ 7.63061225e-01,  5.05258143e-01, -1.13600898e+00],
+                        [ 8.86669099e-01,  3.09667647e-01, -8.42582583e-01],
+                        [ 1.02726996e+00,  1.87435761e-01, -5.72583139e-01],
+                        [ 1.20022333e+00,  1.09121621e-01, -2.76646346e-01],
+                        [ 1.41937554e+00,  8.79127607e-02, -3.65659175e-03],
+                        [ 1.64978051e+00,  1.26482233e-01,  2.57413626e-01],
+                        [ 1.98993695e+00,  2.70689189e-01,  3.36985409e-01],
+                        [ 2.31365824e+00,  3.81311357e-01,  3.29619169e-01]])
+
 # waypoints_new = np.stack((x_points*scale_factor,y_points*scale_factor, yaw_points)).T[1:,:]
-# np.save("/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints1_100scale.npy", waypoints)
+np.save("/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints_Nov6_1bag_cheat.npy", waypoints)
 t_cos = np.cos(waypoints[:,-1])
 t_sin = np.sin(waypoints[:,-1])
 
@@ -460,7 +522,7 @@ cv2.destroyAllWindows()
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 # cv2.imwrite("maps/figure8_track3.png", new_road_image)
-cv2.imwrite("maps/figure8_track12.png", road_image)
-# cv2.imwrite("maps/figure8_track8.png", white_image)
+cv2.imwrite("maps/figure8_track19.png", road_image)
+cv2.imwrite("maps/figure8_track20.png", white_image)
 
 # 30.3822394 -48.199419 757.96629 201.956163

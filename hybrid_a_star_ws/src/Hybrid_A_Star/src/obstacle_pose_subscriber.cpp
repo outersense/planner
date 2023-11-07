@@ -23,20 +23,21 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
     {
         // std::cout<<"i am here now"<< std::endl;
         // buff_mutex_.lock();
+        // -3.0419910440369464             2.9681722692357146
         int scale_factor = 1;
         int translate_x = 0;
         int translate_y = 0;
         int extend = 0;
         if (scale_100_4 ==true){
             scale_factor = 100;
-            translate_x = -23;
-            translate_y = 37;
+            translate_x = -30;
+            translate_y = 30;
             extend = 13;
         }
         else{
             scale_factor = 10;
-            translate_x = -2;
-            translate_y = 4;
+            translate_x = -3;
+            translate_y = 3;
             extend = 2;
         }
 
