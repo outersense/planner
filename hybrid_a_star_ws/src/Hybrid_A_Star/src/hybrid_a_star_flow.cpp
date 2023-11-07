@@ -93,7 +93,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 
 
     double x, y, theta;
-    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints_Nov6_2bag.txt";
+    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints_Nov6_1bag_cheat.txt";
     std::ifstream file(filename);
     if (file.is_open()) {
         std::string line;

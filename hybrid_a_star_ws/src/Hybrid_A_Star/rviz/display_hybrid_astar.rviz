@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /RobotModel1/Links1
+        - /Path2
       Splitter Ratio: 0.5
     Tree Height: 365
   - Class: rviz/Selection
@@ -338,4 +339,4 @@ Window Geometry:
     collapsed: true
   Width: 1386
   X: 214
-  Y: 65
+  Y: 28
