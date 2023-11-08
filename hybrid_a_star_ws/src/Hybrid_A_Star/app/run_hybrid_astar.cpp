@@ -44,7 +44,11 @@ int main(int argc, char **argv) {
     ros::Rate rate(100);
 
     while (ros::ok()) {
+        auto start_time = std::chrono::high_resolution_clock::now();
         kinodynamic_astar_flow.Run();
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+        std::cout << "Execution time: " << duration.count() << " milliseconds" << std::endl;
 
         ros::spinOnce();
         rate.sleep();

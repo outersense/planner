@@ -193,7 +193,7 @@ bool scale_100_3 = false;
             scale_factor = 10;
             translate_x = -3;
             translate_y = 3;
-            extend = 2;
+            extend = 3;
         }
         
         

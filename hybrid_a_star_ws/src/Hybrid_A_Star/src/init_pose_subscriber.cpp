@@ -39,6 +39,7 @@ void InitPoseSubscriber2D::MessageCallBack(
         const geometry_msgs::PoseWithCovarianceStampedPtr &init_pose_ptr
 ) {
     buff_mutex_.lock();
+    init_poses_.clear();
     init_poses_.emplace_back(init_pose_ptr);
     buff_mutex_.unlock();
 }

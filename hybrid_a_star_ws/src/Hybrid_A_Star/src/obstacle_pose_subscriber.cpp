@@ -38,7 +38,7 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
             scale_factor = 10;
             translate_x = -3;
             translate_y = 3;
-            extend = 2;
+            extend = 3;
         }
 
         for (std::vector<float>::size_type i = 0; i < obstacle_data->data.size(); i += 5)
