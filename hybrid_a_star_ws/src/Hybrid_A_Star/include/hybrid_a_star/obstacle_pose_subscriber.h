@@ -40,7 +40,8 @@ public:
     ObstaclePoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name, size_t buff_size);
 
     // void ParseData(std::deque<geometry_msgs::PoseStampedPtr> &pose_data_buff);
-    std::vector<int> getX_Y_Vals() const;
+    // std::vector<int> getX_Y_Vals() const;
+    std::vector<double> getX_Y_Vals() const;
     
     void updateMapWithObstacles(const std_msgs::Float32MultiArray::ConstPtr& obstacle_data);
 
@@ -54,7 +55,8 @@ private:
 
     std::mutex buff_mutex_;
     // int x, y;
-    std::vector<int> x_y_vals;
+    // std::vector<int> x_y_vals;
+    std::vector<double> x_y_vals;
 };
 
 #endif //HYBRID_A_STAR_OBSTACLE_POSE_SUBSCRIBER_H

@@ -86,7 +86,8 @@ private:
     std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> init_pose_deque_;
     std::deque<geometry_msgs::PoseStampedPtr> goal_pose_deque_;
     std::deque<nav_msgs::OccupancyGridPtr> costmap_deque_;
-    std::vector<int> vals_accessed;
+    // std::vector<int> vals_accessed;
+    std::vector<double> vals_accessed;
 
     std::vector<double> x_values;
     std::vector<double> y_values;

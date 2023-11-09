@@ -72,8 +72,8 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // std::cout << *costmap_sub_ptr_<< std::endl;
     // costmap_sub_ptr_->PrintCostMapData();
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
-    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car2/planner_curr_pos", 1);
-    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car2/planner_goal_pos", 1);
+    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_2/planner_curr_pos", 1);
+    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_2/planner_goal_pos", 1);
 
     obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose", 1);
     
@@ -81,7 +81,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
-    path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
+    path_pub_os = nh.advertise<nav_msgs::Path>("/car_2/planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
     
@@ -160,8 +160,11 @@ void HybridAStarFlow::Run() {
         // std::cout<<"need to do something here"<< std::endl;
         const double map_resolution = 0.2;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
-            unsigned int x_pls = vals_accessed[i];
-            unsigned int y_pls = vals_accessed[i + 1];
+            // unsigned int x_pls = vals_accessed[i];
+            // unsigned int y_pls = vals_accessed[i + 1];
+
+            double x_pls = vals_accessed[i];
+            double y_pls = vals_accessed[i + 1];
 
             unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
             unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
@@ -325,8 +328,10 @@ void HybridAStarFlow::Run() {
         // std::cout<<"need to remove obstacles"<< std::endl;
         const double map_resolution = 0.2;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
-            unsigned int x_pls = vals_accessed[i];
-            unsigned int y_pls = vals_accessed[i + 1];
+            // unsigned int x_pls = vals_accessed[i];
+            // unsigned int y_pls = vals_accessed[i + 1];
+            double x_pls = vals_accessed[i];
+            double y_pls = vals_accessed[i + 1];
 
             unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
             unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);

@@ -27,7 +27,7 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
         int scale_factor = 1;
         int translate_x = 0;
         int translate_y = 0;
-        int extend = 0;
+        double extend = 0.0;
         if (scale_100_4 ==true){
             scale_factor = 100;
             translate_x = -30;
@@ -38,39 +38,66 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
             scale_factor = 10;
             translate_x = -3;
             translate_y = 3;
-            extend = 3;
+            extend = 2.5;
         }
+        // for (std::vector<float>::size_type i = 0; i < obstacle_data->data.size(); i += 5)
+        // {
+        //     int id = (obstacle_data->data[i]);
+        //     // std::cout<< "id is "<< id <<"for "<< i << std::endl;
+        //     int x = static_cast<int>(obstacle_data->data[i + 1]*scale_factor)+translate_x;
+        //     int y = static_cast<int>(obstacle_data->data[i + 2]*scale_factor)+translate_y;
+        //     double vel = std::abs(obstacle_data->data[i + 3]);
+        //     if (id < 1000 && vel <= 0.05) // && x >= 0 && x < map_width && y >= 0 && y < map_height)
+        //     {
+        //         x_y_vals.push_back(x);
+        //         x_y_vals.push_back(y);
+
+
+        //         for (int pix = 1; pix < extend; pix++){
+        //             // Update surrounding cells
+        //             for (int dx = -pix; dx <= pix; dx++) {
+        //                 for (int dy = -pix; dy <= pix; dy++) {
+        //                     int new_x = x + dx;
+        //                     int new_y = y + dy;
+        //                     x_y_vals.push_back(new_x);
+        //                     x_y_vals.push_back(new_y);
+        //                 }
+        //             }
+        //         }
+        //     }           
+        // }
+        
 
         for (std::vector<float>::size_type i = 0; i < obstacle_data->data.size(); i += 5)
         {
+
             int id = (obstacle_data->data[i]);
-            // std::cout<< "id is "<< id <<"for "<< i << std::endl;
             int x = static_cast<int>(obstacle_data->data[i + 1]*scale_factor)+translate_x;
             int y = static_cast<int>(obstacle_data->data[i + 2]*scale_factor)+translate_y;
             double vel = std::abs(obstacle_data->data[i + 3]);
-            if (id < 1000 && vel <= 0.05) // && x >= 0 && x < map_width && y >= 0 && y < map_height)
+            if (id < 1000 && vel <= 0.05)
             {
+                // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
                 x_y_vals.push_back(x);
                 x_y_vals.push_back(y);
-
-
-                for (int pix = 1; pix < extend; pix++){
-                    // Update surrounding cells
-                    for (int dx = -pix; dx <= pix; dx++) {
-                        for (int dy = -pix; dy <= pix; dy++) {
-                            int new_x = x + dx;
-                            int new_y = y + dy;
+                for (double pix = 0.5; pix < extend; pix += 1.0) { // Use double type for pix
+                // Update surrounding cells
+                    for (int dx = -static_cast<int>(pix); dx <= static_cast<int>(pix); dx++) {
+                        for (int dy = -static_cast<int>(pix); dy <= static_cast<int>(pix); dy++) {
+                            double new_x = x + dx;
+                            double new_y = y + dy;
                             x_y_vals.push_back(new_x);
                             x_y_vals.push_back(new_y);
                         }
                     }
                 }
-            }           
+            }
         }
+ 
         // buff_mutex_.unlock();
     }
 
-std::vector<int> ObstaclePoseSubscriber2D::getX_Y_Vals() const {
+std::vector<double> ObstaclePoseSubscriber2D::getX_Y_Vals() const {
     return x_y_vals;
 }
 // void ObstaclePoseSubscriber2D::ParseData(std::deque<geometry_msgs::PoseStampedPtr> &pose_data_buff) {
