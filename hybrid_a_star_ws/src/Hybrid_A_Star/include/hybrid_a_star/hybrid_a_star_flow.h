@@ -58,7 +58,7 @@ private:
     void PublishPathOutersense(const VectorVec3d &path);
 
     // Vec3d FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values) ;
-    Vec3d FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values, const std::vector<double>& theta_values) ;
+    Vec3d FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values, const std::vector<double>& theta_values, size_t lookback_index) ;
 
     VectorVec3d InterpolatePath(const Vec3d& start_state, const Vec3d& goal_state, double step_size);
 

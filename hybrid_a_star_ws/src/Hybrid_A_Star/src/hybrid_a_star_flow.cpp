@@ -141,7 +141,7 @@ void HybridAStarFlow::Run() {
 
         unsigned int map_w = std::floor(current_costmap_ptr_->info.width / map_resolution);
         unsigned int map_h = std::floor(current_costmap_ptr_->info.height / map_resolution);
-        // std::cout<<"scaled width" << map_w << "          scaled height "<< map_h <<std::endl;
+        std::cout<<"scaled width" << map_w << "          scaled height "<< map_h <<std::endl;
         for (unsigned int w = 0; w < map_w; ++w) {
             for (unsigned int h = 0; h < map_h; ++h) {
                 auto x = static_cast<unsigned int> ((w + 0.5) * map_resolution
@@ -202,7 +202,7 @@ void HybridAStarFlow::Run() {
                 current_goal_pose_ptr_->pose.position.y,
                 goal_yaw
         );
-        std::cout<< "init start state                                "<< start_state[0] << " " << start_state[1] <<std::endl;
+        // std::cout<< "init start state                                "<< start_state[0] << " " << start_state[1] <<std::endl;
         int variation_id = kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state);
         if (variation_id !=0) {
             if (variation_id ==1){
@@ -221,54 +221,86 @@ void HybridAStarFlow::Run() {
                 PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
             }
             else if(variation_id == 9){
-                std::cout<< "i am in interpolate"<< std::endl;
-                // //  // change the current position vec3d to nearest position vec3d
-                // // // std::cout<<"finding neigbor"<<std::endl;
-                // // // std::cout<< "previous: "<<start_state[0]<<std::endl;
+                std::cout<< "                      i am in interpolate"<< std::endl;
+                //  // change the current position vec3d to nearest position vec3d
+                // // std::cout<<"finding neigbor"<<std::endl;
+                // // std::cout<< "previous: "<<start_state[0]<<std::endl;
 
-                // // // start_state = FindNearestNeighbor(start_state,x_values,y_values);
-                // // std::cout<<"before finding nearest neighbour "<< std::endl;
-                // // std::cout<<"xval is "<< start_state[0]<<std::endl;
-                // // std::cout<<"yval is "<< start_state[1]<<std::endl;
-                // // std::cout<<"thetaval is "<< start_state[2]<<std::endl;
-                // Vec3d new_start_state = FindNearestNeighbor(start_state,x_values,y_values, theta_values);
-                // // std::cout<<std::endl;
-                // // std::cout<<"AFTER finding nearest neighbour "<< std::endl;
-                // // std::cout<<"xval is "<< new_start_state[0]<<std::endl;
-                // // std::cout<<"yval is "<< new_start_state[1]<<std::endl;
-                // // std::cout<<"thetaval is "<< new_start_state[2]<<std::endl;
-                // // std::cout<<std::endl;
-                // // std::cout<<std::endl;
+                // // start_state = FindNearestNeighbor(start_state,x_values,y_values);
+                // std::cout<<"before finding nearest neighbour "<< std::endl;
+                // std::cout<<"xval is "<< start_state[0]<<std::endl;
+                // std::cout<<"yval is "<< start_state[1]<<std::endl;
+                // std::cout<<"thetaval is "<< start_state[2]<<std::endl;
+                Vec3d new_start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 6);
+                // std::cout<<std::endl;
+                // std::cout<<"AFTER finding nearest neighbour "<< std::endl;
+                // std::cout<<"xval is "<< new_start_state[0]<<std::endl;
+                // std::cout<<"yval is "<< new_start_state[1]<<std::endl;
+                // std::cout<<"thetaval is "<< new_start_state[2]<<std::endl;
+                // std::cout<<std::endl;
+                // std::cout<<std::endl;
 
-                // // std::cout<<std::endl;
-                // // std::cout<<std::endl;
+                // std::cout<<std::endl;
+                // std::cout<<std::endl;
 
-                // // std::cout<<new_init[0];
+                // std::cout<<new_init[0];
 
-                // // std::cout<<"after: "<<start_state[0]<<std::endl;
+                // std::cout<<"after: "<<start_state[0]<<std::endl;
 
 
                 
-                // int variation_id_2 = kinodynamic_astar_searcher_ptr_->Search(new_start_state, goal_state);
-                // if (variation_id_2 !=0) {
-                //     if (variation_id_2 ==1){
-                //         auto path = kinodynamic_astar_searcher_ptr_->GetPath();
-                //         PublishPath(path);
-                //         PublishPathOutersense(path);
-                //         if (scale_100 == true){
-                //             PublishVehiclePath(path, 30.0, 20.0, 20u);
-                //         }
-                //         else{
-                //             PublishVehiclePath(path, 3.0, 2.0, 5u);
-                //         }
-                // // path = InterpolatePath(start_state, goal_state, 1000.0);
-                // // std::cout<< "i am here now"<< std::endl;
-                // // PublishPath(path);
-                // // PublishPathOutersense(path);
-                //     }
-                // else if (variation_id_2 ==9 ){std::cout<<"back in interpolate"<<std::endl;}
-                // }
-                // else{std::cout<<"could not find anything yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrr"<<std::endl;}
+                int variation_id_2 = kinodynamic_astar_searcher_ptr_->Search(new_start_state, goal_state);
+                if (variation_id_2 !=0) {
+                    if (variation_id_2 ==1){
+                        auto path = kinodynamic_astar_searcher_ptr_->GetPath();
+                        PublishPath(path);
+                        PublishPathOutersense(path);
+                        if (scale_100 == true){
+                            PublishVehiclePath(path, 30.0, 20.0, 20u);
+                        }
+                        else{
+                            PublishVehiclePath(path, 3.0, 2.0, 5u);
+                        }
+                // path = InterpolatePath(start_state, goal_state, 1000.0);
+                // std::cout<< "i am here now"<< std::endl;
+                // PublishPath(path);
+                // PublishPathOutersense(path);
+                    }
+                    else if (variation_id_2 ==9 ){
+                        std::cout<<"         back in interpolate            "<<std::endl;
+                        std::cout<<"         back in interpolate            "<<std::endl;
+                        std::cout<<"         back in interpolate            "<<std::endl;
+                        std::cout<<"         back in interpolate            "<<std::endl;
+                        std::cout<<"         back in interpolate            "<<std::endl;
+                        Vec3d new_start_state2 = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 10);
+                        int variation_id_3 = kinodynamic_astar_searcher_ptr_->Search(new_start_state2, goal_state);
+                        if (variation_id_3 !=0) {
+                            if (variation_id_3 ==1){
+                                auto path = kinodynamic_astar_searcher_ptr_->GetPath();
+                                PublishPath(path);
+                                PublishPathOutersense(path);
+                                if (scale_100 == true){
+                                    PublishVehiclePath(path, 30.0, 20.0, 20u);
+                                }
+                                else{
+                                    PublishVehiclePath(path, 3.0, 2.0, 5u);
+                                }
+                            }
+                            else if (variation_id_3 ==9 ){
+                                std::cout<<"         bus kar yaar abhi bahut hua interpolate interpolate            "<<std::endl;
+                            }
+                        }
+                        else{std::cout<<"could not find anything andhar se bhi yaaar"<<std::endl;}
+                    }
+                }
+                    
+                else{
+                    std::cout<<"could not find anything yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrr"<<std::endl;
+                    std::cout<<"could not find anything yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrr"<<std::endl;
+                    std::cout<<"could not find anything yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrr"<<std::endl;
+                    std::cout<<"could not find anything yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrr"<<std::endl;
+                    std::cout<<"could not find anything yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrr"<<std::endl;
+                    }
             }
 
             // nav_msgs::Path path_ros;
@@ -370,14 +402,44 @@ void HybridAStarFlow::Run() {
 
 // Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values) {
 
-Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values, const std::vector<double>& theta_values) {
-    if (x_values.empty() || y_values.empty() || x_values.size() != y_values.size()) {
-        // Handle invalid input or mismatched vector sizes
-        return start_state;
-    }
+// Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values, const std::vector<double>& theta_values) {
+//     if (x_values.empty() || y_values.empty() || x_values.size() != y_values.size()) {
+//         // Handle invalid input or mismatched vector sizes
+//         return start_state;
+//     }
+
+//     double min_distance = std::numeric_limits<double>::max();
+//     size_t nearest_index = 0;
+
+//     for (size_t i = 0; i < x_values.size(); ++i) {
+//         double dx = start_state[0] - x_values[i];
+//         double dy = start_state[1] - y_values[i];
+//         double distance = std::sqrt(dx * dx + dy * dy);
+        
+//         if (distance < min_distance) {
+//             min_distance = distance;
+//             nearest_index = i;
+//         }
+//     }
+
+//     Vec3d nearest_neighbor;
+//     nearest_neighbor[0] = x_values[nearest_index];
+//     nearest_neighbor[1] = y_values[nearest_index];
+//     nearest_neighbor[2] = theta_values[nearest_index]; // Assuming z-coordinate remains the same
+
+//     return nearest_neighbor;
+// }
+
+Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values, const std::vector<double>& theta_values, size_t lookback_index) {
+    // if (x_values.empty() || y_values.empty() || x_values.size() != y_values.size()) {
+    //     // Handle invalid input or mismatched vector sizes
+    //     return start_state;
+    // }
 
     double min_distance = std::numeric_limits<double>::max();
     size_t nearest_index = 0;
+    // size_t lookback_index = 6;
+    size_t needed_index = 0;
 
     for (size_t i = 0; i < x_values.size(); ++i) {
         double dx = start_state[0] - x_values[i];
@@ -389,11 +451,19 @@ Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<
             nearest_index = i;
         }
     }
+    if(nearest_index-lookback_index<0){
+        needed_index = x_values.size()-(nearest_index-lookback_index)-1;
+    }
+    else{
+        needed_index = nearest_index-lookback_index;
+    }
+
 
     Vec3d nearest_neighbor;
-    nearest_neighbor[0] = x_values[nearest_index];
-    nearest_neighbor[1] = y_values[nearest_index];
-    nearest_neighbor[2] = theta_values[nearest_index]; // Assuming z-coordinate remains the same
+    std::cout<< "needed and nearest  " << needed_index<< "       " << nearest_index<< std::endl;
+    nearest_neighbor[0] = x_values[needed_index];
+    nearest_neighbor[1] = y_values[needed_index];
+    nearest_neighbor[2] = theta_values[needed_index]; // Assuming z-coordinate remains the same
 
     return nearest_neighbor;
 }
@@ -528,7 +598,7 @@ void HybridAStarFlow::ReadData() {
     costmap_sub_ptr_->ParseData(costmap_deque_);
     init_pose_sub_ptr_->ParseData(init_pose_deque_);
     goal_pose_sub_ptr_->ParseData(goal_pose_deque_);
-    std::cout<< "initial position deque length                 "<< init_pose_deque_.size() << std::endl;
+    // std::cout<< "initial position deque length                 "<< init_pose_deque_.size() << std::endl;
     // ParseData for obstacle
     // goal_pose_sub_ptr_->x, goal_pose_sub_ptr_-y, 
     // std::vector<double> vals = obstacle_pose_sub_ptr_->getX_Y_Vals();

@@ -84,10 +84,10 @@ void InitPoseSubscriber2D::MessageCallBack(const geometry_msgs::PoseWithCovarian
         init_poses_.emplace_back(init_pose_ptr);
         
         // Access the received message to print the x and y values
-        geometry_msgs::PoseWithCovarianceStamped pose_data = *init_pose_ptr;
-        double x_value = pose_data.pose.pose.position.x;
-        double y_value = pose_data.pose.pose.position.y;
-        std::cout << "Received x and y value: " << x_value << " " << y_value << std::endl;
+        // geometry_msgs::PoseWithCovarianceStamped pose_data = *init_pose_ptr;
+        // double x_value = pose_data.pose.pose.position.x;
+        // double y_value = pose_data.pose.pose.position.y;
+        // std::cout << "Received x and y value: " << x_value << " " << y_value << std::endl;
     }
     
     buff_mutex_.unlock();

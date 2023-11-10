@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/run_hybrid_astar"
-  "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/run_hybrid_astar.pdb"
+  "/home/dhanesh/Masters/OuterSense/Planning_test/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/run_hybrid_astar"
+  "/home/dhanesh/Masters/OuterSense/Planning_test/planner/hybrid_a_star_ws/devel/lib/hybrid_a_star/run_hybrid_astar.pdb"
   "CMakeFiles/run_hybrid_astar.dir/app/run_hybrid_astar.cpp.o"
 )
 
