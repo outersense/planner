@@ -89,7 +89,7 @@ Visualization Manager:
       Shaft Length: 40
       Shaft Radius: 05
       Shape: Arrow
-      Topic: /initialpose
+      Topic: /car_1/planner_curr_pos
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -105,7 +105,7 @@ Visualization Manager:
       Shaft Length: 40
       Shaft Radius: 05
       Shape: Arrow
-      Topic: /move_base_simple/goal
+      Topic: /car_1/planner_goal_pos
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -290,11 +290,11 @@ Visualization Manager:
     - Class: rviz/Measure
     - Class: rviz/SetInitialPose
       Theta std deviation: 0.2617993950843811
-      Topic: /initialpose
+      Topic: /car_1/planner_curr_pos
       X std deviation: 0.5
       Y std deviation: 0.5
     - Class: rviz/SetGoal
-      Topic: /move_base_simple/goal
+      Topic: /car_1/planner_goal_pos
     - Class: rviz/PublishPoint
       Single click: true
       Topic: /clicked_point
