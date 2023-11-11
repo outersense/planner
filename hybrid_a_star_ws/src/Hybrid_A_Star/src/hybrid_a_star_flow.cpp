@@ -74,6 +74,8 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
     init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_2/planner_curr_pos", 1);
     goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_2/planner_goal_pos", 1);
+    // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_1/planner_curr_pos", 1);
+    // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_1/planner_goal_pos", 1);
 
     obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose", 1);
     
@@ -82,6 +84,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
     path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
+    // path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
     
@@ -203,6 +206,7 @@ void HybridAStarFlow::Run() {
                 goal_yaw
         );
         // std::cout<< "init start state                                "<< start_state[0] << " " << start_state[1] <<std::endl;
+        start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 3);
         int variation_id = kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state);
         if (variation_id !=0) {
             if (variation_id ==1){
@@ -231,7 +235,7 @@ void HybridAStarFlow::Run() {
                 // std::cout<<"xval is "<< start_state[0]<<std::endl;
                 // std::cout<<"yval is "<< start_state[1]<<std::endl;
                 // std::cout<<"thetaval is "<< start_state[2]<<std::endl;
-                Vec3d new_start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 6);
+                Vec3d new_start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 3);
                 // std::cout<<std::endl;
                 // std::cout<<"AFTER finding nearest neighbour "<< std::endl;
                 // std::cout<<"xval is "<< new_start_state[0]<<std::endl;
@@ -272,7 +276,7 @@ void HybridAStarFlow::Run() {
                         std::cout<<"         back in interpolate            "<<std::endl;
                         std::cout<<"         back in interpolate            "<<std::endl;
                         std::cout<<"         back in interpolate            "<<std::endl;
-                        Vec3d new_start_state2 = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 10);
+                        Vec3d new_start_state2 = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 7);
                         int variation_id_3 = kinodynamic_astar_searcher_ptr_->Search(new_start_state2, goal_state);
                         if (variation_id_3 !=0) {
                             if (variation_id_3 ==1){
@@ -430,16 +434,16 @@ void HybridAStarFlow::Run() {
 //     return nearest_neighbor;
 // }
 
-Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values, const std::vector<double>& theta_values, size_t lookback_index) {
+Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<double>& x_values, const std::vector<double>& y_values, const std::vector<double>& theta_values, int lookback_index) {
     // if (x_values.empty() || y_values.empty() || x_values.size() != y_values.size()) {
     //     // Handle invalid input or mismatched vector sizes
     //     return start_state;
     // }
 
     double min_distance = std::numeric_limits<double>::max();
-    size_t nearest_index = 0;
+    int nearest_index = 0;
     // size_t lookback_index = 6;
-    size_t needed_index = 0;
+    int needed_index = 0;
     // std::cout<<"xvalssss"<<x_values.size()<<std::endl;
     for (size_t i = 0; i < x_values.size(); ++i) {
         double dx = start_state[0] - x_values[i];
@@ -453,7 +457,10 @@ Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<
             // std::cout<<"there"<<std::endl;
         }
     }
+    // size_t zero_val = 0;
+    std::cout<< "yeh check hai yahan" <<nearest_index<< "    "<<lookback_index<< std::endl;
     if(nearest_index-lookback_index<0){
+        // std::cout<<"here"<<std::endl;
         needed_index = x_values.size()+(nearest_index-lookback_index)-1;
         // std::cout<<"here"<<std::endl;
     }
