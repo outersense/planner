@@ -28,6 +28,7 @@
 #include "hybrid_a_star/rs_path.h"
 
 #include <glog/logging.h>
+#include<iostream>
 
 // P 371: TABLE 1
 const RSPath::RSPathSegmentType RSPath::RS_path_segment_type[18][5] = {
@@ -502,7 +503,7 @@ void RSPath::CCSCC(double x, double y, double phi, RSPathData &path) {
     }
 }
 
-TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_state,
+std::pair<TypeVectorVecd<3>,bool> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_state,
                                     const double step_size, double &length) {
     RSPathData rs_path = GetRSPath(start_state.x(), start_state.y(), start_state.z(),
                                    goal_state.x(), goal_state.y(), goal_state.z());
@@ -524,6 +525,7 @@ TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_
     double phi;
 
     TypeVectorVecd<3> path_poses;
+    bool reverseflag= false;
 
     for (unsigned int i = 0; i <= interpolation_number; ++i) {
         double v;
@@ -535,9 +537,14 @@ TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_
             if (rs_path.length_[j] < 0.0) {
                 v = std::max(-seg, rs_path.length_[j]);
                 seg += v;
+                // std::cout<<"reverse"<<std::endl;
+                reverseflag = true;
+                // break;
             } else {
+                std::cout<<reverseflag<<std::endl;
                 v = std::min(seg, rs_path.length_[j]);
                 seg -= v;
+                // std::cout<<"forward"<<std::endl;
             }
 
             phi = temp_pose.z();
@@ -570,5 +577,6 @@ TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_
         path_poses.emplace_back(pose);
     }
 
-    return path_poses;
+
+    return std::make_pair(path_poses, reverseflag);;
 }

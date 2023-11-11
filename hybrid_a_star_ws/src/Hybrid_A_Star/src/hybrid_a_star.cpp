@@ -32,7 +32,7 @@
 
 #include <iostream>
 using Eigen::Vector3d;
-bool scale_100_2 = true;
+bool scale_100_2 = false;
 
 HybridAStar::HybridAStar(double steering_angle, int steering_angle_discrete_num, double segment_length,
                          int segment_length_discrete_num, double wheel_base, double steering_penalty,
@@ -896,9 +896,19 @@ void HybridAStar::Reset() {
 
 bool HybridAStar::AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
                                      const StateNode::Ptr &goal_node_ptr, double &length) {
-    VectorVec3d rs_path_poses = rs_path_ptr_->GetRSPath(current_node_ptr->state_,
+    auto rs_path_poses_and_bool = rs_path_ptr_->GetRSPath(current_node_ptr->state_,
                                                         goal_node_ptr->state_,
                                                         move_step_size_, length);
+
+    TypeVectorVecd<3> rs_path_poses = rs_path_poses_and_bool.first;
+    bool reverseflag_2 = rs_path_poses_and_bool.second;
+    // std::cout<<reverseflag;
+    std::cout<<"reverse_flag is: "<<reverseflag_2<<std::endl;
+    if (reverseflag_2==true){
+        std::cout<<"there is a reverse in path";
+    }
+
+
 
     for (const auto &pose: rs_path_poses)
         if (BeyondBoundary(pose.head(2)) || !CheckCollision(pose.x(), pose.y(), pose.z())) {
