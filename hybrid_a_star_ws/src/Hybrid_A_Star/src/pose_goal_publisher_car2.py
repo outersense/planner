@@ -106,7 +106,7 @@ class GetGoal:
     def __init__(self):
         self.look_ahead_index = 6
         self.error_buffer = 10
-        scale_100 = False
+        scale_100 = True
         self.pos_obstacles =[]
         
         if (scale_100 == True):
@@ -114,9 +114,11 @@ class GetGoal:
             # for 100 scale maps Nov2
             # self.translate_x = -23.433744557914416
             # self.translate_y = 37.368772684946485
-            waypoints_name = "waypoints_Nov6_1bag_cheat.npy"
-            self.translate_x = -30.419910440369464
-            self.translate_y = 29.681722692357146
+            waypoints_name = "Nov10_manual_jash_100scale.npy"
+            self.translate_x = -32.964026958248915
+            self.translate_y = 35.39230053680539
+#             x_translation = -3.2964026958248915
+# y_translation = 3.539230053680539
 
             # self.translate_x = -20.41996779977085
             # self.translate_y = 39.681654685361023
@@ -124,9 +126,9 @@ class GetGoal:
         # for 10 scale maps Nov2
         else:
             # waypoints_name = "waypoints1_10scale.npy"
-            waypoints_name = "waypoints_Nov6_1bag_cheat.npy"
-            self.translate_x = -3.0419910440369464
-            self.translate_y = 2.9681722692357146
+            waypoints_name = "Nov10_manual_jash_100scale.npy"
+            self.translate_x = -3.2964026958248915
+            self.translate_y = 3.539230053680539
 
             # self.translate_x = -2.041996779977085
             # self.translate_y = 3.9681654685361023

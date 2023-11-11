@@ -270,7 +270,7 @@
 class ObstacleMapUpdater
 {
 public:
-bool scale_100_3 = false;
+bool scale_100_3 = true;
     ObstacleMapUpdater()
     {
         obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &ObstacleMapUpdater::obstacleCallback, this);
@@ -307,14 +307,14 @@ bool scale_100_3 = false;
         double extend = 0.0;
         if (scale_100_3 ==true){
             scale_factor = 100;
-            translate_x = -30;
-            translate_y = 30;
+            translate_x = -33;
+            translate_y = 35;
             extend = 13;
         }
         else{
             scale_factor = 10;
             translate_x = -3;
-            translate_y = 3;
+            translate_y = 4;
             extend = 2.5;
         }
         

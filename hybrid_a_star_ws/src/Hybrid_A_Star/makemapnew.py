@@ -8,21 +8,22 @@ import tf
 import scipy.spatial as sp
 from sklearn.neighbors import NearestNeighbors
 import cv2
+from skimage.transform import rotate
 
 
 
 
-bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov6"
+bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_test/planner/rosbags/nov10"
 # bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov2"
 # bagfile_path = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/rosbags/nov1"
-bagfile_name = "nov6_2.bag"
+bagfile_name = "manual_jash2.bag"
 # bagfile_name = "manual_ronit.bag"
 
 topic_gps = "/rccar_pose"
 topic_car2_world = "/car2/world_pose"
 
-# scale_factor =100
-scale_factor =10
+scale_factor =100
+# scale_factor =10
 
 
 bagfile_ego = os.path.join(bagfile_path, bagfile_name)
@@ -409,7 +410,7 @@ waypoints = np.stack((x_points,y_points, yaw_points)).T[1:,:]
 #                         [ 2.31365824e+00,  3.81311357e-01,  3.29619169e-01]])
 
 # waypoints_new = np.stack((x_points*scale_factor,y_points*scale_factor, yaw_points)).T[1:,:]
-np.save("/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints_Nov6_1bag_cheat.npy", waypoints)
+# np.save("/home/dhanesh/Masters/OuterSense/Planning_test/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale.npy", waypoints)
 t_cos = np.cos(waypoints[:,-1])
 t_sin = np.sin(waypoints[:,-1])
 
@@ -420,8 +421,15 @@ plt.quiver(waypoints[:,0], waypoints[:,1], t_cos, t_sin, color='lightblue', widt
 plt.show()
 plt.close()
 ln1, ln2 = calculate_perpendicular_points2(waypoints)
+ln1toedit_index = np.where(ln1[:,0]<1.4)
+ln2toedit_index = np.where(ln1[:,0]>6.4)
+# print(ln1[ln1toedit_index[0]][:,0])
+ln1[ln1toedit_index[0]] = ln1[ln1toedit_index[0]] - np.asarray([0.2,0])
+ln2[ln2toedit_index[0]] = ln2[ln2toedit_index[0]] + np.asarray([0.2,0])
+# print(ln1[ln1toedit_index[0]][:,0])
 # print(ln1)
 # print(ln2)
+# plt.plot(ln1[:,0], ln1[:,1], 'b+', label="Lidar after extrinsics")
 plt.plot(ln1[:,0], ln1[:,1], 'b+', label="Lidar after extrinsics")
 plt.plot(ln2[:,0], ln2[:,1], 'g+', label="Lidar after extrinsics")
 plt.plot(waypoints[:,0], waypoints[:,1], 'r+', label="Lidar after extrinsics")
@@ -429,13 +437,21 @@ plt.quiver(waypoints[:,0], waypoints[:,1], t_cos, t_sin, color='lightblue', widt
 plt.show()
 plt.close()
 road_image, white_image = fill_lanes_with_color(ln1*scale_factor, ln2*scale_factor)
-road_image = cv2.flip(road_image, 0)
+# road_image = cv2.flip(road_image, 0)
+# road_image = rotate(road_image, 1, resize= True, center=(0,0))*255
+# print(road_image)
 cv2.imshow("Road Image", road_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 cv2.imshow("Road Image", white_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+# -32.964026958248915             35.39230053680539
+road_image = cv2.flip(road_image, 0)
+plt.imshow(road_image, cmap="gray")
+# plt.scatter(waypoints[:,0]*100 -32.964026958248915, waypoints[:,1]*100+35.39230053680539)
+plt.scatter(waypoints[:,0]*10 -3, waypoints[:,1]*10+4)
+plt.show()
 
 # print(gps_pose_array, gps_pose_array.shape)
 # plt.plot(gps_pose_array[::20,1], gps_pose_array[::20,2], 'b+', label="Lidar after extrinsics")
@@ -524,7 +540,7 @@ cv2.destroyAllWindows()
 # cv2.destroyAllWindows()
 # cv2.imwrite("maps/figure8_track3.png", new_road_image)
 
-cv2.imwrite("maps/figure8_track19.png", road_image)
-cv2.imwrite("maps/figure8_track20.png", white_image)
+cv2.imwrite("maps/figure8_track30.png", road_image)
+# cv2.imwrite("maps/figure8_track29.png", white_image)
 
 # 30.3822394 -48.199419 757.96629 201.956163

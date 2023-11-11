@@ -53,11 +53,17 @@
 
 #include "hybrid_a_star/goal_pose_subscriber.h"
 
+bool skip_data_goal = true;
+
 GoalPoseSubscriber2D::GoalPoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name, size_t buff_size) {
     subscriber_ = nh.subscribe(topic_name, buff_size, &GoalPoseSubscriber2D::MessageCallBack, this);
 }
 
 void GoalPoseSubscriber2D::MessageCallBack(const geometry_msgs::PoseStampedPtr &goal_pose_ptr) {
+
+    if (skip_data_goal){
+
+    
     buff_mutex_.lock();
 
     if (goal_pose_ptr) {
@@ -66,6 +72,8 @@ void GoalPoseSubscriber2D::MessageCallBack(const geometry_msgs::PoseStampedPtr &
     }
 
     buff_mutex_.unlock();
+    }
+    skip_data_goal = !skip_data_goal;
 }
 
 void GoalPoseSubscriber2D::ParseData(std::deque<geometry_msgs::PoseStampedPtr> &pose_data_buff) {

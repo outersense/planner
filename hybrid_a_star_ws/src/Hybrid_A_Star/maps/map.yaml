@@ -11,7 +11,12 @@
 # image: figure8_track14.png #10 scale white  Nov 6 manualRonit
 # image: figure8_track15.png #10 scale 8  0.35 Nov 6 manualRonit
 # image: figure8_track16.png #10 scale 8  0.35 Nov 6 manualRonit
-image: figure8_track19.png #10 scale 8  0.35 Nov 6 manualRonit
+# image: figure8_track19.png #10 scale 8  0.35 Nov 6 manualRonit
+# image: figure8_track21.png #10 scale 8  0.35 Nov 8 manualjash2
+# image: figure8_track25.png #10 scale 8  0.35 Nov 8 manualjash2
+# image: figure8_track27.png #100 scale 8  0.35 Nov 8 manualjash2
+# image: figure8_track28.png #10 scale 8  0.35 Nov 8 manualjash2
+image: figure8_track30.png #100 scale 8  0.35 Nov 8 manualjash2
 resolution: 1.0
 # resolution: 0.1
 origin: [ 0.0, 0.0, 0.0 ]

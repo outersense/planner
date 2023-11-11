@@ -32,7 +32,7 @@
 
 #include <iostream>
 using Eigen::Vector3d;
-bool scale_100_2 = false;
+bool scale_100_2 = true;
 
 HybridAStar::HybridAStar(double steering_angle, int steering_angle_discrete_num, double segment_length,
                          int segment_length_discrete_num, double wheel_base, double steering_penalty,

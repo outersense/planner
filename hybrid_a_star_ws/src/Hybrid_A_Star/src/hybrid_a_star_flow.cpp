@@ -49,7 +49,7 @@ double Mod2Pi(const double &x) {
 
     return v;
 }
-bool scale_100 = false;
+bool scale_100 = true;
 
 HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     double steering_angle = nh.param("planner/steering_angle", 10);
@@ -81,7 +81,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
-    path_pub_os = nh.advertise<nav_msgs::Path>("/car_2/planned_path", 1);
+    path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
     
@@ -93,7 +93,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 
 
     double x, y, theta;
-    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_new/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/waypoints_Nov6_1bag_cheat.txt";
+    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_test/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale.txt";
     std::ifstream file(filename);
     if (file.is_open()) {
         std::string line;
@@ -440,19 +440,22 @@ Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<
     size_t nearest_index = 0;
     // size_t lookback_index = 6;
     size_t needed_index = 0;
-
+    // std::cout<<"xvalssss"<<x_values.size()<<std::endl;
     for (size_t i = 0; i < x_values.size(); ++i) {
         double dx = start_state[0] - x_values[i];
         double dy = start_state[1] - y_values[i];
         double distance = std::sqrt(dx * dx + dy * dy);
+        // std::cout<<"where"<<std::endl;
         
         if (distance < min_distance) {
             min_distance = distance;
             nearest_index = i;
+            // std::cout<<"there"<<std::endl;
         }
     }
     if(nearest_index-lookback_index<0){
-        needed_index = x_values.size()-(nearest_index-lookback_index)-1;
+        needed_index = x_values.size()+(nearest_index-lookback_index)-1;
+        // std::cout<<"here"<<std::endl;
     }
     else{
         needed_index = nearest_index-lookback_index;
@@ -460,7 +463,7 @@ Vec3d HybridAStarFlow::FindNearestNeighbor(Vec3d start_state, const std::vector<
 
 
     Vec3d nearest_neighbor;
-    std::cout<< "needed and nearest  " << needed_index<< "       " << nearest_index<< std::endl;
+    std::cout<< "needed and nearest  " << needed_index<< "       " << nearest_index << "            " << lookback_index<< std::endl;
     nearest_neighbor[0] = x_values[needed_index];
     nearest_neighbor[1] = y_values[needed_index];
     nearest_neighbor[2] = theta_values[needed_index]; // Assuming z-coordinate remains the same
@@ -651,15 +654,16 @@ void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
         int scale_factor = 1;
         double translate_x = 0.0;
         double translate_y = 0.0;
+        // -3.2964026958248915             3.539230053680539
         if (scale_100 == true){
             scale_factor = 100;
-            translate_x = -30.419910440369464;
-            translate_y = 29.681722692357146;
+            translate_x = -32.964026958248915;
+            translate_y = 35.39230053680539;
         }
         else{
             scale_factor = 10;
-            translate_x = -3.0419910440369464;
-            translate_y = 2.9681722692357146;
+            translate_x = -3.2964026958248915;
+            translate_y = 3.539230053680539;
         }
         
         pose_stamped.header.frame_id = "world";

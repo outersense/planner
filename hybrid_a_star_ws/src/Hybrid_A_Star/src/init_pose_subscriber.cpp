@@ -72,25 +72,34 @@
 #include "hybrid_a_star/init_pose_subscriber.h"
 #include <iostream>
 
+bool skipdata = true;
+
 InitPoseSubscriber2D::InitPoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name, size_t buff_size) {
     subscriber_ = nh.subscribe(topic_name, buff_size, &InitPoseSubscriber2D::MessageCallBack, this);
 }
 
 void InitPoseSubscriber2D::MessageCallBack(const geometry_msgs::PoseWithCovarianceStampedPtr &init_pose_ptr) {
-    buff_mutex_.lock();
-    
-    if (init_pose_ptr) {
-        init_poses_.clear();
-        init_poses_.emplace_back(init_pose_ptr);
+    if(skipdata){
+
+
+        buff_mutex_.lock();
         
-        // Access the received message to print the x and y values
-        // geometry_msgs::PoseWithCovarianceStamped pose_data = *init_pose_ptr;
-        // double x_value = pose_data.pose.pose.position.x;
-        // double y_value = pose_data.pose.pose.position.y;
-        // std::cout << "Received x and y value: " << x_value << " " << y_value << std::endl;
+        if (init_pose_ptr) {
+            init_poses_.clear();
+            init_poses_.emplace_back(init_pose_ptr);
+            
+            // Access the received message to print the x and y values
+            // geometry_msgs::PoseWithCovarianceStamped pose_data = *init_pose_ptr;
+            // double x_value = pose_data.pose.pose.position.x;
+            // double y_value = pose_data.pose.pose.position.y;
+            // std::cout << "Received x and y value: " << x_value << " " << y_value << std::endl;
+        }
+        
+        buff_mutex_.unlock();
+        
     }
-    
-    buff_mutex_.unlock();
+    skipdata = !skipdata;
+
 }
 
 void InitPoseSubscriber2D::ParseData(std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> &pose_data_buff) {

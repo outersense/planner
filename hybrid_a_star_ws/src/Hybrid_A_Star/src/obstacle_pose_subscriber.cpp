@@ -18,7 +18,7 @@ void ObstaclePoseSubscriber2D::MessageCallBack(const std_msgs::Float32MultiArray
 
     buff_mutex_.unlock();
 }
-bool scale_100_4 = false;
+bool scale_100_4 = true;
 void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32MultiArray::ConstPtr& obstacle_data)
     {
         // std::cout<<"i am here now"<< std::endl;
@@ -30,14 +30,16 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
         double extend = 0.0;
         if (scale_100_4 ==true){
             scale_factor = 100;
-            translate_x = -30;
-            translate_y = 30;
+            translate_x = -33;
+            translate_y = 35;
             extend = 13;
         }
         else{
             scale_factor = 10;
+//             x_translation = -3.2964026958248915
+// y_translation = 3.539230053680539
             translate_x = -3;
-            translate_y = 3;
+            translate_y = 4;
             extend = 2.5;
         }
         // for (std::vector<float>::size_type i = 0; i < obstacle_data->data.size(); i += 5)
