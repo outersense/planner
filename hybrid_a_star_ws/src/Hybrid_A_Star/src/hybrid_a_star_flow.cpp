@@ -206,7 +206,7 @@ void HybridAStarFlow::Run() {
                 goal_yaw
         );
         // std::cout<< "init start state                                "<< start_state[0] << " " << start_state[1] <<std::endl;
-        start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 6);
+        // start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 6);
         int variation_id = kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state);
         if (variation_id !=0) {
             if (variation_id ==1){
