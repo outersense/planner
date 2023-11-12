@@ -61,7 +61,7 @@ GoalPoseSubscriber2D::GoalPoseSubscriber2D(ros::NodeHandle &nh, const std::strin
 
 void GoalPoseSubscriber2D::MessageCallBack(const geometry_msgs::PoseStampedPtr &goal_pose_ptr) {
 
-    if (skip_data_goal){
+    if (true){
 
     
     buff_mutex_.lock();

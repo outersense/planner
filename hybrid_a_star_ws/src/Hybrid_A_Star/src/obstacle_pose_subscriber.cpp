@@ -30,7 +30,7 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
         double extend = 0.0;
         if (scale_100_4 ==true){
             scale_factor = 100;
-            translate_x = -33;
+            translate_x = -18; //-33;
             translate_y = 35;
             extend = 13;
         }

@@ -1,7 +1,7 @@
 import numpy as np
 
 # Load the .npy file
-npy_file_path = 'src/Nov10_manual_jash_100scale.npy'
+npy_file_path = 'src/Nov10_manual_jash_100scale2.npy'
 data = np.load(npy_file_path)
 
 # Multiply x and y by 10
@@ -15,7 +15,7 @@ scale_factor = 100
 # -3.2964026958248915             3.539230053680539
 # x_translation = -3.2964026958248915
 # y_translation = 3.539230053680539
-x_translation = -32.964026958248915
+x_translation = -17.964026958248915#-32.964026958248915
 y_translation = 35.39230053680539
 
 # Translate x and y values
@@ -23,7 +23,7 @@ data[:, 0] = data[:,0]*scale_factor + x_translation
 data[:, 1] = data[:,1]*scale_factor + y_translation
 
 # Define the path for the modified .txt file
-txt_file_path = 'src/Nov10_manual_jash_100scale.txt'
+txt_file_path = 'src/Nov10_manual_jash_100scale2.txt'
 
 # Save the modified data to the .txt file
 np.savetxt(txt_file_path, data)

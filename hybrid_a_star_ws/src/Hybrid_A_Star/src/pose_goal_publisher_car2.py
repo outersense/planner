@@ -104,8 +104,8 @@ def do_kdtree(array_source, array_dest, k =1):
 
 class GetGoal:
     def __init__(self):
-        # self.look_ahead_index = 6
-        self.look_ahead_index = 3
+        self.look_ahead_index = 6
+        # self.look_ahead_index = 3
         self.error_buffer = 10
         scale_100 = True
         self.pos_obstacles =[]
@@ -115,8 +115,8 @@ class GetGoal:
             # for 100 scale maps Nov2
             # self.translate_x = -23.433744557914416
             # self.translate_y = 37.368772684946485
-            waypoints_name = "Nov10_manual_jash_100scale.npy"
-            self.translate_x = -32.964026958248915
+            waypoints_name = "Nov10_manual_jash_100scale2.npy"
+            self.translate_x = -17.964026958248915 #-32.964026958248915
             self.translate_y = 35.39230053680539
 #             x_translation = -3.2964026958248915
 # y_translation = 3.539230053680539
@@ -127,7 +127,7 @@ class GetGoal:
         # for 10 scale maps Nov2
         else:
             # waypoints_name = "waypoints1_10scale.npy"
-            waypoints_name = "Nov10_manual_jash_100scale.npy"
+            waypoints_name = "Nov10_manual_jash_100scale2.npy"
             self.translate_x = -3.2964026958248915
             self.translate_y = 3.539230053680539
 
@@ -138,6 +138,8 @@ class GetGoal:
             self.scale_factor = 10
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
         rospy.init_node('publish_curr_pose_and_goal_pose_car2')
+        # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
+        # rospy.Subscriber('/debug_pose2', Odometry, self.odom_callback)
         # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
         rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
         # rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)

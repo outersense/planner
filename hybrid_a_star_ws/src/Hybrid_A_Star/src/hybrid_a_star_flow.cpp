@@ -96,7 +96,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 
 
     double x, y, theta;
-    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_test/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale.txt";
+    std::string filename = "/home/dhanesh/Masters/OuterSense/Planning_100scale/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale2.txt";
     std::ifstream file(filename);
     if (file.is_open()) {
         std::string line;
@@ -114,7 +114,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
         std::cerr << "Failed to open the file: " << filename << std::endl;
     }
 
-    // std::cout<<x_values[1]<<std::endl;
+    std::cout<<x_values[1]<<std::endl;
 
 }
 
@@ -206,7 +206,7 @@ void HybridAStarFlow::Run() {
                 goal_yaw
         );
         // std::cout<< "init start state                                "<< start_state[0] << " " << start_state[1] <<std::endl;
-        start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 3);
+        start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 6);
         int variation_id = kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state);
         if (variation_id !=0) {
             if (variation_id ==1){
@@ -235,7 +235,7 @@ void HybridAStarFlow::Run() {
                 // std::cout<<"xval is "<< start_state[0]<<std::endl;
                 // std::cout<<"yval is "<< start_state[1]<<std::endl;
                 // std::cout<<"thetaval is "<< start_state[2]<<std::endl;
-                Vec3d new_start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 3);
+                Vec3d new_start_state = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 6);
                 // std::cout<<std::endl;
                 // std::cout<<"AFTER finding nearest neighbour "<< std::endl;
                 // std::cout<<"xval is "<< new_start_state[0]<<std::endl;
@@ -276,7 +276,7 @@ void HybridAStarFlow::Run() {
                         std::cout<<"         back in interpolate            "<<std::endl;
                         std::cout<<"         back in interpolate            "<<std::endl;
                         std::cout<<"         back in interpolate            "<<std::endl;
-                        Vec3d new_start_state2 = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 7);
+                        Vec3d new_start_state2 = FindNearestNeighbor(goal_state,x_values,y_values, theta_values, 10);
                         int variation_id_3 = kinodynamic_astar_searcher_ptr_->Search(new_start_state2, goal_state);
                         if (variation_id_3 !=0) {
                             if (variation_id_3 ==1){
@@ -664,7 +664,7 @@ void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
         // -3.2964026958248915             3.539230053680539
         if (scale_100 == true){
             scale_factor = 100;
-            translate_x = -32.964026958248915;
+            translate_x = -17.964026958248915; //-32.964026958248915;
             translate_y = 35.39230053680539;
         }
         else{

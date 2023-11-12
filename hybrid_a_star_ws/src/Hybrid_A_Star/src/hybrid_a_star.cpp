@@ -896,9 +896,16 @@ void HybridAStar::Reset() {
 
 bool HybridAStar::AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
                                      const StateNode::Ptr &goal_node_ptr, double &length) {
-    VectorVec3d rs_path_poses = rs_path_ptr_->GetRSPath(current_node_ptr->state_,
+    auto rs_path_poses_and_int = rs_path_ptr_->GetRSPath(current_node_ptr->state_,
                                                         goal_node_ptr->state_,
                                                         move_step_size_, length);
+    VectorVec3d rs_path_poses = rs_path_poses_and_int.first;
+    int reverse_count  = rs_path_poses_and_int.second;
+
+
+    if (reverse_count>200){
+        std::cout<<"there is a reverse in the path "<< reverse_count << std::endl;
+    }
 
     for (const auto &pose: rs_path_poses)
         if (BeyondBoundary(pose.head(2)) || !CheckCollision(pose.x(), pose.y(), pose.z())) {

@@ -307,7 +307,7 @@ bool scale_100_3 = true;
         double extend = 0.0;
         if (scale_100_3 ==true){
             scale_factor = 100;
-            translate_x = -33;
+            translate_x = -18; //-33;
             translate_y = 35;
             extend = 13;
         }

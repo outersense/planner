@@ -79,7 +79,7 @@ InitPoseSubscriber2D::InitPoseSubscriber2D(ros::NodeHandle &nh, const std::strin
 }
 
 void InitPoseSubscriber2D::MessageCallBack(const geometry_msgs::PoseWithCovarianceStampedPtr &init_pose_ptr) {
-    if(skipdata){
+    if(true){
 
 
         buff_mutex_.lock();

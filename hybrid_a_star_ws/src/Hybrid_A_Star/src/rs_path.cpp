@@ -502,7 +502,7 @@ void RSPath::CCSCC(double x, double y, double phi, RSPathData &path) {
     }
 }
 
-TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_state,
+std::pair<TypeVectorVecd<3>,int> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_state,
                                     const double step_size, double &length) {
     RSPathData rs_path = GetRSPath(start_state.x(), start_state.y(), start_state.z(),
                                    goal_state.x(), goal_state.y(), goal_state.z());
@@ -524,7 +524,7 @@ TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_
     double phi;
 
     TypeVectorVecd<3> path_poses;
-
+    int reverse_counter = 0;
     for (unsigned int i = 0; i <= interpolation_number; ++i) {
         double v;
         double t = i * 1.0 / interpolation_number;
@@ -535,6 +535,7 @@ TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_
             if (rs_path.length_[j] < 0.0) {
                 v = std::max(-seg, rs_path.length_[j]);
                 seg += v;
+                reverse_counter ++;
             } else {
                 v = std::min(seg, rs_path.length_[j]);
                 seg -= v;
@@ -570,5 +571,5 @@ TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_
         path_poses.emplace_back(pose);
     }
 
-    return path_poses;
+    return std::make_pair(path_poses,reverse_counter);
 }

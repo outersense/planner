@@ -114,8 +114,8 @@ class GetGoal:
             # for 100 scale maps Nov2
             # self.translate_x = -23.433744557914416
             # self.translate_y = 37.368772684946485
-            waypoints_name = "Nov10_manual_jash_100scale.npy"
-            self.translate_x = -32.964026958248915
+            waypoints_name = "Nov10_manual_jash_100scale2.npy"
+            self.translate_x = -17.964026958248915 #-32.964026958248915
             self.translate_y = 35.39230053680539
 
             # self.translate_x = -20.41996779977085
@@ -124,7 +124,7 @@ class GetGoal:
         # for 10 scale maps Nov2
         else:
             # waypoints_name = "waypoints1_10scale.npy"
-            waypoints_name = "Nov10_manual_jash_100scale.npy"
+            waypoints_name = "Nov10_manual_jash_100scale2.npy"
             self.translate_x = -3.2964026958248915
             self.translate_y = 3.539230053680539
 
