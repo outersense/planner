@@ -101,7 +101,7 @@ private:
 
     inline bool LineCheck(double x0, double y0, double x1, double y1);
 
-    bool AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
+    int AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
                             const StateNode::Ptr &goal_node_ptr, double &length);
 
     inline double ComputeG(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &neighbor_node_ptr) const;

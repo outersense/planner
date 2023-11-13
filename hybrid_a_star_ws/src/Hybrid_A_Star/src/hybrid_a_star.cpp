@@ -685,7 +685,7 @@ int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
 
         if ((current_node_ptr->state_.head(2) - goal_node_ptr->state_.head(2)).norm() <= shot_distance_) {
             double rs_length = 0.0;
-            if (AnalyticExpansions(current_node_ptr, goal_node_ptr, rs_length)) {
+            if (AnalyticExpansions(current_node_ptr, goal_node_ptr, rs_length)==1) {
                 terminal_node_ptr_ = goal_node_ptr;
 
                 StateNode::Ptr grid_node_ptr = terminal_node_ptr_->parent_node_;
@@ -707,6 +707,9 @@ int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                 check_collision_use_time = 0.0;
                 num_check_collision = 0.0;
                 return 1;
+            }
+            else if (AnalyticExpansions(current_node_ptr, goal_node_ptr, rs_length)==99) {
+                return 9;
             }
         }
 
@@ -894,7 +897,7 @@ void HybridAStar::Reset() {
     terminal_node_ptr_ = nullptr;
 }
 
-bool HybridAStar::AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
+int HybridAStar::AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
                                      const StateNode::Ptr &goal_node_ptr, double &length) {
     auto rs_path_poses_and_int = rs_path_ptr_->GetRSPath(current_node_ptr->state_,
                                                         goal_node_ptr->state_,
@@ -905,11 +908,12 @@ bool HybridAStar::AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
 
     if (reverse_count>200){
         std::cout<<"there is a reverse in the path "<< reverse_count << std::endl;
+        return 99;
     }
 
     for (const auto &pose: rs_path_poses)
         if (BeyondBoundary(pose.head(2)) || !CheckCollision(pose.x(), pose.y(), pose.z())) {
-            return false;
+            return 0;
         };
 
     goal_node_ptr->intermediate_states_ = rs_path_poses;
@@ -918,5 +922,5 @@ bool HybridAStar::AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
     auto begin = goal_node_ptr->intermediate_states_.begin();
     goal_node_ptr->intermediate_states_.erase(begin);
 
-    return true;
+    return 1;
 }
