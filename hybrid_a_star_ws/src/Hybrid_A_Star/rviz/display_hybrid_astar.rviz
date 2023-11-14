@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /RobotModel1/Links1
-        - /Path2
       Splitter Ratio: 0.5
     Tree Height: 365
   - Class: rviz/Selection
@@ -87,7 +86,7 @@ Visualization Manager:
       Name: Start Pose
       Queue Size: 10
       Shaft Length: 40
-      Shaft Radius: 05
+      Shaft Radius: 5
       Shape: Arrow
       Topic: /car_2/planner_curr_pos
       Unreliable: false
@@ -103,7 +102,7 @@ Visualization Manager:
       Name: Goal Pose
       Queue Size: 10
       Shaft Length: 40
-      Shaft Radius: 05
+      Shaft Radius: 5
       Shape: Arrow
       Topic: /car_2/planner_goal_pos
       Unreliable: false
@@ -113,11 +112,11 @@ Visualization Manager:
       Class: rviz/Path
       Color: 25; 255; 0
       Enabled: true
-      Head Diameter: 03.0000001192092896
-      Head Length: 02.0000000298023224
-      Length: 03.0000001192092896
+      Head Diameter: 3
+      Head Length: 2
+      Length: 3
       Line Style: Billboards
-      Line Width: 03.0000001192092896
+      Line Width: 3
       Name: Path
       Offset:
         X: 0
@@ -126,9 +125,9 @@ Visualization Manager:
       Pose Color: 255; 85; 255
       Pose Style: None
       Queue Size: 10
-      Radius: 00.29999997466802597
-      Shaft Diameter: 01.0000000149011612
-      Shaft Length: 01.0000000149011612
+      Radius: 0.29999998211860657
+      Shaft Diameter: 1
+      Shaft Length: 1
       Topic: /run_hybrid_astar/searched_path
       Unreliable: false
       Value: true
@@ -137,11 +136,11 @@ Visualization Manager:
       Class: rviz/Path
       Color: 255; 0; 0
       Enabled: false
-      Head Diameter: 03.0000001192092896
-      Head Length: 02.0000000298023224
-      Length: 03.0000001192092896
+      Head Diameter: 3
+      Head Length: 2
+      Length: 3
       Line Style: Billboards
-      Line Width: 01.0000000149011612
+      Line Width: 1
       Name: Optimized Path
       Offset:
         X: 0
@@ -150,9 +149,9 @@ Visualization Manager:
       Pose Color: 255; 85; 255
       Pose Style: None
       Queue Size: 10
-      Radius: 00.29999997466802597
-      Shaft Diameter: 01.0000000149011612
-      Shaft Length: 01.0000000149011612
+      Radius: 0.29999998211860657
+      Shaft Diameter: 1
+      Shaft Length: 1
       Topic: /run_hybrid_astar/searched_path
       Unreliable: false
       Value: false
@@ -169,7 +168,7 @@ Visualization Manager:
       Marker Topic: /run_hybrid_astar/vehicle_path
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -186,7 +185,7 @@ Visualization Manager:
       Topic: /joint_states
       Unreliable: false
       Value: true
-      Width: 00.19999999552965164
+      Width: 0.19999998807907104
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -229,9 +228,9 @@ Visualization Manager:
       Name: PoseWithCovariance
       Queue Size: 10
       Shaft Length: 40
-      Shaft Radius: 05
+      Shaft Radius: 5
       Shape: Arrow
-      Topic: /car1/planner_curr_pos
+      Topic: /car_1/planner_curr_pos
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -245,9 +244,9 @@ Visualization Manager:
       Name: Pose
       Queue Size: 10
       Shaft Length: 40
-      Shaft Radius: 05
+      Shaft Radius: 5
       Shape: Arrow
-      Topic: /car1/planner_goal_pos
+      Topic: /car_1/planner_goal_pos
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -255,11 +254,11 @@ Visualization Manager:
       Class: rviz/Path
       Color: 225; 255; 0
       Enabled: true
-      Head Diameter: 03.0000001192092896
-      Head Length: 02.0000000298023224
-      Length: 03.0000001192092896
+      Head Diameter: 3
+      Head Length: 2
+      Length: 3
       Line Style: Billboards
-      Line Width: 03.0000001192092896
+      Line Width: 3
       Name: Path
       Offset:
         X: 0
@@ -268,11 +267,27 @@ Visualization Manager:
       Pose Color: 255; 85; 255
       Pose Style: None
       Queue Size: 10
-      Radius: 00.29999999329447746
-      Shaft Diameter: 01.0000000149011612
-      Shaft Length: 01.0000000149011612
-      Topic: /run_hybrid_astar1/searched_path
+      Radius: 0.29999998211860657
+      Shaft Diameter: 1
+      Shaft Length: 1
+      Topic: /run_hybrid_astar2/searched_path
       Unreliable: false
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /visualization_marker_text
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /visualization_marker
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
@@ -302,7 +317,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 59.21753692626953
+      Distance: 612.534912109375
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -310,9 +325,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 37.54314041137695
-        Y: 13.214142799377441
-        Z: 6.301127910614014
+        X: 437.23345947265625
+        Y: 85.44943237304688
+        Z: 6.372890949249268
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
@@ -339,4 +354,4 @@ Window Geometry:
     collapsed: true
   Width: 1386
   X: 214
-  Y: 28
+  Y: 27

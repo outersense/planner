@@ -283,7 +283,7 @@ bool HybridAStar::HasObstacle(const Vec2i &grid_index) const {
 void HybridAStar::SetObstacle(unsigned int x, unsigned int y) {
     if (x < 0u || x > static_cast<unsigned int>(MAP_GRID_SIZE_X_)
         || y < 0u || y > static_cast<unsigned int>(MAP_GRID_SIZE_Y_)) {
-        std::cout<<"triggereddddddd"<<std::endl;
+        // std::cout<<"triggereddddddd"<<std::endl;
         return;
     }
 
@@ -292,9 +292,10 @@ void HybridAStar::SetObstacle(unsigned int x, unsigned int y) {
 void HybridAStar::RemoveObstacle(unsigned int x, unsigned int y) {
     if (x < 0u || x > static_cast<unsigned int>(MAP_GRID_SIZE_X_)
         || y < 0u || y > static_cast<unsigned int>(MAP_GRID_SIZE_Y_)) {
+            
         return;
     }
-
+    // std::cout<<"******************************************************###########################################################################"<<std::endl;
     map_data_[x + y * MAP_GRID_SIZE_X_] = 0;
 }
 
@@ -632,7 +633,7 @@ double HybridAStar::ComputeG(const StateNode::Ptr &current_node_ptr,
 }
 
 int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
-    int timer_out_time = 1000;
+    int timer_out_time = 5000;
     if (scale_100_2 == true){
         timer_out_time = 10000;
     }

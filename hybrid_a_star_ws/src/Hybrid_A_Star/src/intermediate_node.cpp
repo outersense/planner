@@ -309,7 +309,8 @@ bool scale_100_3 = true;
             scale_factor = 100;
             translate_x = -18; //-33;
             translate_y = 35;
-            extend = 13;
+            // extend = 13;
+            extend = 40;
         }
         else{
             scale_factor = 10;

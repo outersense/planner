@@ -50,6 +50,8 @@ double Mod2Pi(const double &x) {
     return v;
 }
 bool scale_100 = true;
+int clearcout =0;
+int i_made_obstacles = 0;
 
 HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     double steering_angle = nh.param("planner/steering_angle", 10);
@@ -89,6 +91,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
     
     has_map_ = false;
+    
 
 
     // std::vector<double> theta_values;
@@ -123,7 +126,9 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 void HybridAStarFlow::Run() {
     kinodynamic_astar_searcher_ptr_->Reset();
     ReadData();
-    int i_made_obstacles = 0;
+    clearcout = clearcout+1 ;
+    std::cout << "clear count is:  "<< clearcout<< std::endl;
+    
     if (!has_map_) {
         if (costmap_deque_.empty()) {
             return;
@@ -132,7 +137,7 @@ void HybridAStarFlow::Run() {
         current_costmap_ptr_ = costmap_deque_.front();
         costmap_deque_.pop_front();
 
-        const double map_resolution = 0.2;
+        const double map_resolution = 1.0;
         kinodynamic_astar_searcher_ptr_->Init(
                 current_costmap_ptr_->info.origin.position.x,
                 1.0 * current_costmap_ptr_->info.width * current_costmap_ptr_->info.resolution,
@@ -161,7 +166,7 @@ void HybridAStarFlow::Run() {
     }
     if (vals_accessed.size() != 0){
         // std::cout<<"need to do something here"<< std::endl;
-        const double map_resolution = 0.2;
+        const double map_resolution = 0.85;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             // unsigned int x_pls = vals_accessed[i];
             // unsigned int y_pls = vals_accessed[i + 1];
@@ -190,6 +195,7 @@ void HybridAStarFlow::Run() {
     
     while (HasStartPose() && HasGoalPose()) {
         // std::cout<<"#################"<< count_ddddd <<std::endl;
+        
         InitPoseData();
 
         double start_yaw = tf::getYaw(current_init_pose_ptr_->pose.pose.orientation);
@@ -361,22 +367,26 @@ void HybridAStarFlow::Run() {
         // count_ddddd = count_ddddd+1;
 
     }
-    if (i_made_obstacles != 0){
-        // std::cout<<"need to remove obstacles"<< std::endl;
-        const double map_resolution = 0.2;
-        for (size_t i = 0; i < vals_accessed.size(); i += 2) {
-            // unsigned int x_pls = vals_accessed[i];
-            // unsigned int y_pls = vals_accessed[i + 1];
-            double x_pls = vals_accessed[i];
-            double y_pls = vals_accessed[i + 1];
+    if ((i_made_obstacles != 0)  ){
+        // if (clearcout%100 == 0){
+        //     std::cout<<"mai chutiya hu "<<std::endl;}
+    // if (i_made_obstacles != 0 ){
+            std::cout<<"need to remove obstacles"<< std::endl;
+            const double map_resolution = 0.85;
+            for (size_t i = 0; i < vals_accessed.size(); i += 2) {
+                // unsigned int x_pls = vals_accessed[i];
+                // unsigned int y_pls = vals_accessed[i + 1];
+                double x_pls = vals_accessed[i];
+                double y_pls = vals_accessed[i + 1];
 
-            unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
-            unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
-            // std::cout<< x_pls << "                        "<< y_pls << std::endl;
-            // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
-            kinodynamic_astar_searcher_ptr_->RemoveObstacle(bhagwan_k_bharose_x, bhagwan_k_bharose_y);
+                unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
+                unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
+                // std::cout<< x_pls << "                        "<< y_pls << std::endl;
+                // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
+                kinodynamic_astar_searcher_ptr_->RemoveObstacle(bhagwan_k_bharose_x, bhagwan_k_bharose_y);
             i_made_obstacles=0;
-        }
+            clearcout = 0;
+            }
     }
 }
 
