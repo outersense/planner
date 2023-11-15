@@ -164,6 +164,11 @@ void HybridAStarFlow::Run() {
         }
         has_map_ = true;
     }
+    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl; 
     if (vals_accessed.size() != 0){
         // std::cout<<"need to do something here"<< std::endl;
         const double map_resolution = 0.85;
