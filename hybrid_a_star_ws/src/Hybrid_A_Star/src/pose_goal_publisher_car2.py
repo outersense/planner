@@ -158,6 +158,25 @@ class GetGoal:
     def get_goal_for_pose(self, curr):
         near_id, _ = do_kdtree(self.waypoints[:,:-1], curr, k =1)
         goal_id = near_id + self.look_ahead_index
+        if (len(self.pos_obstacles) !=0):
+            for i in range(len(self.pos_obstacles)):
+                x_obs = self.pos_obstacles[i][0]
+                y_obs = self.pos_obstacles[i][1]
+                obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+                near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+                print("###########################################  ", near_id_obs, "  #############################################")
+                if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index:
+                    goal_id = near_id_obs -1 
+                    print("triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs==0:
+                    goal_id = self.waypoints.shape[0]-1
+                    print("triggggeeerrrreeedddddd tttttttttttthere")
+                if near_id_obs<goal_id and near_id_obs> near_id:
+                    goal_id = near_id_obs-1
+                    print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+
+
+
         if (len(self.goal_id_dq) ==0):
             self.goal_id_dq.append(goal_id)
             
@@ -172,17 +191,26 @@ class GetGoal:
         goal_pose = self.waypoints[goal_id]
 
         print(near_id, "                ", goal_id, type(goal_id))
-        if (len(self.pos_obstacles) !=0):
-            for i in range(len(self.pos_obstacles)):
-                x_obs = self.pos_obstacles[i][0]
-                y_obs = self.pos_obstacles[i][1]
-                dist = math.sqrt(((goal_pose[0,0]*self.scale_factor + self.translate_x)-x_obs)**2 + ((goal_pose[0,1]*self.scale_factor + self.translate_y)-y_obs)**2)
-                if (dist < 2):
+        # if (len(self.pos_obstacles) !=0):
+        #     for i in range(len(self.pos_obstacles)):
+        #         x_obs = self.pos_obstacles[i][0]
+        #         y_obs = self.pos_obstacles[i][1]
+        #         # obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+        #         # near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+        #         # if near_id_obs<goal_id
+
+                
+                
+                
+                
+                
+        #         # dist = math.sqrt(((goal_pose[0,0]*self.scale_factor + self.translate_x)-x_obs)**2 + ((goal_pose[0,1]*self.scale_factor + self.translate_y)-y_obs)**2)
+        #         # if (dist < 2):
                     
-                    goal_id = goal_id+1
-                    print("inside obstacle", near_id, "                ", goal_id, type(goal_id))
-                    self.goal_id_dq.append(goal_id)
-                    goal_pose = self.waypoints[goal_id]
+        #         #     goal_id = goal_id+1
+        #         #     print("inside obstacle", near_id, "                ", goal_id, type(goal_id))
+        #         #     self.goal_id_dq.append(goal_id)
+        #         #     goal_pose = self.waypoints[goal_id]
         
         return goal_pose, goal_id
     
@@ -197,8 +225,8 @@ class GetGoal:
         while (i<length_msg):
             
             car_id =  pose[i]
-            pos_x   = pose[i+1]*scale_factor +translate_x
-            pos_y   = pose[i+2]*scale_factor +translate_y
+            pos_x   = pose[i+1]#*scale_factor +translate_x
+            pos_y   = pose[i+2]#*scale_factor +translate_y
             pos_v   = pose[i+3]
             pos_yaw = pose[i+4]
             if (car_id<1000 and pos_v <=0.05):

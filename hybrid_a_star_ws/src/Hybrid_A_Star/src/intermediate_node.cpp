@@ -305,12 +305,16 @@ bool scale_100_3 = true;
         int translate_x = 0;
         int translate_y = 0;
         double extend = 0.0;
+        double halfWidth = 0.0;
+        double halfHeight = 0.0;
         if (scale_100_3 ==true){
             scale_factor = 100;
             translate_x = -18; //-33;
             translate_y = 35;
             // extend = 13;
             extend = 40;
+            halfWidth = 20; // Half of the rectangle width
+            halfHeight = 60; // Half of the rectangle height
         }
         else{
             scale_factor = 10;
@@ -340,17 +344,32 @@ bool scale_100_3 = true;
                 if (static_cast<unsigned int>(map_index) < map_size) {
                     current_map.data[map_index] = 100; 
                 }
-                for (double pix = 0.5; pix < extend; pix += 1.0) { // Use double type for pix
-                // Update surrounding cells
-                    for (int dx = -static_cast<int>(pix); dx <= static_cast<int>(pix); dx++) {
-                        for (int dy = -static_cast<int>(pix); dy <= static_cast<int>(pix); dy++) {
-                            double new_x = x + dx;
-                            double new_y = y + dy;
-                            if (new_x >= 0 && new_x < map_width && new_y >= 0 && new_y < map_height) {
-                                int index = static_cast<int>(new_x) + static_cast<int>(new_y) * map_width;
-                                if (static_cast<unsigned int>(index) < map_size) {
-                                    current_map.data[index] = 100;
-                                }
+
+                // for (double pix = 0.5; pix < extend; pix += 1.0) { // Use double type for pix
+                // // Update surrounding cells
+                //     for (int dx = -static_cast<int>(pix); dx <= static_cast<int>(pix); dx++) {
+                //         for (int dy = -static_cast<int>(pix); dy <= static_cast<int>(pix); dy++) {
+                //             double new_x = x + dx;
+                //             double new_y = y + dy;
+                //             if (new_x >= 0 && new_x < map_width && new_y >= 0 && new_y < map_height) {
+                //                 int index = static_cast<int>(new_x) + static_cast<int>(new_y) * map_width;
+                //                 if (static_cast<unsigned int>(index) < map_size) {
+                //                     current_map.data[index] = 100;
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+                
+
+                for (double dx = -halfWidth; dx <= halfWidth; dx += 1.0) {
+                    for (double dy = -halfHeight; dy <= halfHeight; dy += 1.0) {
+                        double new_x = x + dx;
+                        double new_y = y + dy;
+                        if (new_x >= 0 && new_x < map_width && new_y >= 0 && new_y < map_height) {
+                            int index = static_cast<int>(new_x) + static_cast<int>(new_y) * map_width;
+                            if (static_cast<unsigned int>(index) < map_size) {
+                                current_map.data[index] = 100;
                             }
                         }
                     }

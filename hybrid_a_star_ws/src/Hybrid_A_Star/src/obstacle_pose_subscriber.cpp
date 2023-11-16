@@ -28,12 +28,16 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
         int translate_x = 0;
         int translate_y = 0;
         double extend = 0.0;
+        double halfWidth = 0.0;
+        double halfHeight = 0.0;
         if (scale_100_4 ==true){
             scale_factor = 100;
             translate_x = -18; //-33;
             translate_y = 35;
             // extend = 13;
             extend = 40;
+            halfWidth = 20; 
+            halfHeight = 60;
         }
         else{
             scale_factor = 10;
@@ -83,17 +87,29 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
                 // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
                 x_y_vals.push_back(x);
                 x_y_vals.push_back(y);
-                for (double pix = 0.5; pix < extend; pix += 1.0) { // Use double type for pix
-                // Update surrounding cells
-                    for (int dx = -static_cast<int>(pix); dx <= static_cast<int>(pix); dx++) {
-                        for (int dy = -static_cast<int>(pix); dy <= static_cast<int>(pix); dy++) {
-                            double new_x = x + dx;
-                            double new_y = y + dy;
-                            x_y_vals.push_back(new_x);
-                            x_y_vals.push_back(new_y);
-                        }
+
+                for (double dx = -halfWidth; dx <= halfWidth; dx += 1.0) {
+                    for (double dy = -halfHeight; dy <= halfHeight; dy += 1.0) {
+                        double new_x = x + dx;
+                        double new_y = y + dy;
+                        x_y_vals.push_back(new_x);
+                        x_y_vals.push_back(new_y);
                     }
                 }
+
+
+
+                // for (double pix = 0.5; pix < extend; pix += 1.0) { // Use double type for pix
+                // // Update surrounding cells
+                //     for (int dx = -static_cast<int>(pix); dx <= static_cast<int>(pix); dx++) {
+                //         for (int dy = -static_cast<int>(pix); dy <= static_cast<int>(pix); dy++) {
+                //             double new_x = x + dx;
+                //             double new_y = y + dy;
+                //             x_y_vals.push_back(new_x);
+                //             x_y_vals.push_back(new_y);
+                //         }
+                //     }
+                // }
             }
         }
  
