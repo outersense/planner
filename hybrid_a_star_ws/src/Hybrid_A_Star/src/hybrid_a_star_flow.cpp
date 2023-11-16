@@ -50,7 +50,7 @@ double Mod2Pi(const double &x) {
     return v;
 }
 bool scale_100 = true;
-// int clearcout =0;
+int clearcout =0;
 int i_made_obstacles = 0;
 
 HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
@@ -126,8 +126,8 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
 void HybridAStarFlow::Run() {
     kinodynamic_astar_searcher_ptr_->Reset();
     ReadData();
-    // clearcout = clearcout+1 ;
-    // std::cout << "clear count is:  "<< clearcout<< std::endl;
+    clearcout = clearcout+1 ;
+    std::cout << "clear count is:  "<< clearcout<< std::endl;
     
     if (!has_map_) {
         if (costmap_deque_.empty()) {
@@ -376,8 +376,7 @@ void HybridAStarFlow::Run() {
         // count_ddddd = count_ddddd+1;
 
     }
-    // if ((i_made_obstacles != 0 && clearcout%100==0)  ){
-    if (i_made_obstacles != 0  ){
+    if ((i_made_obstacles != 0 && clearcout%5==0)  ){
         // if (clearcout%100 == 0){
         //     std::cout<<"mai chutiya hu "<<std::endl;}
     // if (i_made_obstacles != 0 ){
@@ -398,7 +397,7 @@ void HybridAStarFlow::Run() {
             
             }
             i_made_obstacles=0;
-            // clearcout = 0;
+            clearcout = 0;
             vals_latched.clear();
     }
 }
