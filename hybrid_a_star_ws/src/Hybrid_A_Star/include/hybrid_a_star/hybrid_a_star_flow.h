@@ -88,6 +88,7 @@ private:
     std::deque<nav_msgs::OccupancyGridPtr> costmap_deque_;
     // std::vector<int> vals_accessed;
     std::vector<double> vals_accessed;
+    std::vector<double> vals_latched;
 
     std::vector<double> x_values;
     std::vector<double> y_values;

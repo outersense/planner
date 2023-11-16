@@ -104,7 +104,7 @@ def do_kdtree(array_source, array_dest, k =1):
 
 class GetGoal:
     def __init__(self):
-        self.look_ahead_index = 6
+        self.look_ahead_index = 5
         # self.look_ahead_index = 3
         self.error_buffer = 10
         scale_100 = True

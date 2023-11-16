@@ -184,8 +184,12 @@ void HybridAStarFlow::Run() {
             // std::cout<< x_pls << "                        "<< y_pls << std::endl;
             // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
             kinodynamic_astar_searcher_ptr_->SetObstacle(bhagwan_k_bharose_x, bhagwan_k_bharose_y);
-            i_made_obstacles=1;
+            vals_latched.push_back(vals_accessed[i]);
+            vals_latched.push_back(vals_accessed[i+1]);
+            
         }
+        // vals_latched = vals_accessed;
+        i_made_obstacles=1;
     }
     
 
@@ -372,26 +376,29 @@ void HybridAStarFlow::Run() {
         // count_ddddd = count_ddddd+1;
 
     }
-    if ((i_made_obstacles != 0)  ){
+    if ((i_made_obstacles != 0 && clearcout%100==0)  ){
         // if (clearcout%100 == 0){
         //     std::cout<<"mai chutiya hu "<<std::endl;}
     // if (i_made_obstacles != 0 ){
             std::cout<<"need to remove obstacles"<< std::endl;
             const double map_resolution = 0.85;
-            for (size_t i = 0; i < vals_accessed.size(); i += 2) {
+            // for (size_t i = 0; i < vals_accessed.size(); i += 2) {
+            for(int i=0; i<vals_latched.size(); i+=2) {
                 // unsigned int x_pls = vals_accessed[i];
                 // unsigned int y_pls = vals_accessed[i + 1];
-                double x_pls = vals_accessed[i];
-                double y_pls = vals_accessed[i + 1];
+                double x_pls = vals_latched[i];
+                double y_pls = vals_latched[i + 1];
 
                 unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
                 unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
                 // std::cout<< x_pls << "                        "<< y_pls << std::endl;
                 // kinodynamic_astar_searcher_ptr_->SetObstacle(x_pls, y_pls);
                 kinodynamic_astar_searcher_ptr_->RemoveObstacle(bhagwan_k_bharose_x, bhagwan_k_bharose_y);
+            
+            }
             i_made_obstacles=0;
             clearcout = 0;
-            }
+            vals_latched.clear();
     }
 }
 
