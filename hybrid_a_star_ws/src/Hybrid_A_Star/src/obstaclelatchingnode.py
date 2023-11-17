@@ -58,82 +58,67 @@ class ObsLatch:
         return pos_obs, obs_id
     
     def obstacle_callback(self,msg):
+        publish_list = []
         pos_obstacles, car_ids = self.get_obstacle_pose(msg, self.scale_factor, self.translate_x, self.translate_y )
         if len(self.global_car_id_list < 6):
             self.global_car_id_list.append(car_ids)
             self.global_pose_obstacles.append(pos_obstacles)
+        elif(len(car_ids)==0 and count%10 != 0):
+            print("latching")
+            count = count+1
+            for obslist in self.global_pose_obstacles:
+                while i < len(obslist):
+                    publish_list.append(0)
+                    publish_list.append(i)
+                    publish_list.append(i+1)
+                    publish_list.append(0)
+                    publish_list.append(0)
+                    i = i+2
+            self.latched_obs_pose.publish(publish_list)
+
+        elif (len(car_ids)==0 and count %10 ==0):
+            print("clearing")
+            count = 0
+            
+
         else:    
             for id in car_ids:
                 presence_checks = [id in sublist for sublist in self.global_car_id_list]
                 if all(not check for check in presence_checks):
                     print("now drop the object")
                     # publish x y current value
+                    for obslist in self.global_pose_obstacles:
+                        while i < len(obslist):
+                            publish_list.append(0)
+                            publish_list.append(i)
+                            publish_list.append(i+1)
+                            publish_list.append(0)
+                            publish_list.append(0)
+                            i = i+2
+                    self.latched_obs_pose.publish(publish_list)
 
 
 
                 else:
                     print("do not drop the obstacle ")
+                    # send all in this deque
+                    for obslist in self.global_pose_obstacles:
+                        while i < len(obslist):
+                            publish_list.append(0)
+                            publish_list.append(i)
+                            publish_list.append(i+1)
+                            publish_list.append(0)
+                            publish_list.append(0)
+                            i = i+2
+                    self.latched_obs_pose.publish(publish_list)
+
+
 
 
             self.global_car_id_list.append(car_ids)
             self.global_pose_obstacles.append(pos_obstacles)
 
         self.counter = self.counter +1
-
-    # def odom_callback(self,msg):
-    #     # Create a PoseStamped message
-    #     pose_cov_msg = PoseWithCovarianceStamped()
-    #     pose_cov_msg.header.stamp = msg.header.stamp
-    #     pose_cov_msg.header.frame_id = "world"
-
-    #     pose_cov_msg.pose.pose.position.x = msg.pose.pose.position.x*self.scale_factor + self.translate_x
-    #     pose_cov_msg.pose.pose.position.y = msg.pose.pose.position.y*self.scale_factor + self.translate_y
-    #     pose_cov_msg.pose.pose.position.z = 0.0
-    #     pose_cov_msg.pose.pose.orientation = msg.pose.pose.orientation
-
-
-    #     pose_cov_msg.pose.covariance = msg.pose.covariance
-
-    #     self.pose_cov_publisher.publish(pose_cov_msg)
-    #     self.current_pose = np.asarray([msg.pose.pose.position.x, msg.pose.pose.position.y]).reshape(1,-1)
-    #     self.goal_pose_val, gola_id = self.get_goal_for_pose(self.current_pose)
-    #     # print(self.current_pose,    "                  ",        self.goal_pose_val)
-    #     # print(self.goal_pose_val.shape)
-        
-
-    #     pose_stamped_msg = PoseStamped()
-    #     pose_stamped_msg.header.stamp = msg.header.stamp
-    #     pose_stamped_msg.header.frame_id = "world"
-
-    #     pose_stamped_msg.pose.position.x = self.goal_pose_val[0,0]*self.scale_factor + self.translate_x
-    #     pose_stamped_msg.pose.position.y = self.goal_pose_val[0,1]*self.scale_factor + self.translate_y
-    #     pose_stamped_msg.pose.position.z = 0.0
-    #     # if (len(self.pos_obstacles) !=0):
-    #     #     for i in range(len(self.pos_obstacles)):
-    #     #         x_obs = self.pos_obstacles[i][0]
-    #     #         y_obs = self.pos_obstacles[i][1]
-    #     #         dist = math.sqrt((pose_stamped_msg.pose.position.x-x_obs)**2 + (pose_stamped_msg.pose.position.y-y_obs)**2)
-    #     #         if (dist < 2):
-    #     #             print("inside obstacle")
-    #     #             gola_id = gola_id+1
-    #     #             goal_pose_val_new = self.waypoints[gola_id]
-    #     #             pose_stamped_msg.pose.position.x = goal_pose_val_new[0,0]*self.scale_factor + self.translate_x
-    #     #             pose_stamped_msg.pose.position.y = goal_pose_val_new[0,1]*self.scale_factor + self.translate_y
-
-
-
-    #     # Convert theta to a quaternion
-    #     x, y, z, w = quaternion_from_euler(0, 0, self.goal_pose_val[0,2])  # Convert theta to quaternion
-
-    #     # Set the orientation of PoseStamped message
-    #     pose_stamped_msg.pose.orientation.x = x
-    #     pose_stamped_msg.pose.orientation.y = y
-    #     pose_stamped_msg.pose.orientation.z = z
-    #     pose_stamped_msg.pose.orientation.w = w
-
-    #     self.goal_publisher.publish(pose_stamped_msg)
-
-
 
     def main(self):
         rospy.spin()
