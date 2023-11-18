@@ -74,18 +74,21 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // std::cout << *costmap_sub_ptr_<< std::endl;
     // costmap_sub_ptr_->PrintCostMapData();
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
-    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_2/planner_curr_pos", 1);
-    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_2/planner_goal_pos", 1);
-    // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_1/planner_curr_pos", 1);
-    // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_1/planner_goal_pos", 1);
+    // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_2/planner_curr_pos", 1);
+    // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_2/planner_goal_pos", 1);
+    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_1/planner_curr_pos", 1);
+    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_1/planner_goal_pos", 1);
 
-    obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose", 1);
+    // obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose", 1);
+    obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose_new", 1);
+    // obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose_new2", 1);
     
     // obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &HybridAStarFlow::obstacleCallback, this);
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
     path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
-    path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
+    // path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
+    path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
     // path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
     searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
     vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
@@ -127,7 +130,7 @@ void HybridAStarFlow::Run() {
     kinodynamic_astar_searcher_ptr_->Reset();
     ReadData();
     clearcout = clearcout+1 ;
-    std::cout << "clear count is:  "<< clearcout<< std::endl;
+    // std::cout << "clear count is:  "<< clearcout<< std::endl;
     
     if (!has_map_) {
         if (costmap_deque_.empty()) {
@@ -164,11 +167,11 @@ void HybridAStarFlow::Run() {
         }
         has_map_ = true;
     }
-    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
-    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
-    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
-    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
-    std::cout<<"################################################## "<<vals_accessed.size()<< std::endl; 
+    // std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    // std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    // std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    // std::cout<<"################################################## "<<vals_accessed.size()<< std::endl;
+    // std::cout<<"################################################## "<<vals_accessed.size()<< std::endl; 
     if (vals_accessed.size() != 0){
         // std::cout<<"need to do something here"<< std::endl;
         const double map_resolution = 0.85;
@@ -380,7 +383,7 @@ void HybridAStarFlow::Run() {
         // if (clearcout%100 == 0){
         //     std::cout<<"mai chutiya hu "<<std::endl;}
     // if (i_made_obstacles != 0 ){
-            std::cout<<"need to remove obstacles"<< std::endl;
+            // std::cout<<"need to remove obstacles"<< std::endl;
             const double map_resolution = 0.85;
             // for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             for(int i=0; i<vals_latched.size(); i+=2) {

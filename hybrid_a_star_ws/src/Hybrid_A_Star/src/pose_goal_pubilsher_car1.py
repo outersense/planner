@@ -104,8 +104,8 @@ def do_kdtree(array_source, array_dest, k =1):
 
 class GetGoal:
     def __init__(self):
-        # self.look_ahead_index = 6
-        self.look_ahead_index = 3
+        self.look_ahead_index = 5
+        # self.look_ahead_index = 3
         self.error_buffer = 10
         scale_100 = True
         self.pos_obstacles =[]
@@ -118,6 +118,8 @@ class GetGoal:
             waypoints_name = "Nov10_manual_jash_100scale2.npy"
             self.translate_x = -17.964026958248915 #-32.964026958248915
             self.translate_y = 35.39230053680539
+#             x_translation = -3.2964026958248915
+# y_translation = 3.539230053680539
 
             # self.translate_x = -20.41996779977085
             # self.translate_y = 39.681654685361023
@@ -135,14 +137,23 @@ class GetGoal:
             # self.translate_y = 3.7368772684946485
             self.scale_factor = 10
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
-        rospy.init_node('publish_curr_pose_and_goal_pose_car1')
+        rospy.init_node('publish_curr_pose_and_goal_pose_car_1')
+        # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
+        # rospy.Subscriber('/debug_pose2', Odometry, self.odom_callback)
         # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
         rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
-        rospy.Subscriber('/rccar_pose', Float32MultiArray, self.obstacle_callback)
+        # rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
+        # rospy.Subscriber('/debug_pose2', Odometry, self.odom_callback)
+        # rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
+        rospy.Subscriber('/rccar_pose_new', Float32MultiArray, self.obstacle_callback)
         # self.pose_cov_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         # self.goal_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_goal_pos', PoseStamped, queue_size=10)
         self.pose_cov_publisher = rospy.Publisher('/car_1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         self.goal_publisher = rospy.Publisher('/car_1/planner_goal_pos', PoseStamped, queue_size=10)
+        # self.pose_cov_publisher = rospy.Publisher('/car_2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        # self.goal_publisher = rospy.Publisher('/car_2/planner_goal_pos', PoseStamped, queue_size=10)
+        # self.pose_cov_publisher = rospy.Publisher('/car_1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        # self.goal_publisher = rospy.Publisher('/car_1/planner_goal_pos', PoseStamped, queue_size=10)
         self.goal_id_dq = deque(maxlen=1)
         
         
@@ -151,6 +162,25 @@ class GetGoal:
     def get_goal_for_pose(self, curr):
         near_id, _ = do_kdtree(self.waypoints[:,:-1], curr, k =1)
         goal_id = near_id + self.look_ahead_index
+        if (len(self.pos_obstacles) !=0):
+            for i in range(len(self.pos_obstacles)):
+                x_obs = self.pos_obstacles[i][0]
+                y_obs = self.pos_obstacles[i][1]
+                obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+                near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+                print("###########################################  ", near_id_obs, "  #############################################")
+                if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index:
+                    goal_id = near_id_obs -2 
+                    print("triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs==0:
+                    goal_id = self.waypoints.shape[0]-2
+                    print("triggggeeerrrreeedddddd tttttttttttthere")
+                if near_id_obs<goal_id and near_id_obs> near_id:
+                    goal_id = near_id_obs-2
+                    print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+
+
+
         if (len(self.goal_id_dq) ==0):
             self.goal_id_dq.append(goal_id)
             
@@ -165,17 +195,26 @@ class GetGoal:
         goal_pose = self.waypoints[goal_id]
 
         print(near_id, "                ", goal_id, type(goal_id))
-        if (len(self.pos_obstacles) !=0):
-            for i in range(len(self.pos_obstacles)):
-                x_obs = self.pos_obstacles[i][0]
-                y_obs = self.pos_obstacles[i][1]
-                dist = math.sqrt(((goal_pose[0,0]*self.scale_factor + self.translate_x)-x_obs)**2 + ((goal_pose[0,1]*self.scale_factor + self.translate_y)-y_obs)**2)
-                if (dist < 2):
+        # if (len(self.pos_obstacles) !=0):
+        #     for i in range(len(self.pos_obstacles)):
+        #         x_obs = self.pos_obstacles[i][0]
+        #         y_obs = self.pos_obstacles[i][1]
+        #         # obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+        #         # near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+        #         # if near_id_obs<goal_id
+
+                
+                
+                
+                
+                
+        #         # dist = math.sqrt(((goal_pose[0,0]*self.scale_factor + self.translate_x)-x_obs)**2 + ((goal_pose[0,1]*self.scale_factor + self.translate_y)-y_obs)**2)
+        #         # if (dist < 2):
                     
-                    goal_id = goal_id+1
-                    print("inside obstacle", near_id, "                ", goal_id, type(goal_id))
-                    self.goal_id_dq.append(goal_id)
-                    goal_pose = self.waypoints[goal_id]
+        #         #     goal_id = goal_id+1
+        #         #     print("inside obstacle", near_id, "                ", goal_id, type(goal_id))
+        #         #     self.goal_id_dq.append(goal_id)
+        #         #     goal_pose = self.waypoints[goal_id]
         
         return goal_pose, goal_id
     
@@ -190,8 +229,8 @@ class GetGoal:
         while (i<length_msg):
             
             car_id =  pose[i]
-            pos_x   = pose[i+1]*scale_factor +translate_x
-            pos_y   = pose[i+2]*scale_factor +translate_y
+            pos_x   = pose[i+1]#*scale_factor +translate_x
+            pos_y   = pose[i+2]#*scale_factor +translate_y
             pos_v   = pose[i+3]
             pos_yaw = pose[i+4]
             if (car_id<1000 and pos_v <=0.05):
