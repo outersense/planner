@@ -273,7 +273,9 @@ public:
 bool scale_100_3 = true;
     ObstacleMapUpdater()
     {
-        obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &ObstacleMapUpdater::obstacleCallback, this);
+        obstacle_subscriber = nh.subscribe("/rccar_pose_new", 10, &ObstacleMapUpdater::obstacleCallback, this);
+        // obstacle_subscriber = nh.subscribe("/rccar_pose_new2", 10, &ObstacleMapUpdater::obstacleCallback, this);
+        // obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &ObstacleMapUpdater::obstacleCallback, this);
         map_subscriber = nh.subscribe("/map", 1, &ObstacleMapUpdater::mapCallback, this);
         updated_map_publisher = nh.advertise<nav_msgs::OccupancyGrid>("/updated_map", 1);
     }

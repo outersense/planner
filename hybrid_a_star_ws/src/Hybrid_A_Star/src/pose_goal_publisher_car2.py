@@ -141,11 +141,15 @@ class GetGoal:
         # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
         # rospy.Subscriber('/debug_pose2', Odometry, self.odom_callback)
         # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
-        rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
         # rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
-        rospy.Subscriber('/rccar_pose', Float32MultiArray, self.obstacle_callback)
+        rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
+        # rospy.Subscriber('/debug_pose2', Odometry, self.odom_callback)
+        # rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
+        rospy.Subscriber('/rccar_pose_new', Float32MultiArray, self.obstacle_callback)
         # self.pose_cov_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         # self.goal_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_goal_pos', PoseStamped, queue_size=10)
+        # self.pose_cov_publisher = rospy.Publisher('/car_1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        # self.goal_publisher = rospy.Publisher('/car_1/planner_goal_pos', PoseStamped, queue_size=10)
         self.pose_cov_publisher = rospy.Publisher('/car_2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         self.goal_publisher = rospy.Publisher('/car_2/planner_goal_pos', PoseStamped, queue_size=10)
         # self.pose_cov_publisher = rospy.Publisher('/car_1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
@@ -166,13 +170,13 @@ class GetGoal:
                 near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
                 print("###########################################  ", near_id_obs, "  #############################################")
                 if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index:
-                    goal_id = near_id_obs -1 
+                    goal_id = near_id_obs -2 
                     print("triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
                 if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs==0:
-                    goal_id = self.waypoints.shape[0]-1
+                    goal_id = self.waypoints.shape[0]-2
                     print("triggggeeerrrreeedddddd tttttttttttthere")
                 if near_id_obs<goal_id and near_id_obs> near_id:
-                    goal_id = near_id_obs-1
+                    goal_id = near_id_obs-2
                     print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
 
 
