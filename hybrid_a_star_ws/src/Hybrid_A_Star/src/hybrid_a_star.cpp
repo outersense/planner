@@ -636,7 +636,7 @@ int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     int timer_out_time = 5000;
     if (scale_100_2 == true){
         // timer_out_time = 10000;
-        timer_out_time = 4000;
+        timer_out_time = 1000;
     }
     
     Timer search_used_time;

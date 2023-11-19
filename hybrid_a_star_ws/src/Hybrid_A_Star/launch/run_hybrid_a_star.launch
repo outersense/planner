@@ -9,7 +9,7 @@
         <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher"/>
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
 
-        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find hybrid_a_star)/rviz/display_hybrid_astar.rviz"/>
+        <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find hybrid_a_star)/rviz/display_hybrid_astar.rviz"/> -->
 
         <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster"
             args="0 0 0 0 0 0 world map 100"/>
