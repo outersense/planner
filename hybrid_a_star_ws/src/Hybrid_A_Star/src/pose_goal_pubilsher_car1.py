@@ -162,6 +162,7 @@ class GetGoal:
     def get_goal_for_pose(self, curr):
         near_id, _ = do_kdtree(self.waypoints[:,:-1], curr, k =1)
         goal_id = near_id + self.look_ahead_index
+        flag_cond = False
         if (len(self.pos_obstacles) !=0):
             for i in range(len(self.pos_obstacles)):
                 x_obs = self.pos_obstacles[i][0]
@@ -171,12 +172,15 @@ class GetGoal:
                 print("###########################################  ", near_id_obs, "  #############################################")
                 if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index:
                     goal_id = near_id_obs -2 
+                    flag_cond = True
                     print("triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
                 if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs==0:
                     goal_id = self.waypoints.shape[0]-2
+                    flag_cond = True
                     print("triggggeeerrrreeedddddd tttttttttttthere")
                 if near_id_obs<goal_id and near_id_obs> near_id:
                     goal_id = near_id_obs-2
+                    flag_cond = True
                     print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
 
 
@@ -184,8 +188,8 @@ class GetGoal:
         if (len(self.goal_id_dq) ==0):
             self.goal_id_dq.append(goal_id)
             
-        if(goal_id <= self.waypoints.shape[0]-1 and abs(goal_id-self.goal_id_dq[0])>self.error_buffer):
-            # print("triggeredddd")
+        if(goal_id <= self.waypoints.shape[0]-1 and abs(goal_id-self.goal_id_dq[0])>self.error_buffer and flag_cond == False):
+            print("triggeredddd########################################")
             goal_id = np.asarray([self.goal_id_dq[0]])[0]
 
 
