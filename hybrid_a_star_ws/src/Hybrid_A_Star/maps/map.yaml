@@ -18,7 +18,8 @@
 # image: figure8_track28.png #10 scale 8  0.35 Nov 8 manualjash2
 # image: figure8_track30.png #100 scale 8  0.35 Nov 8 manualjash2
 # image: figure8_track33.png #100 scale 8  0.35 Nov 8 manualjash2
-image: figure8_track35.png #100 scale 8  0.35 Nov 8 manualjash2
+# image: figure8_track35.png #100 scale 8  0.35 Nov 8 manualjash2 FVD
+image: figure8_track36.png #100 scale 8  0.35 Nov 8 manualjash2 expanded encore
 resolution: 1.0
 # resolution: 0.1
 origin: [ 0.0, 0.0, 0.0 ]

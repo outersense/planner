@@ -340,7 +340,7 @@ def do_kdtree(array_source, array_dest, k =1):
 
 class GetGoal:
     def __init__(self):
-        self.look_ahead_index = 6
+        self.look_ahead_index = 5
         # self.look_ahead_index = 3
         self.error_buffer = 10
         scale_100 = True
@@ -373,22 +373,21 @@ class GetGoal:
             # self.translate_y = 3.7368772684946485
             self.scale_factor = 10
         self.waypoints = np.load(waypoints_name, allow_pickle=True)
-        rospy.init_node('publish_curr_pose_and_goal_pose_car2')
+        rospy.init_node('publish_curr_pose_and_goal_pose_car3')
         # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
         # rospy.Subscriber('/debug_pose2', Odometry, self.odom_callback)
         # rospy.Subscriber('/car2/fused_nucklie', Odometry, self.odom_callback)
         # rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
-        rospy.Subscriber('/car2/fused', Odometry, self.odom_callback)
+        rospy.Subscriber('/car3/fused', Odometry, self.odom_callback)
         # rospy.Subscriber('/debug_pose2', Odometry, self.odom_callback)
         # rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
-        # rospy.Subscriber('/rccar_pose_new', Float32MultiArray, self.obstacle_callback)
-        rospy.Subscriber('/rccar_pose', Float32MultiArray, self.obstacle_callback)
+        rospy.Subscriber('/rccar_pose_new', Float32MultiArray, self.obstacle_callback)
         # self.pose_cov_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         # self.goal_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_goal_pos', PoseStamped, queue_size=10)
         # self.pose_cov_publisher = rospy.Publisher('/car_1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         # self.goal_publisher = rospy.Publisher('/car_1/planner_goal_pos', PoseStamped, queue_size=10)
-        self.pose_cov_publisher = rospy.Publisher('/car_2/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
-        self.goal_publisher = rospy.Publisher('/car_2/planner_goal_pos', PoseStamped, queue_size=10)
+        self.pose_cov_publisher = rospy.Publisher('/car_3/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
+        self.goal_publisher = rospy.Publisher('/car_3/planner_goal_pos', PoseStamped, queue_size=10)
         # self.pose_cov_publisher = rospy.Publisher('/car_1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         # self.goal_publisher = rospy.Publisher('/car_1/planner_goal_pos', PoseStamped, queue_size=10)
         # self.goal_id_dq = deque(maxlen=1)
@@ -426,10 +425,7 @@ class GetGoal:
                         goal_id = near_id_obs-2
                         flag_cond = True
                         print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
-                    if goal_id>=near_id_obs-1 and goal_id<= near_id_obs+1:
-                        goal_id = near_id_obs -2 
-                        print("triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
-                if id_obs ==1015:
+                if id_obs <1000:
                     obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
                     near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
                     print("###########################################  ", near_id_obs, "  #############################################")

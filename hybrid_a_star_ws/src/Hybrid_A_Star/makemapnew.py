@@ -434,6 +434,8 @@ ln1[ln1toedit_index3[0]] = ln1[ln1toedit_index3[0]] + np.asarray([0,0.20])
 # ln1[ln1toedit_index4[0]] = ln1[ln1toedit_index4[0]] + np.asarray([0,0.50])
 ln1toedit_index4 = np.where((ln1[:,0]>1.2)& (ln1[:,0]<1.7) & (ln1[:,1]>1.0))
 ln1[ln1toedit_index4[0]] = ln1[ln1toedit_index4[0]] + np.asarray([-0.23,0.10])
+ln1toedit_index5 = np.where((ln1[:,0]>4.5) & (ln1[:,1]>1.35))
+ln1[ln1toedit_index5[0]] = ln1[ln1toedit_index5[0]] + np.asarray([0.0,0.10])
 # print(ln1toedit_index4, ln1[ln1toedit_index4[0]])
 
 ln2[ln2toedit_index[0]] = ln2[ln2toedit_index[0]] + np.asarray([0.15,0])
@@ -475,6 +477,11 @@ waypoints[4] = waypoints[4]+ np.asarray([0.0,0.0,0.174])
 waypoints[2] = waypoints[2]+ np.asarray([1.0,0.4,0.174])
 waypoints[1] = waypoints[1]+ np.asarray([0.55,0.25,0.174])
 waypoints[0] = waypoints[0]+ np.asarray([0.28,0.15,0.174])
+waypoints[20] = waypoints[20]+ np.asarray([-0.2,0.0,-0.087])
+waypoints[26] = waypoints[26]+ np.asarray([-0.2,0.1,0.0])
+waypoints[16] = waypoints[16]+ np.asarray([0.0,0.0,0.174])
+waypoints[35] = waypoints[35]+ np.asarray([0.0,0.0,0.174])# can comment these
+waypoints[36] = waypoints[36]+ np.asarray([0.0,0.0,0.174])# can comment these
 np.save("/home/dhanesh/Masters/OuterSense/Planning_100scale/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale2.npy", waypoints)
 
 t_cos = np.cos(waypoints[:,-1])
@@ -595,7 +602,8 @@ road_image = cv2.flip(road_image, 0)
 # cv2.destroyAllWindows()
 # cv2.imwrite("maps/figure8_track3.png", new_road_image)
 
-cv2.imwrite("maps/figure8_track35.png", road_image)
+# cv2.imwrite("maps/figure8_track35.png", road_image)
+cv2.imwrite("maps/figure8_track36.png", road_image)
 # cv2.imwrite("maps/figure8_track29.png", white_image)
 
 # 30.3822394 -48.199419 757.96629 201.956163
