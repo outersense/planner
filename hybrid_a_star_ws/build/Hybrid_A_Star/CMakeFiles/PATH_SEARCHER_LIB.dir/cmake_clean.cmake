@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/dhanesh/Masters/OuterSense/Planning_100scale_2/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.pdb"
-  "/home/dhanesh/Masters/OuterSense/Planning_100scale_2/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so"
+  "/home/dhanesh/Masters/OuterSense/Planning_scale_3/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.pdb"
+  "/home/dhanesh/Masters/OuterSense/Planning_scale_3/planner/hybrid_a_star_ws/devel/lib/libPATH_SEARCHER_LIB.so"
   "CMakeFiles/PATH_SEARCHER_LIB.dir/src/costmap_subscriber.cpp.o"
   "CMakeFiles/PATH_SEARCHER_LIB.dir/src/goal_pose_subscriber.cpp.o"
   "CMakeFiles/PATH_SEARCHER_LIB.dir/src/hybrid_a_star.cpp.o"

@@ -6,21 +6,21 @@
         <arg name="fixed_frame" default="world"/>
 
         <param name="robot_description" textfile="$(find hybrid_a_star)/model/car_model/default.urdf"/>
-        <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher2"/>
-        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher2"/>
+        <!-- <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher2"/>
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher2"/> -->
 
         <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find hybrid_a_star)/rviz/display_hybrid_astar.rviz"/> -->
 
-        <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster2"
-            args="0 0 0 0 0 0 world map 100"/>
+        <!-- <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster2"
+            args="0 0 0 0 0 0 world map 100"/> -->
 
-        <node pkg="map_server" type="map_server" name="map_server2" args="$(find hybrid_a_star)/maps/map.yaml"/>
+        <!-- <node pkg="map_server" type="map_server" name="map_server2" args="$(find hybrid_a_star)/maps/map.yaml"/> -->
 
         <!-- <node pkg="hybrid_a_star" type="intermediate_node" name="intermediate_node2" output="screen"> -->
             <!-- Add any parameters or arguments specific to map_obstacle_updater if needed -->
         <!-- </node> -->
 
-        <node pkg="hybrid_a_star" type="run_hybrid_astar" name="run_hybrid_astar2" output="screen">
+        <node pkg="hybrid_a_star" type="run_hybrid_astar" name="run_hybrid_astar3" output="screen">
             <param name="planner/steering_angle" value="24.0"/>
             <param name="planner/steering_angle_discrete_num" value="24"/>
             <param name="planner/wheel_base" value="25.6"/>

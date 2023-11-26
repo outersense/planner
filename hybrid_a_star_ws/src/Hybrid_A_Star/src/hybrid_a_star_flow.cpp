@@ -76,22 +76,22 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/initialpose", 1);
     // init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_2/planner_curr_pos", 1);
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_2/planner_goal_pos", 1);
-    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_1/planner_curr_pos", 1);
-    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_1/planner_goal_pos", 1);
+    init_pose_sub_ptr_ = std::make_shared<InitPoseSubscriber2D>(nh, "/car_3/planner_curr_pos", 1);
+    goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/car_3/planner_goal_pos", 1);
 
-    // obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose", 1);
-    obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose_new", 1);
+    obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose", 1);
+    // obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose_new", 1);
     // obstacle_pose_sub_ptr_ = std::make_shared<ObstaclePoseSubscriber2D>(nh, "/rccar_pose_new2", 1);
     
     // obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &HybridAStarFlow::obstacleCallback, this);
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
-    path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
+    path_pub_ = nh.advertise<nav_msgs::Path>("searched_path3", 1);
     // path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
-    path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
+    path_pub_os = nh.advertise<nav_msgs::Path>("/car3/planned_path", 1);
     // path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
-    searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
-    vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
+    // searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
+    vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path3", 1);
     
     has_map_ = false;
     
@@ -174,7 +174,7 @@ void HybridAStarFlow::Run() {
     // std::cout<<"################################################## "<<vals_accessed.size()<< std::endl; 
     if (vals_accessed.size() != 0){
         // std::cout<<"need to do something here"<< std::endl;
-        const double map_resolution = 0.85;
+        const double map_resolution = 1.0;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             // unsigned int x_pls = vals_accessed[i];
             // unsigned int y_pls = vals_accessed[i + 1];
@@ -232,6 +232,7 @@ void HybridAStarFlow::Run() {
                 
                 PublishPath(path);
                 PublishPathOutersense(path);
+                // std::cout<< "bug3"<< std::endl;
                 if (scale_100 == true){
                     PublishVehiclePath(path, 30.0, 20.0, 20u);
                 }
@@ -240,7 +241,7 @@ void HybridAStarFlow::Run() {
                 }
                 
                 
-                PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
+                // PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
             }
             else if(variation_id == 9){
                 std::cout<< "                      i am in interpolate"<< std::endl;
@@ -379,12 +380,12 @@ void HybridAStarFlow::Run() {
         // count_ddddd = count_ddddd+1;
 
     }
-    if ((i_made_obstacles != 0 && clearcout%5==0)  ){
+    if ((i_made_obstacles != 0 && clearcout%2==0)  ){
         // if (clearcout%100 == 0){
         //     std::cout<<"mai chutiya hu "<<std::endl;}
     // if (i_made_obstacles != 0 ){
             // std::cout<<"need to remove obstacles"<< std::endl;
-            const double map_resolution = 0.85;
+            const double map_resolution = 1.0;
             // for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             for(int i=0; i<vals_latched.size(); i+=2) {
                 // unsigned int x_pls = vals_accessed[i];
@@ -675,7 +676,7 @@ void HybridAStarFlow::PublishPath(const VectorVec3d &path) {
 
     nav_path.header.frame_id = "world";
     nav_path.header.stamp = timestamp_;
-
+    // std::cout<< "bug1"<< std::endl;
     path_pub_.publish(nav_path);
 }
 void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
@@ -709,7 +710,7 @@ void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
 
     nav_path.header.frame_id = "world";
     nav_path.header.stamp = timestamp_;
-
+    // std::cout<< "bug2"<< std::endl;
     path_pub_os.publish(nav_path);
 }
 
