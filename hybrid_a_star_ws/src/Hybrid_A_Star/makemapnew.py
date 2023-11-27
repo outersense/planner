@@ -479,7 +479,7 @@ waypoints[1] = waypoints[1]+ np.asarray([0.55,0.25,0.174])
 waypoints[0] = waypoints[0]+ np.asarray([0.28,0.15,0.174])
 waypoints[20] = waypoints[20]+ np.asarray([-0.2,0.0,-0.087])
 waypoints[26] = waypoints[26]+ np.asarray([-0.2,0.1,0.0])
-waypoints[16] = waypoints[16]+ np.asarray([0.0,0.0,0.174])
+# waypoints[16] = waypoints[16]+ np.asarray([0.0,0.0,0.58])
 waypoints[35] = waypoints[35]+ np.asarray([0.0,0.0,0.174])# can comment these
 waypoints[36] = waypoints[36]+ np.asarray([0.0,0.0,0.174])# can comment these
 np.save("/home/dhanesh/Masters/OuterSense/Planning_100scale/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale2.npy", waypoints)
