@@ -275,7 +275,7 @@ bool scale_100_3 = true;
     {
         // obstacle_subscriber = nh.subscribe("/rccar_pose_new", 10, &ObstacleMapUpdater::obstacleCallback, this);
         // obstacle_subscriber = nh.subscribe("/rccar_pose_new2", 10, &ObstacleMapUpdater::obstacleCallback, this);
-        obstacle_subscriber = nh.subscribe("/rccar_pose_new", 10, &ObstacleMapUpdater::obstacleCallback, this);
+        obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &ObstacleMapUpdater::obstacleCallback, this);
         map_subscriber = nh.subscribe("/map", 1, &ObstacleMapUpdater::mapCallback, this);
         updated_map_publisher = nh.advertise<nav_msgs::OccupancyGrid>("/updated_map", 1);
     }
@@ -308,7 +308,11 @@ bool scale_100_3 = true;
         int translate_y = 0;
         double extend = 0.0;
         double halfWidth = 0.0;
+        double halfWidth2 = 0.0;
         double halfHeight = 0.0;
+        double halfHeight2 = 0.0;
+        double halfWidth3 = 0.0;
+        double halfHeight3 = 0.0;
         if (scale_100_3 ==true){
             scale_factor = 100;
             translate_x = -18; //-33;
@@ -316,7 +320,11 @@ bool scale_100_3 = true;
             // extend = 13;
             extend = 40;
             halfWidth = 20; // Half of the rectangle width
-            halfHeight = 60; // Half of the rectangle height
+            halfHeight = 40; // Half of the rectangle height
+            halfHeight2 = 12; // Half of the rectangle height
+            halfWidth2 = 12;
+            halfHeight3 = 30; // Half of the rectangle height
+            halfWidth3 = 30;
         }
         else{
             scale_factor = 10;
@@ -338,7 +346,7 @@ bool scale_100_3 = true;
             double vel = std::abs(obstacle_data->data[i + 3]);
             // std::cout<< "velocity is                             "<<vel << "                           "<< i << std::endl;
             // std::cout<<" The Scaled values are: "<< x<< " "<< y<< " "<< std::endl;
-            if (id < 1000 && vel <= 0.05 && x >= 0 && x < map_width && y >= 0 && y < map_height)
+            if (id < 1000 && vel <= 0.01 && x >= 0 && x < map_width && y >= 0 && y < map_height)
             {
                 // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
                 int map_index = x + y * map_width;
@@ -413,6 +421,98 @@ bool scale_100_3 = true;
             // double backy = static_cast<double>(y-48)/100;
             // std::cout<<" The Scaled back to original values are: "<< backx<< " "<< backy<< " "<< std::endl;
             // std::cout<<"##########################ERROR######################"<< x_og-backx << " "<< y_og-backy<<std::endl;
+            if (id == 1017 && vel <= 0.01 && x >= 0 && x < map_width && y >= 0 && y < map_height)
+            {
+                // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
+                int map_index = x + y * map_width;
+                
+                if (static_cast<unsigned int>(map_index) < map_size) {
+                    current_map.data[map_index] = 100; 
+                }
+
+                // for (double pix = 0.5; pix < extend; pix += 1.0) { // Use double type for pix
+                // // Update surrounding cells
+                //     for (int dx = -static_cast<int>(pix); dx <= static_cast<int>(pix); dx++) {
+                //         for (int dy = -static_cast<int>(pix); dy <= static_cast<int>(pix); dy++) {
+                //             double new_x = x + dx;
+                //             double new_y = y + dy;
+                //             if (new_x >= 0 && new_x < map_width && new_y >= 0 && new_y < map_height) {
+                //                 int index = static_cast<int>(new_x) + static_cast<int>(new_y) * map_width;
+                //                 if (static_cast<unsigned int>(index) < map_size) {
+                //                     current_map.data[index] = 100;
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+                
+
+                for (double dx = -halfWidth3; dx <= halfWidth3; dx += 1.0) {
+                    for (double dy = -halfHeight3; dy <= halfHeight3; dy += 1.0) {
+                        double new_x = x + dx;
+                        double new_y = y + dy;
+                        if (new_x >= 0 && new_x < map_width && new_y >= 0 && new_y < map_height) {
+                            int index = static_cast<int>(new_x) + static_cast<int>(new_y) * map_width;
+                            if (static_cast<unsigned int>(index) < map_size) {
+                                current_map.data[index] = 100;
+                            }
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                // for (int pix = 1; pix < extend; pix++){
+                //     // Update surrounding cells
+                //     for (int dx = -pix; dx <= pix; dx++) {
+                //         for (int dy = -pix; dy <= pix; dy++) {
+                //             int new_x = x + dx;
+                //             int new_y = y + dy;
+                //             if (new_x >= 0 && new_x < map_width && new_y >= 0 && new_y < map_height) {
+                //                 int index = new_x + new_y * map_width;
+                //                 if (static_cast<unsigned int>(index) < map_size) {
+                //                     current_map.data[index] = 100;
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+            }
+            if (id == 1015 && vel <= 0.01 && x >= 0 && x < map_width && y >= 0 && y < map_height)
+            {
+                // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
+                int map_index = x + y * map_width;
+                
+                if (static_cast<unsigned int>(map_index) < map_size) {
+                    current_map.data[map_index] = 100; 
+                }
+                for (double dx = -halfWidth2; dx <= halfWidth2; dx += 1.0) {
+                    for (double dy = -halfHeight2; dy <= halfHeight2; dy += 1.0) {
+                        double new_x = x + dx;
+                        double new_y = y + dy;
+                        if (new_x >= 0 && new_x < map_width && new_y >= 0 && new_y < map_height) {
+                            int index = static_cast<int>(new_x) + static_cast<int>(new_y) * map_width;
+                            if (static_cast<unsigned int>(index) < map_size) {
+                                current_map.data[index] = 100;
+                            }
+                        }
+                    }
+                }
+            }
             
         }
     }
