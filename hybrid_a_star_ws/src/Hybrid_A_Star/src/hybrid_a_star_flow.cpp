@@ -86,7 +86,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
     // obstacle_subscriber = nh.subscribe("/rccar_pose", 10, &HybridAStarFlow::obstacleCallback, this);
     // goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
-    path_pub_ = nh.advertise<nav_msgs::Path>("searched_path3", 1);
+    path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
     // path_pub_os = nh.advertise<nav_msgs::Path>("/car2/planned_path", 1);
     path_pub_os = nh.advertise<nav_msgs::Path>("/car3/planned_path", 1);
     // path_pub_os = nh.advertise<nav_msgs::Path>("/car1/planned_path", 1);
@@ -120,7 +120,7 @@ HybridAStarFlow::HybridAStarFlow(ros::NodeHandle &nh) {
         std::cerr << "Failed to open the file: " << filename << std::endl;
     }
 
-    std::cout<<x_values[1]<<std::endl;
+    // std::cout<<x_values[1]<<std::endl;
 
 }
 
@@ -177,11 +177,11 @@ void HybridAStarFlow::Run() {
         const double map_resolution = 1.0;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             // unsigned int x_pls = vals_accessed[i];
-            // unsigned int y_pls = vals_accessed[i + 1];
+            // unsigned int y_pls = vals_accesed[i + 1];
 
             double x_pls = vals_accessed[i];
             double y_pls = vals_accessed[i + 1];
-
+            // std::cout<< x_pls <<" "<< y_pls << std::endl;
             unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
             unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
             // std::cout<< x_pls << "                        "<< y_pls << std::endl;
@@ -192,6 +192,7 @@ void HybridAStarFlow::Run() {
             
         }
         // vals_latched = vals_accessed;
+        std::cout<<  "###############     added obstacles         ##############"<<  std::endl;
         i_made_obstacles=1;
     }
     
@@ -232,7 +233,6 @@ void HybridAStarFlow::Run() {
                 
                 PublishPath(path);
                 PublishPathOutersense(path);
-                // std::cout<< "bug3"<< std::endl;
                 if (scale_100 == true){
                     PublishVehiclePath(path, 30.0, 20.0, 20u);
                 }
@@ -400,6 +400,7 @@ void HybridAStarFlow::Run() {
                 kinodynamic_astar_searcher_ptr_->RemoveObstacle(bhagwan_k_bharose_x, bhagwan_k_bharose_y);
             
             }
+            std::cout<<  "$$$$$$$$$$$$$$$     removed obstacles         $$$$$$$$$$$$$$$" << std::endl;
             i_made_obstacles=0;
             clearcout = 0;
             vals_latched.clear();
@@ -676,7 +677,7 @@ void HybridAStarFlow::PublishPath(const VectorVec3d &path) {
 
     nav_path.header.frame_id = "world";
     nav_path.header.stamp = timestamp_;
-    // std::cout<< "bug1"<< std::endl;
+
     path_pub_.publish(nav_path);
 }
 void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
@@ -710,7 +711,7 @@ void HybridAStarFlow::PublishPathOutersense(const VectorVec3d &path) {
 
     nav_path.header.frame_id = "world";
     nav_path.header.stamp = timestamp_;
-    // std::cout<< "bug2"<< std::endl;
+
     path_pub_os.publish(nav_path);
 }
 

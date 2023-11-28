@@ -636,7 +636,8 @@ int HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     int timer_out_time = 5000;
     if (scale_100_2 == true){
         // timer_out_time = 10000;
-        timer_out_time = 4000;
+        // timer_out_time = 1000;
+        timer_out_time = 5000;
     }
     
     Timer search_used_time;
@@ -876,6 +877,7 @@ VectorVec3d HybridAStar::GetPath() const {
 }
 
 void HybridAStar::Reset() {
+    // std::cout<<"blah blah.0"<< std::endl;
     if (state_node_map_) {
         for (int i = 0; i < STATE_GRID_SIZE_X_; ++i) {
             if (state_node_map_[i] == nullptr)

@@ -29,7 +29,11 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
         int translate_y = 0;
         double extend = 0.0;
         double halfWidth = 0.0;
+        double halfWidth2 = 0.0;
         double halfHeight = 0.0;
+        double halfHeight2 = 0.0;
+        double halfWidth3 = 0.0;
+        double halfHeight3 = 0.0;
         if (scale_100_4 ==true){
             scale_factor = 100;
             translate_x = -18; //-33;
@@ -37,7 +41,11 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
             // extend = 13;
             extend = 40;
             halfWidth = 20; 
-            halfHeight = 60;
+            halfHeight = 40;
+            halfWidth2 = 12;
+            halfHeight2 = 12;
+            halfWidth3 = 30;
+            halfHeight3 = 30;
         }
         else{
             scale_factor = 10;
@@ -82,7 +90,7 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
             int x = static_cast<int>(obstacle_data->data[i + 1]*scale_factor)+translate_x;
             int y = static_cast<int>(obstacle_data->data[i + 2]*scale_factor)+translate_y;
             double vel = std::abs(obstacle_data->data[i + 3]);
-            if (id < 1000 && vel <= 0.05)
+            if (id < 1000 && vel <= 0.01)
             {
                 // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
                 x_y_vals.push_back(x);
@@ -110,6 +118,38 @@ void ObstaclePoseSubscriber2D::updateMapWithObstacles(const std_msgs::Float32Mul
                 //         }
                 //     }
                 // }
+            }
+            if (id == 1017 && vel <= 0.01)
+            {
+                // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
+                x_y_vals.push_back(x);
+                x_y_vals.push_back(y);
+
+                for (double dx = -halfWidth; dx <= halfWidth; dx += 1.0) {
+                    for (double dy = -halfHeight; dy <= halfHeight; dy += 1.0) {
+                        double new_x = x + dx;
+                        double new_y = y + dy;
+                        x_y_vals.push_back(new_x);
+                        x_y_vals.push_back(new_y);
+                    }
+                }
+
+            }
+            if (id == 1015 && vel <= 0.01 )
+            {
+                // std::cout<< "I have an obstical so something has 0 vel" << std::endl;
+                x_y_vals.push_back(x);
+                x_y_vals.push_back(y);
+                
+                for (double dx = -halfWidth2; dx <= halfWidth2; dx += 1.0) {
+                    for (double dy = -halfHeight2; dy <= halfHeight2; dy += 1.0) {
+                        double new_x = x + dx;
+                        double new_y = y + dy;
+                        x_y_vals.push_back(new_x);
+                        x_y_vals.push_back(new_y);
+                    }
+                }
+
             }
         }
  
