@@ -877,6 +877,7 @@ VectorVec3d HybridAStar::GetPath() const {
 }
 
 void HybridAStar::Reset() {
+    // std::cout<<"blah blah.0"<< std::endl;
     if (state_node_map_) {
         for (int i = 0; i < STATE_GRID_SIZE_X_; ++i) {
             if (state_node_map_[i] == nullptr)

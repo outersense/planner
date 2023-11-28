@@ -346,6 +346,7 @@ class GetGoal:
         scale_100 = True
         self.pos_obstacles =[]
         self.mybigdict = {}
+        self.countercheck = 0
 
         
         
@@ -354,7 +355,7 @@ class GetGoal:
             # for 100 scale maps Nov2
             # self.translate_x = -23.433744557914416
             # self.translate_y = 37.368772684946485
-            waypoints_name = "Nov10_manual_jash_100scale2.npy"
+            waypoints_name = "/home/dhanesh/Masters/OuterSense/Planning_100scale/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale2.npy"
             self.translate_x = -17.964026958248915 #-32.964026958248915
             self.translate_y = 35.39230053680539
 #             x_translation = -3.2964026958248915
@@ -366,7 +367,7 @@ class GetGoal:
         # for 10 scale maps Nov2
         else:
             # waypoints_name = "waypoints1_10scale.npy"
-            waypoints_name = "Nov10_manual_jash_100scale2.npy"
+            waypoints_name = "/home/dhanesh/Masters/OuterSense/Planning_100scale/planner/hybrid_a_star_ws/src/Hybrid_A_Star/src/Nov10_manual_jash_100scale2.npy"
             self.translate_x = -3.2964026958248915
             self.translate_y = 3.539230053680539
 
@@ -386,6 +387,7 @@ class GetGoal:
         # rospy.Subscriber('/car1/fused', Odometry, self.odom_callback)
         # rospy.Subscriber('/rccar_pose_new', Float32MultiArray, self.obstacle_callback)
         rospy.Subscriber('/rccar_pose', Float32MultiArray, self.obstacle_callback)
+        rospy.Subscriber('/perception_outage', Float32MultiArray, self.perception_loss_callback)
         # self.pose_cov_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
         # self.goal_publisher = rospy.Publisher('/car2/run_hybrid_astar/planner_goal_pos', PoseStamped, queue_size=10)
         # self.pose_cov_publisher = rospy.Publisher('/car_1/planner_curr_pos', PoseWithCovarianceStamped, queue_size=10)
@@ -402,15 +404,21 @@ class GetGoal:
     def get_goal_for_pose(self, curr):
         list_of_ids = []
         # near_id, _ = do_kdtree(self.waypoints[:,:-1], curr, k =1)
+        if curr[0][-1]<0 and curr[0][0]>4 and curr[0][0]<1:
+            curr[0][-1]= curr[0][-1]+2*3.14
         near_id, _ = do_kdtree(self.waypoints, curr, k =1)
+        # print(self.waypoints)
+        # print(curr)
+        # print("yeh 16 k lia",near_id, " " ,_)
         goal_id = near_id + self.look_ahead_index
         flag_cond = False
+        
         if (len(self.pos_obstacles) !=0):
             for i in range(len(self.pos_obstacles)):
                 id_obs = self.pos_obstacles[i][0]
                 list_of_ids.append(id_obs)
                 self.add_key(id_obs)
-
+            
             self.mybigdict = self.delete_keys(list_of_ids,self.mybigdict)
 
             
@@ -426,7 +434,7 @@ class GetGoal:
                 
                 
                 
-                if id_obs <1000:
+                if id_obs <1000:# pedestrian
                     # obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
                     # near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
                     # print("###########################################  ", near_id_obs, "  #############################################")
@@ -490,7 +498,7 @@ class GetGoal:
                     #     #     print("newwwwwwwwwwwwwwwwww triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
                     counter = self.mybigdict[id_obs]
                     print("hehuhahahahahahahahhaahah", counter)
-                    if counter <10:
+                    if counter <20:
                     
                         # coming behind
                         obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
@@ -521,7 +529,7 @@ class GetGoal:
                         if (goal_id > self.waypoints.shape[0]-1):
                             goal_id = goal_id - self.waypoints.shape[0] 
                         
-                        if ((near_id_obs>=22 and near_id_obs<26) or (near_id_obs>=0 and near_id_obs<=3)) and ((goal_id>=22 and goal_id<26) or (goal_id>=0 and goal_id<=3)) and flag_cond == False:
+                        if ((near_id_obs>=22 and near_id_obs<=26) or (near_id_obs>=0 and near_id_obs<=3)) and ((goal_id>=22 and goal_id<=26) or (goal_id>=0 and goal_id<=3)) and flag_cond == False:
                             print(near_id, type(near_id))
                             print(goal_id, type(goal_id))
                             if near_id>33:
@@ -567,41 +575,51 @@ class GetGoal:
 
 
 
-                if id_obs ==1015:
+                if id_obs ==1015:# tukable obstacle
+                    self.countercheck = self.countercheck+1
+                    print("hehuhahahahahahahahhaahahhahahahahahahahah", self.countercheck)
+                    if self.countercheck >250:
+                        self.mybigdict[id_obs]=0
+
                     counter = self.mybigdict[id_obs]
                     print("hehuhahahahahahahahhaahah", counter)
-                    if counter <10:
+                    if counter <20:
                     
                         # coming behind
                         obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
                         near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
                         print("###########################################  ", near_id_obs, "  #############################################")
-                        if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index:
+                        if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index and goal_id>near_id_obs:
                             goal_id = near_id_obs -2 
                             flag_cond = True
                             print("triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                            self.mybigdict[id_obs] +=1
                         if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>near_id:
                             goal_id = near_id_obs -2 
                             flag_cond = True
                             print("triggggeeerrrreeedddddd nooooooooooooooooohhhhhhhhhhhhhere")
+                            self.mybigdict[id_obs] +=1
                         if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs==0:
                             goal_id = np.asarray([self.waypoints.shape[0]-2])
                             flag_cond = True
                             print("triggggeeerrrreeedddddd thereeeeeee")
+                            self.mybigdict[id_obs] +=1
                         if near_id_obs<goal_id and near_id_obs> near_id:
                             goal_id = near_id_obs-2
                             flag_cond = True
                             print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+                            self.mybigdict[id_obs] +=1
                         if goal_id>=near_id_obs-1 and goal_id<= near_id_obs+1:
                             goal_id = near_id_obs -2
                             flag_cond = True 
                             print("triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
+                            self.mybigdict[id_obs] +=1
 
                         # print("near id: ", near_id_obs," goal_id ",goal_id)
                         if (goal_id > self.waypoints.shape[0]-1):
                             goal_id = goal_id - self.waypoints.shape[0] 
                         
-                        if ((near_id_obs>=22 and near_id_obs<26) or (near_id_obs>=0 and near_id_obs<=3)) and ((goal_id>=22 and goal_id<26) or (goal_id>=0 and goal_id<=3)) and flag_cond == False:
+                        if ((near_id_obs>=22 and near_id_obs<=26) or (near_id_obs>=0 and near_id_obs<=3)) and ((goal_id>=22 and goal_id<=26) or (goal_id>=0 and goal_id<=3)) and flag_cond == False:
                             print(near_id, type(near_id))
                             print(goal_id, type(goal_id))
                             if near_id>33:
@@ -620,37 +638,227 @@ class GetGoal:
                                 goal_id = near_id_obs2-2
                                 # flag_cond = True
                                 print("newwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+                                self.mybigdict[id_obs] +=1
                             if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs2>0 and near_id_obs2<self.look_ahead_index:
                                 goal_id = near_id_obs2 -2 
                                 # flag_cond = True
                                 print("newwwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                                self.mybigdict[id_obs] +=1
                             if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs2==0:
                                 goal_id = np.asarray([self.waypoints.shape[0]-2])
                                 # flag_cond = True
                                 print("newwwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd thereeeeeee")
+                                self.mybigdict[id_obs] +=1
                             # if goal_id<0:
                             #     goal_id =  self.waypoints.shape[0]+goal_id
                             
                             # if goal_id>=near_id_obs2-1 and goal_id<= near_id_obs2+1:
                             #     goal_id = near_id_obs2 -2 
                             #     print("newwwwwwwwwwwwwwwwww triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
-
-                        else:
-                            if (goal_id > self.waypoints.shape[0]-1):
-                                goal_id = goal_id - self.waypoints.shape[0]
-                            obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
-                            near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
-                            print("###########################################  ", near_id_obs, "  #############################################")
-                            if goal_id>near_id_obs-1 and goal_id< near_id_obs+1:
-                                goal_id = goal_id+3
-                                print("triggggeerrrreeeedddddddddddddddddd ahhhhhheeeeaaaadddddddddddddddddd")
-
                         
+                        self.countercheck = 0
 
+                    else:
+                        if (goal_id > self.waypoints.shape[0]-1):
+                            goal_id = goal_id - self.waypoints.shape[0]
+                        obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+                        near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+                        print("###########################################  ", near_id_obs, "  #############################################")
+                        if goal_id>near_id_obs-1 and goal_id< near_id_obs+1:
+                            goal_id = goal_id+3
+                            print("triggggeerrrreeeedddddddddddddddddd ahhhhhheeeeaaaadddddddddddddddddd")
+                    
+                    
 
+                if id_obs ==1017: #dynamic obstacle
+                    print("i am in 1017")
 
+                    self.countercheck = self.countercheck+1
+                    print("hehuhahahahahahahahhaahahhahahahahahahahah", self.countercheck)
+                    if self.countercheck >250:
+                        self.mybigdict[id_obs]=0
 
+                    counter = self.mybigdict[id_obs]
+                    print("hehuhahahahahahahahhaahah", counter)
+                    if counter <20:
+                    
+                        # coming behind
+                        obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+                        near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+                        print("###########################################  ", near_id_obs, "  #############################################")
+                        if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index and goal_id>near_id_obs:
+                            goal_id = near_id_obs -2 
+                            flag_cond = True
+                            print("triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                            self.mybigdict[id_obs] +=1
+                        if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>near_id:
+                            goal_id = near_id_obs -2 
+                            flag_cond = True
+                            print("triggggeeerrrreeedddddd nooooooooooooooooohhhhhhhhhhhhhere")
+                            self.mybigdict[id_obs] +=1
+                        if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs==0:
+                            goal_id = np.asarray([self.waypoints.shape[0]-2])
+                            flag_cond = True
+                            print("triggggeeerrrreeedddddd thereeeeeee")
+                            self.mybigdict[id_obs] +=1
+                        if near_id_obs<goal_id and near_id_obs> near_id:
+                            goal_id = near_id_obs-2
+                            flag_cond = True
+                            print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+                            self.mybigdict[id_obs] +=1
+                        if goal_id>=near_id_obs-1 and goal_id<= near_id_obs+1:
+                            goal_id = near_id_obs -2
+                            flag_cond = True 
+                            print("triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
+                            self.mybigdict[id_obs] +=1
 
+                        # print("near id: ", near_id_obs," goal_id ",goal_id)
+                        if (goal_id > self.waypoints.shape[0]-1):
+                            goal_id = goal_id - self.waypoints.shape[0] 
+                        
+                        if ((near_id_obs>=22 and near_id_obs<=26) or (near_id_obs>=0 and near_id_obs<=3)) and ((goal_id>=22 and goal_id<=26) or (goal_id>=0 and goal_id<=3)) and flag_cond == False:
+                            print(near_id, type(near_id))
+                            print(goal_id, type(goal_id))
+                            if near_id>33:
+                                targetwaypoints1 = self.waypoints[near_id[0]:]
+                                targetwaypoints2 = self.waypoints[: goal_id[0]+1]
+                                targetwaypoints = np.vstack((targetwaypoints1, targetwaypoints2))
+                            else:    
+                                targetwaypoints = self.waypoints[near_id[0]:goal_id[0]+1]
+                            print(targetwaypoints)
+                            near_id_obs2_, __ = do_kdtree(targetwaypoints[:,:-1], obspos, k =1) 
+                            # print(near_id_obs2_)
+                            near_id_obs2, ____= do_kdtree(self.waypoints[:,:-1], targetwaypoints[near_id_obs2_,:-1], k =1)
+                            print(near_id_obs2)
+
+                            if near_id_obs2<goal_id and near_id_obs2> near_id:
+                                goal_id = near_id_obs2-2
+                                # flag_cond = True
+                                print("newwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+                                self.mybigdict[id_obs] +=1
+                            if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs2>0 and near_id_obs2<self.look_ahead_index:
+                                goal_id = near_id_obs2 -2 
+                                # flag_cond = True
+                                print("newwwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                                self.mybigdict[id_obs] +=1
+                            if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs2==0:
+                                goal_id = np.asarray([self.waypoints.shape[0]-2])
+                                # flag_cond = True
+                                print("newwwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd thereeeeeee")
+                                self.mybigdict[id_obs] +=1
+                            # if goal_id<0:
+                            #     goal_id =  self.waypoints.shape[0]+goal_id
+                            
+                            # if goal_id>=near_id_obs2-1 and goal_id<= near_id_obs2+1:
+                            #     goal_id = near_id_obs2 -2 
+                            #     print("newwwwwwwwwwwwwwwwww triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
+                        
+                        self.countercheck = 0
+
+                    else:
+                        if (goal_id > self.waypoints.shape[0]-1):
+                            goal_id = goal_id - self.waypoints.shape[0]
+                        obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+                        near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+                        print("###########################################  ", near_id_obs, "  #############################################")
+                        if goal_id>near_id_obs-1 and goal_id< near_id_obs+1:
+                            goal_id = goal_id+3
+                            print("triggggeerrrreeeedddddddddddddddddd ahhhhhheeeeaaaadddddddddddddddddd")
+                    # self.countercheck = self.countercheck+1
+                    # print("hehuhahahahahahahahhaahahhahahahahahahahah", self.countercheck)
+                    # if self.countercheck >250:
+                    #     self.mybigdict[id_obs]=0
+
+                    # counter = self.mybigdict[id_obs]
+                    # print("hehuhahahahahahahahhaahah", counter)
+                    
+                    # variablecheck = 1
+                    # if counter <20:
+                    
+                    #     # coming behind
+                    #     obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+                    #     near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+                    #     print("###########################################  ", near_id_obs, "  #############################################")
+                    #     if near_id_obs<6 and near_id_obs>=0:
+                    #         variablecheck =2
+                    #     if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>0 and near_id_obs<self.look_ahead_index and goal_id>near_id_obs:
+                    #         goal_id = near_id_obs -variablecheck 
+                    #         flag_cond = True
+                    #         print("triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                    #         self.mybigdict[id_obs] +=1
+                    #     if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs>near_id:
+                    #         goal_id = near_id_obs -variablecheck 
+                    #         flag_cond = True
+                    #         print("triggggeeerrrreeedddddd nooooooooooooooooohhhhhhhhhhhhhere")
+                    #         self.mybigdict[id_obs] +=1
+                    #     if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs==0:
+                    #         goal_id = np.asarray([self.waypoints.shape[0]-variablecheck])
+                    #         flag_cond = True
+                    #         print("triggggeeerrrreeedddddd thereeeeeee")
+                    #         self.mybigdict[id_obs] +=1
+                    #     if near_id_obs<goal_id and near_id_obs> near_id:
+                    #         goal_id = near_id_obs-variablecheck
+                    #         flag_cond = True
+                    #         print("triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+                    #         self.mybigdict[id_obs] +=1
+                    #     if goal_id>=near_id_obs-1 and goal_id<= near_id_obs+1:
+                    #         goal_id = near_id_obs -variablecheck
+                    #         flag_cond = True 
+                    #         print("triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
+                    #         self.mybigdict[id_obs] +=1
+
+                    #     # print("near id: ", near_id_obs," goal_id ",goal_id)
+                    #     if (goal_id > self.waypoints.shape[0]-1):
+                    #         goal_id = goal_id - self.waypoints.shape[0] 
+                        
+                    #     if ((near_id_obs>=22 and near_id_obs<=26) or (near_id_obs>=0 and near_id_obs<=3)) and ((goal_id>=22 and goal_id<=26) or (goal_id>=0 and goal_id<=3)) and flag_cond == False:
+                    #         print(near_id, type(near_id))
+                    #         print(goal_id, type(goal_id))
+                    #         if near_id>33:
+                    #             targetwaypoints1 = self.waypoints[near_id[0]:]
+                    #             targetwaypoints2 = self.waypoints[: goal_id[0]+1]
+                    #             targetwaypoints = np.vstack((targetwaypoints1, targetwaypoints2))
+                    #         else:    
+                    #             targetwaypoints = self.waypoints[near_id[0]:goal_id[0]+1]
+                    #         print(targetwaypoints)
+                    #         near_id_obs2_, __ = do_kdtree(targetwaypoints[:,:-1], obspos, k =1) 
+                    #         # print(near_id_obs2_)
+                    #         near_id_obs2, ____= do_kdtree(self.waypoints[:,:-1], targetwaypoints[near_id_obs2_,:-1], k =1)
+                    #         print(near_id_obs2)
+
+                    #         if near_id_obs2<goal_id and near_id_obs2> near_id:
+                    #             goal_id = near_id_obs2-variablecheck
+                    #             # flag_cond = True
+                    #             print("newwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd wwwwwwwwwwwwhere")
+                    #             self.mybigdict[id_obs] +=1
+                    #         if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs2>0 and near_id_obs2<self.look_ahead_index:
+                    #             goal_id = near_id_obs2 -variablecheck 
+                    #             # flag_cond = True
+                    #             print("newwwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd hhhhhhhhhhhhhere")
+                    #             self.mybigdict[id_obs] +=1
+                    #         if near_id> self.waypoints.shape[0]-1-self.look_ahead_index and near_id_obs2==0:
+                    #             goal_id = np.asarray([self.waypoints.shape[0]-variablecheck])
+                    #             # flag_cond = True
+                    #             print("newwwwwwwwwwwwwwwwwww triggggeeerrrreeedddddd thereeeeeee")
+                    #             self.mybigdict[id_obs] +=1
+                    #         # if goal_id<0:
+                    #         #     goal_id =  self.waypoints.shape[0]+goal_id
+                            
+                    #         # if goal_id>=near_id_obs2-1 and goal_id<= near_id_obs2+1:
+                    #         #     goal_id = near_id_obs2 -2 
+                    #         #     print("newwwwwwwwwwwwwwwwww triggggeerrrreeeedddddddddddddddddd behinnnnnnddddddddddddddd")
+                        
+                    #     self.countercheck = 0
+
+                    # else:
+                    #     if (goal_id > self.waypoints.shape[0]-1):
+                    #         goal_id = goal_id - self.waypoints.shape[0]
+                    #     obspos = np.asarray([x_obs, y_obs]).reshape(1,-1)
+                    #     near_id_obs, __ = do_kdtree(self.waypoints[:,:-1], obspos, k =1)
+                    #     print("###########################################  ", near_id_obs, "  #############################################")
+                    #     if goal_id>near_id_obs-1 and goal_id< near_id_obs+1:
+                    #         goal_id = goal_id+3
+                    #         print("triggggeerrrreeeedddddddddddddddddd ahhhhhheeeeaaaadddddddddddddddddd")
 
 
 
@@ -711,13 +919,14 @@ class GetGoal:
         return goal_pose, goal_id
     
     def add_key(self,key):
-        if key in self.mybigdict:
+        if key not in self.mybigdict:   
             # if self.mybigdict[key]<5:
-            self.mybigdict[key]+=1
+            # self.mybigdict[key]+=1
+            self.mybigdict[key]=0
             # else:
             #     self.mybigdict[key]=0
-        else:
-            self.mybigdict[key]=0
+        # else:
+        #     self.mybigdict[key]=0
 
     def delete_keys(self,input_list,input_dict):
 
@@ -754,12 +963,20 @@ class GetGoal:
                 pos_obs.append([car_id, pos_x, pos_y])
             if (car_id ==1015 and pos_v <=0.05):
                 pos_obs.append([car_id, pos_x, pos_y])
+            if (car_id ==1017 and pos_v <=0.05):
+                pos_obs.append([car_id, pos_x, pos_y])
             i=i+5
         
         return pos_obs
     
     def obstacle_callback(self,msg):
         self.pos_obstacles = self.get_obstacle_pose(msg, self.scale_factor, self.translate_x, self.translate_y )
+    
+    def perception_loss_callback(self,msg):
+        print("annnndddhhhhaaaaaa aannndddaaaaaaa")
+        lost_car_pos = self.get_obstacle_pose(msg, self.scale_factor, self.translate_x, self.translate_y )
+        for i in range(len(lost_car_pos)):
+            self.pos_obstacles.append(lost_car_pos[i])
 
     def odom_callback(self,msg):
         # Create a PoseStamped message

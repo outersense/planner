@@ -177,11 +177,11 @@ void HybridAStarFlow::Run() {
         const double map_resolution = 1.0;
         for (size_t i = 0; i < vals_accessed.size(); i += 2) {
             // unsigned int x_pls = vals_accessed[i];
-            // unsigned int y_pls = vals_accessed[i + 1];
+            // unsigned int y_pls = vals_accesed[i + 1];
 
             double x_pls = vals_accessed[i];
             double y_pls = vals_accessed[i + 1];
-
+            // std::cout<< x_pls <<" "<< y_pls << std::endl;
             unsigned int bhagwan_k_bharose_x = std::floor(x_pls/map_resolution);
             unsigned int bhagwan_k_bharose_y = std::floor(y_pls/map_resolution);
             // std::cout<< x_pls << "                        "<< y_pls << std::endl;
